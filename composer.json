@@ -16,9 +16,9 @@
   ],
   "require": {
     "majkl578/nette-identity-doctrine": "^2.2",
-    "dravencms/locale": "@dev",
-    "dravencms/templated-email": "@dev",
-    "dravencms/recaptcha": "@dev"
+    "dravencms/locale": "^v1.0",
+    "dravencms/templated-email": "^v1.0",
+    "dravencms/recaptcha": "^v1.0"
   },
   "replace": {
     "dravencms/user-light": "*"
