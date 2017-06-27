@@ -1,0 +1,24 @@
+{* Latte template *}
+
+{block content}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#home" data-toggle="tab">Základní informace</a></li>
+        <li><a href="#password-change" data-toggle="tab">Změna hesla</a></li>
+        <li><a href="#avatar-change" data-toggle="tab">Avatar</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+            {control formAccount}
+        </div>
+        <div class="tab-pane fade in" id="password-change">
+            {control formAccountPassword}
+        </div>
+        <div class="tab-pane fade in" id="avatar-change">
+            <div>
+                <img n:gravatar="$userInfo->getEmail(), 100" alt="Gravatar"/>
+            </div>
+            <p>Váš avatar si můžete změnit na <a href="https://gravatar.com/" target="_blank">https://gravatar.com/</a></p>
+        </div>
+    </div>
+{/block}

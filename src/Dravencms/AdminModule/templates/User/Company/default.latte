@@ -1,0 +1,6 @@
+{block #content}
+    <p n:isAllowed="user, companyEdit">
+        <a n:href="Company:edit" class="btn btn-primary"><i class="fa fa-plus"></i> {_"Create new company"}</a>
+    </p>
+    {control gridCompany}
+{/block}

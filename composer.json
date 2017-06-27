@@ -1,0 +1,51 @@
+{
+  "name": "dravencms/user",
+  "type": "dravencms-package",
+  "description": "User module for dravencms",
+  "keywords": [
+    "dravencms",
+    "user"
+  ],
+  "license": [
+    "LGPL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Adam Schubert"
+    }
+  ],
+  "require": {
+    "majkl578/nette-identity-doctrine": "^2.2",
+    "dravencms/locale": "@dev",
+    "dravencms/templated-email": "@dev",
+    "dravencms/recaptcha": "@dev"
+  },
+  "replace": {
+    "dravencms/user-light": "*"
+  },
+  "conflicts": {
+    "dravencms/user-light": "*"
+  },
+  "require-dev": {
+    "nette/tester": "@dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "Dravencms\\": "src/"
+    }
+  },
+  "extra": {
+    "dravencms": {
+      "configuration": {
+        "extensions": {
+          "user": "Dravencms\\User\\DI\\UserExtension",
+          "doctrine2identity": "Majkl578\\NetteAddons\\Doctrine2Identity\\DI\\IdentityExtension"
+        }
+      },
+      "scripts": {
+        "post-install": "Dravencms\\User\\Script\\PostInstall",
+        "pre-uninstall": "Dravencms\\User\\Script\\PreUninstall"
+      }
+    }
+  }
+}

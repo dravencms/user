@@ -1,0 +1,20 @@
+- Dravencms\Security\Authenticator
+- Dravencms\Security\PasswordManager
+
+- Dravencms\User\DefaultDataCreator
+
+- Dravencms\Model\User\Repository\CompanyRepository
+- Dravencms\Model\User\Repository\GenderRepository
+- Dravencms\Model\User\Repository\UserRepository
+- Dravencms\Model\User\Repository\PasswordResetRepository
+- Dravencms\Model\User\Repository\AclOperationRepository
+- Dravencms\Model\User\Repository\AclResourceRepository
+- Dravencms\Model\User\Repository\GroupRepository
+
+
+- Dravencms\Model\User\Fixtures\UserFixtures
+- Dravencms\Model\User\Fixtures\GroupFixtures
+- Dravencms\Model\User\Fixtures\GroupFixtures
+- Dravencms\Model\User\Fixtures\AclOperationFixtures
+- Dravencms\Model\User\Fixtures\AclResourceFixtures
+- Dravencms\Model\User\Fixtures\AdminMenuFixtures

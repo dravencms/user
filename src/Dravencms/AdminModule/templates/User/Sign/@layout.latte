@@ -1,0 +1,69 @@
+{var $name = 'DravenCMS'}
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html class="ie9 gt-ie8"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="gt-ie8 gt-ie9 not-ie"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{block title|stripHtml|upper}{$name} - Přihlášení{/block}</title>
+    <meta name="description" content="{$description}" n:ifset="$description">
+    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <meta name="author" content="Adam Schubert <adam.schubert@sg1-game.net>">
+    <link rel="shortcut icon" href="{$basePath}/templates/admin/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    {control css}
+</head>
+
+<body class="theme-default {ifset $bodyClass} {$bodyClass} {/ifset}">
+
+<!-- Page background -->
+<div id="page-signin-bg">
+    <!-- Background overlay -->
+    <div class="overlay">
+        <div n:foreach="$flashes as $flash" class="alert {$flash->type}">{$flash->message|noescape}</div>
+    </div>
+    <!-- Replace this with your bg image -->
+    <img src="{$basePath}/assets/admin/img/sign-background.jpg" alt="{$name}">
+</div>
+<!-- / Page background -->
+
+{include #content}
+
+{control js}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Resize BG
+        var $ph = $('#page-signin-bg'),
+                $img = $ph.find('> img');
+
+        $(window).on('resize', function () {
+            $img.attr('style', '');
+            if ($img.height() < $ph.height()) {
+                $img.css({
+                    height: '100%',
+                    width: 'auto'
+                });
+            }
+        });
+
+        // Show/Hide password reset form on click
+
+        $('#forgot-password-link').click(function () {
+            $('#password-reset-form').fadeIn(400);
+            return false;
+        });
+        $('#password-reset-form .close').click(function () {
+            $('#password-reset-form').fadeOut(400);
+            return false;
+        });
+
+    });
+</script>
+
+</body>
+</html>

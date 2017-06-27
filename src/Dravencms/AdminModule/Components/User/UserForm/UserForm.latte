@@ -1,0 +1,75 @@
+<form n:name="form" class="panel form-horizontal">
+    <ul class="alert alert-danger" n:if="$form->hasErrors()">
+        <li n:foreach="$form->errors as $error">{$error}</li>
+    </ul>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="degree">Titul</label>
+                    <input type="text" n:name="degree" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+        </div><!-- row -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="firstName">Jméno</label>
+                    <input type="text" n:name="firstName" autofocus="autofocus" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="lastName">Příjmení</label>
+                    <input type="text" n:name="lastName" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+        </div><!-- row -->
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="email">Email</label>
+                    <input type="email" n:name="email" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+        </div><!-- row -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="password">Heslo</label>
+                    <input type="password" n:name="password" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+            <div class="col-sm-6">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="passwordAgain">Heslo znovu</label>
+                    <input type="password" n:name="passwordAgain" class="form-control">
+                </div>
+            </div><!-- col-sm-6 -->
+        </div><!-- row -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group no-margin-hr">
+                    <label class="control-label" n:name="groups">Role</label>
+                    <select n:name="groups" class="form-control"></select>
+                </div>
+            </div><!-- col-sm-12 -->
+        </div><!-- row -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" n:name="isActive" class="px"> <span class="lbl">Aktivní</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <input type="submit" n:name="send" class="btn btn-success button" value="Uložit">
+    </div>
+</form>
