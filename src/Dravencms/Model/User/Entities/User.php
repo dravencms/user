@@ -20,8 +20,9 @@ use Nette;
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true)
  * @ORM\Table(name="userUser", uniqueConstraints={@UniqueConstraint(name="user_unique", columns={"email", "namespace"})})
  */
-class User extends Nette\Object implements Nette\Security\IIdentity
+class User implements Nette\Security\IIdentity
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
     use SoftDeleteableEntity;

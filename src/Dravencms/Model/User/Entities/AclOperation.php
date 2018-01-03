@@ -19,8 +19,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="userAclOperation", uniqueConstraints={@UniqueConstraint(name="resorce_name", columns={"aclresource_id", "name"})})
  */
-class AclOperation extends Nette\Object
+class AclOperation
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 

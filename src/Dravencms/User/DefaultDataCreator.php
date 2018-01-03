@@ -9,8 +9,9 @@ use Kdyby\Doctrine\EntityManager;
 use Dravencms\Model\User\Entities\User as UserEntity;
 use Nette;
 
-class DefaultDataCreator extends Nette\Object
+class DefaultDataCreator
 {
+    use Nette\SmartObject;
 
     /** @var EntityManager */
     private $entityManager;

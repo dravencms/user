@@ -14,8 +14,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="userGender")
  */
-class Gender extends Nette\Object
+class Gender
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 

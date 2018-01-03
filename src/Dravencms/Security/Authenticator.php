@@ -12,8 +12,10 @@ use Nette;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IIdentity;
 
-class Authenticator extends Nette\Object implements Nette\Security\IAuthenticator
+class Authenticator implements Nette\Security\IAuthenticator
 {
+    use Nette\SmartObject;
+    
     /** @var PasswordManager */
     private $passwordManager;
 

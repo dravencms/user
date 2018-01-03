@@ -16,8 +16,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="userGroup")
  */
-class Group extends Nette\Object
+class Group
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 

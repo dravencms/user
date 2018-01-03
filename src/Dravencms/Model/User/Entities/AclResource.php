@@ -18,8 +18,9 @@ use Nette;
  * @ORM\Entity
  * @ORM\Table(name="userAclResource")
  */
-class AclResource extends Nette\Object
+class AclResource
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
 

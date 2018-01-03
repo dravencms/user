@@ -17,8 +17,9 @@ use Nette;
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true)
  * @ORM\Table(name="userPasswordReset")
  */
-class PasswordReset extends Nette\Object
+class PasswordReset
 {
+    use Nette\SmartObject;
     use Identifier;
     use TimestampableEntity;
     use SoftDeleteableEntity;

@@ -11,8 +11,10 @@ use Nette;
  * Class PasswordManager
  * @package App\Model\Security
  */
-class PasswordManager extends Nette\Object
+class PasswordManager
 {
+    use Nette\SmartObject;
+
     /**
      * @param $password
      * @return string
