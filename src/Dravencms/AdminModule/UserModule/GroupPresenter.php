@@ -25,7 +25,6 @@ use Dravencms\AdminModule\Components\User\GroupGrid\GroupGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Repository\GroupRepository;
-use Grido\DataSources\Doctrine;
 
 /**
  * Description of RolePresenter
@@ -42,10 +41,7 @@ class GroupPresenter extends SecuredPresenter
 
     /** @var GroupGridFactory @inject */
     public $groupGridFactory;
-
-    /** @var Doctrine */
-    private $userGroupGridDataSource;
-
+    
     /** @var Group|null */
     private $userGroupFormEntity = null;
 
@@ -55,7 +51,6 @@ class GroupPresenter extends SecuredPresenter
     public function actionDefault()
     {
         $this->template->h1 = 'Skupiny';
-        $this->userGroupGridDataSource = new Doctrine($this->userGroupRepository->getGroupQueryBuilder());
     }
 
     /**
@@ -79,11 +74,11 @@ class GroupPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\GroupGrid
+     * @return \Dravencms\AdminModule\Components\User\GroupGrid\GroupGrid
      */
     public function createComponentGridGroup()
     {
-        $control = $this->groupGridFactory->create($this->userGroupGridDataSource);
+        $control = $this->groupGridFactory->create();
         $control->onDelete[] = function(){
             $this->flashMessage('Group has been successfully deleted', 'alert-success');
             $this->redirect('Group:');
@@ -92,7 +87,7 @@ class GroupPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\GroupForm
+     * @return \Dravencms\AdminModule\Components\User\GroupForm\GroupForm
      */
     public function createComponentFormGroup()
     {

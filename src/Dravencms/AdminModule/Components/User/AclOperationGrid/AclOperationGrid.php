@@ -23,6 +23,7 @@ namespace Dravencms\AdminModule\Components\User\AclOperationGrid;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
+use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Kdyby\Doctrine\EntityManager;
@@ -72,51 +73,57 @@ class AclOperationGrid extends BaseControl
 
     /**
      * @param $name
-     * @return \Dravencms\Components\BaseGrid
+     * @return Grid
      */
     public function createComponentGrid($name)
     {
+        /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $grid->setModel($this->aclOperationRepository->getAclOperationQueryBuilder($this->aclResource));
+        $grid->setDataSource($this->aclOperationRepository->getAclOperationQueryBuilder($this->aclResource));
 
         $grid->addColumnText('name', 'Název')
                 ->setSortable()
-                ->setFilterText()
-                ->setSuggestion();
+                ->setFilterText();
 
         $grid->addColumnText('description', 'Popis')
                 ->setSortable()
-                ->setFilterText()
-                ->setSuggestion();
+                ->setFilterText();
 
         if ($this->presenter->isAllowed('user', 'edit'))
         {
-            $grid->addActionHref('editOperation', 'Upravit')
-                    ->setIcon('pencil');
+            $grid->addAction('editOperation', '')
+                    ->setIcon('pencil')
+                    ->setTitle('Upravit')
+                    ->setClass('btn btn-xs btn-primary');
         }
 
         if ($this->presenter->isAllowed('user', 'delete'))
         {
-            $grid->addActionHref('delete', 'Smazat')
-                    ->setCustomHref(function($row){
-                        return $this->link('delete!', $row->getId());
-                    })
-                    ->setIcon('trash-o')
-                    ->setConfirm(function($item)
-                    {
-                        return array("Opravdu chcete smazat %s ?", $item->getName());
-                    });
+            $grid->addAction('delete', '', 'delete!')
+                ->setIcon('trash')
+                ->setTitle('Smazat')
+                ->setClass('btn btn-xs btn-danger ajax')
+                ->setConfirm('Do you really want to delete row %s?', 'name');
 
-
-            $operations = array('delete' => 'Smazat');
-            $grid->setOperation($operations, [$this, 'gridOperationsHandler'])
-                    ->setConfirm('delete', 'Opravu chcete smazat %i oprávění ?');
+            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->setExport();
+        $grid->addExportCsvFiltered('Csv export (filtered)', 'acl_resource_filtered.csv')
+            ->setTitle('Csv export (filtered)');
+
+        $grid->addExportCsv('Csv export', 'acl_resource_all.csv')
+            ->setTitle('Csv export');
 
         return $grid;
+    }
+
+    /**
+     * @param array $ids
+     */
+    public function gridGroupActionDelete(array $ids)
+    {
+        $this->handleDelete($ids);
     }
 
     /**

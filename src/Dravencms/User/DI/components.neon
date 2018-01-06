@@ -4,8 +4,6 @@
 - Dravencms\AdminModule\Components\User\DoResetPasswordForm\DoResetPasswordFormFactory
 - Dravencms\AdminModule\Components\User\UserGrid\UserGridFactory
 - Dravencms\AdminModule\Components\User\UserForm\UserFormFactory
-- Dravencms\AdminModule\Components\User\CompanyForm\CompanyFormFactory
-- Dravencms\AdminModule\Components\User\CompanyGrid\CompanyGridFactory
 - Dravencms\AdminModule\Components\User\GroupForm\GroupFormFactory
 - Dravencms\AdminModule\Components\User\GroupGrid\GroupGridFactory
 - Dravencms\AdminModule\Components\User\AclOperationForm\AclOperationFormFactory

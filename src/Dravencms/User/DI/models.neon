@@ -3,7 +3,9 @@
 
 - Dravencms\User\DefaultDataCreator
 
-- Dravencms\Model\User\Repository\CompanyRepository
+- Dravencms\Model\User\Repository\CompanyRepository # DEPRECATED
+
+
 - Dravencms\Model\User\Repository\GenderRepository
 - Dravencms\Model\User\Repository\UserRepository
 - Dravencms\Model\User\Repository\PasswordResetRepository

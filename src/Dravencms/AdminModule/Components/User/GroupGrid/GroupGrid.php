@@ -22,6 +22,7 @@ namespace Dravencms\AdminModule\Components\User\GroupGrid;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
+use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\GroupRepository;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Utils\Html;
@@ -63,12 +64,13 @@ class GroupGrid extends BaseControl
 
     public function createComponentGrid($name)
     {
+        /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $grid->setModel($this->groupRepository->getGroupQueryBuilder());
+        $grid->setDataSource($this->groupRepository->getGroupQueryBuilder());
 
         $grid->addColumnText('name', 'Název')
-                ->setCustomRender(function($row)
+                ->setRenderer(function($row)
                 {
                     $el = Html::el('span', Strings::upper($row->getName()));
                     $el->class = 'label label-default';
@@ -76,61 +78,48 @@ class GroupGrid extends BaseControl
                     return $el;
                 })
                 ->setSortable()
-                ->setFilterText()
-                ->setSuggestion();
-
+                ->setFilterText();
 
         $grid->addColumnText('description', 'Popis')
                 ->setSortable()
-                ->setFilterText()
-                ->setSuggestion();
+                ->setFilterText();
 
 
         $grid->addColumnBoolean('isRegister', 'Přidána při registraci');
 
         if ($this->presenter->isAllowed('user', 'edit'))
         {
-            $grid->addActionHref('edit', 'Upravit')
-                    ->setIcon('pencil');
+            $grid->addAction('edit', '')
+                    ->setIcon('pencil')
+                    ->setTitle('Upravit')
+                    ->setClass('btn btn-xs btn-primary');
         }
 
-        if ($this->presenter->isAllowed('user', 'delete'))
-        {
-            $grid->addActionHref('delete', 'Smazat', 'delete!')
-                    ->setCustomHref(function($row){
-                        return $this->link('delete!', $row->getId());
-                    })
-                    ->setDisable(function($run){
-                        return count($run->getAclOperations());
-                    })
-                    ->setIcon('trash-o')
-                    ->setConfirm(function($item)
-                    {
-                        return ["Opravdu chcete smazat %s ?", $item->getName()];
-                    });
+        if ($this->presenter->isAllowed('user', 'delete')) {
+            $grid->addAction('delete', '', 'delete!')
+                ->setIcon('trash')
+                ->setTitle('Smazat')
+                ->setClass('btn btn-xs btn-danger ajax')
+                ->setConfirm('Do you really want to delete row %s?', 'name');
 
-
-            $operations = ['delete' => 'Smazat'];
-            $grid->setOperation($operations, [$this, 'gridOperationsHandler'])
-                    ->setConfirm('delete', 'Opravu chcete smazat %i ACL skupin ?');
+            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->setExport();
+        $grid->addExportCsvFiltered('Csv export (filtered)', 'groups_filtered.csv')
+            ->setTitle('Csv export (filtered)');
 
+        $grid->addExportCsv('Csv export', 'groups_all.csv')
+            ->setTitle('Csv export');
+        
         return $grid;
     }
 
     /**
-     * @param $action
-     * @param $ids
+     * @param array $ids
      */
-    public function gridOperationsHandler($action, $ids)
+    public function gridGroupActionDelete(array $ids)
     {
-        switch ($action) {
-            case 'delete':
-                $this->handleDelete($ids);
-                break;
-        }
+        $this->handleDelete($ids);
     }
 
     /**

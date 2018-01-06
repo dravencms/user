@@ -9,6 +9,7 @@ namespace Dravencms\AdminModule\Components\User\UserGrid;
 
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
+use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
 use Nette\Utils\Html;
@@ -56,99 +57,73 @@ class UserGrid extends BaseControl
 
     /**
      * @param $name
-     * @return \Grido\Grid
+     * @return Grid
      */
     protected function createComponentGrid($name)
     {
+        /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
 
         $this->entityManager->getFilters()->enable('soft-deleteable');
-        $grid->setModel($this->userRepository->getUsersQueryBuilder($this->namespace));
+        $grid->setDataSource($this->userRepository->getUsersQueryBuilder($this->namespace));
 
         $grid->addColumnText('namespace', 'Namespace')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
+            ->setFilterText();
 
         $grid->addColumnText('degree', 'Titul')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
+            ->setFilterText();
 
         $grid->addColumnText('firstName', 'Jméno')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
+            ->setFilterText();
 
         $grid->addColumnText('lastName', 'Příjmení')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
+            ->setFilterText();
 
         $grid->addColumnText('email', 'Email')
             ->setSortable()
-            ->setFilterText()
-            ->setSuggestion();
-
-        /**
-         * @param User $row
-         * @return mixed
-         */
-        $groupsCol = function ($row) {
-            $roles = [];
-            foreach ($row->getRoles() AS $usersGroup) {
-                $el = Html::el('span', mb_strtoupper($usersGroup->getName()));
-                $el->class = 'label label-default';
-                $el->style = 'background: #'.$usersGroup->getColor().';';
-                $roles[] = $el;
-            }
-            return implode(', ', $roles);
-        };
+            ->setFilterText();
 
         $grid->addColumnText('groups', 'Skupiny')
-            ->setColumn($groupsCol)
-            ->setCustomRender($groupsCol);
+            ->setTemplate(__DIR__.'/groups.latte');
 
         $grid->addColumnBoolean('isActive', 'Active');
 
         if ($this->presenter->isAllowed('user', 'edit')) {
-            $grid->addActionHref('edit', 'Upravit')
-                ->setIcon('pencil');
+            $grid->addAction('edit', '')
+                ->setTitle('Upravit')
+                ->setIcon('pencil')
+                ->setClass('btn btn-xs btn-primary');
         }
 
         if ($this->presenter->isAllowed('user', 'delete')) {
-            $grid->addActionHref('delete', 'Smazat', 'delete!')
-                ->setCustomHref(function($row){
-                    return $this->link('delete!', $row->getId());
-                })
-                ->setIcon('trash-o')
-                ->setConfirm(function ($item) {
-                    return ["Opravdu chcete smazat %s ?", $item->getFirstName() . ' ' . $item->getLastName()];
-                });
+            $grid->addAction('delete', '', 'delete!')
+                ->setIcon('trash')
+                ->setTitle('Smazat')
+                ->setClass('btn btn-xs btn-danger ajax')
+                ->setConfirm('Do you really want to delete row %s?', 'email');
 
-
-            $operations = ['delete' => 'Smazat'];
-            $grid->setOperation($operations, [$this, 'gridUsersOperationsHandler'])
-                ->setConfirm('delete', 'Opravu chcete smazat %i uživatelů ?');
+            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->setExport();
+        $grid->addExportCsvFiltered('Csv export (filtered)', 'users_filtered.csv')
+            ->setTitle('Csv export (filtered)');
+
+        $grid->addExportCsv('Csv export', 'users_all.csv')
+            ->setTitle('Csv export');
 
         return $grid;
     }
 
-
     /**
-     * @param $action
-     * @param $ids
+     * @param array $ids
      */
-    public function gridUsersOperationsHandler($action, $ids)
+    public function gridGroupActionDelete(array $ids)
     {
-        switch ($action) {
-            case 'delete':
-                $this->handleDelete($ids);
-                break;
-        }
+        $this->handleDelete($ids);
     }
 
     /**

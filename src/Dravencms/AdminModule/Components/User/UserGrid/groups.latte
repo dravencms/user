@@ -1,0 +1,3 @@
+{foreach $item->getRoles() AS $group}
+    <span class="label label-default" style="background: #{$group->getColor()};">{$group->getName()|upper}</span> {if !$iterator->isLast()}, {/if}
+{/foreach}
