@@ -40,6 +40,11 @@
         "extensions": {
           "user": "Dravencms\\User\\DI\\UserExtension",
           "doctrine2identity": "Majkl578\\NetteAddons\\Doctrine2Identity\\DI\\IdentityExtension"
+        },
+        "doctrine":{
+          "metadata": {
+            "Dravencms\\Model\\User": "%appDir%/../vendor/dravencms/user/src/Dravencms/Model/User"
+          }
         }
       },
       "scripts": {
