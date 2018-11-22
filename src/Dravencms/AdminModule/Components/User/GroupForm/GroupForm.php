@@ -113,7 +113,8 @@ class GroupForm extends BaseControl
             ->setRequired('Prosím zadejte popis.');
 
         $form->addText('color')
-            ->setRequired('Prosím zadejte barvu.');
+            ->setRequired('Prosím zadejte barvu.')
+            ->addRule(Form::PATTERN, 'Barva musi byt zadana v HEX formatu', '^\d{6}$');
 
         $aclOperationOptions = [];
         foreach ($this->aclResourceRepository->getAll() AS $aclResource)
