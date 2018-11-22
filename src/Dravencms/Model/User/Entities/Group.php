@@ -94,7 +94,7 @@ class Group
     {
         if (!is_bool($register))
         {
-            throw new Nette\InvalidArgumentException('Invalid $register value');
+            throw new \InvalidArgumentException('Invalid $register value');
         }
         $this->isRegister = $register;
     }
@@ -240,7 +240,7 @@ class Group
     {
         if (strlen($color) != 6)
         {
-            throw new \Exception('$color have wrong format');
+            throw new \InvalidArgumentException('$color have wrong format');
         }
         $this->color = $color;
     }
