@@ -1,0 +1,3 @@
+extensions:
+    user: Dravencms\User\DI\UserExtension
+    doctrine2identity: Majkl578\NetteAddons\Doctrine2Identity\DI\IdentityExtension

@@ -16,9 +16,9 @@
   ],
   "require": {
     "majkl578/nette-identity-doctrine": "^2.2",
-    "dravencms/locale": "^v1.0",
-    "dravencms/templated-email": "^v1.0",
-    "dravencms/recaptcha": "^v1.0"
+    "dravencms/locale": ">=v1.0.6",
+    "dravencms/templated-email": ">=v1.0",
+    "dravencms/recaptcha": ">=v2.0"
   },
   "replace": {
     "dravencms/user-light": "*"
@@ -36,16 +36,7 @@
   },
   "extra": {
     "dravencms": {
-      "configuration": {
-        "extensions": {
-          "user": "Dravencms\\User\\DI\\UserExtension",
-          "doctrine2identity": "Majkl578\\NetteAddons\\Doctrine2Identity\\DI\\IdentityExtension"
-        }
-      },
-      "scripts": {
-        "post-install": "Dravencms\\User\\Script\\PostInstall",
-        "pre-uninstall": "Dravencms\\User\\Script\\PreUninstall"
-      }
+      "configuration": "dravencms.config.neon"
     }
   }
 }
