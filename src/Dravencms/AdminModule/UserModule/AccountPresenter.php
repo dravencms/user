@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 namespace Dravencms\AdminModule\UserModule;
 
 /*
@@ -19,7 +19,10 @@ namespace Dravencms\AdminModule\UserModule;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
+use Dravencms\AdminModule\Components\User\AccountForm\AccountForm;
 use Dravencms\AdminModule\Components\User\AccountForm\AccountFormFactory;
+use Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordForm;
 use Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordFormFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Model\User\Repository\UserRepository;
@@ -40,7 +43,7 @@ class AccountPresenter extends SecuredPresenter
     /** @var AccountPasswordFormFactory @inject */
     public $accountPasswordFormFactory;
 
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $user = $this->getUserEntity();
         $this->template->h1 = 'Uživatel „' . $user->getFirstName() . ' ' . $user->getLastName() . '“';
@@ -48,9 +51,9 @@ class AccountPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AccountForm
+     * @return \Dravencms\AdminModule\Components\User\AccountForm\AccountForm
      */
-    public function createComponentFormAccount()
+    public function createComponentFormAccount(): AccountForm
     {
         $control = $this->accountFormFactory->create($this->getUserEntity());
         $control->onSuccess[] = function()
@@ -62,9 +65,9 @@ class AccountPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AccountPasswordForm
+     * @return \Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordForm
      */
-    public function createComponentFormAccountPassword()
+    public function createComponentFormAccountPassword(): AccountPasswordForm
     {
         $control = $this->accountPasswordFormFactory->create($this->getUserEntity());
         $control->onSuccess[] = function()

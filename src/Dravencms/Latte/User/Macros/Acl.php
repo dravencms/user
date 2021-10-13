@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -15,17 +15,23 @@ class Acl extends MacroSet
 {
     /**
      * @param Compiler $compiler
-     * @return static
+     * @return Acl
      */
-    static function install(Compiler $compiler)
+    static function install(Compiler $compiler): Acl
     {
         $me = new static($compiler);
 
-        $me->addMacro('isAllowed', array($me, 'macroIsAllowed'), array($me, 'macroEndIsAllowed'));
+        $me->addMacro('isAllowed', [$me, 'macroIsAllowed'], [$me, 'macroEndIsAllowed']);
         return $me;
     }
 
-    public function macroIsAllowed(MacroNode $node, PhpWriter $writer)
+    /**
+     * @param MacroNode $node
+     * @param PhpWriter $writer
+     * @return string
+     * @throws CompileException
+     */
+    public function macroIsAllowed(MacroNode $node, PhpWriter $writer): string
     {
         if ($node->data->capture = ($node->args === '')) {
             return 'ob_start()';
@@ -36,7 +42,13 @@ class Acl extends MacroSet
         return $writer->write('if ($_presenter->isAllowed(%node.args)) {');
     }
 
-    public function macroEndIsAllowed(MacroNode $node, PhpWriter $writer)
+    /**
+     * @param MacroNode $node
+     * @param PhpWriter $writer
+     * @return string
+     * @throws CompileException
+     */
+    public function macroEndIsAllowed(MacroNode $node, PhpWriter $writer): string
     {
         if ($node->data->capture) {
             if ($node->args === '') {

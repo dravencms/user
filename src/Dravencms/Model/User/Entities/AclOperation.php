@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -6,11 +6,10 @@
 namespace Dravencms\Model\User\Entities;
 
 
-use Dravencms\Model\Admin\Entities\Menu;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Nette;
 
@@ -52,18 +51,12 @@ class AclOperation
     private $aclResource;
 
     /**
-     * @var ArrayCollection|Menu[]
-     * @ORM\OneToMany(targetEntity="Dravencms\Model\Admin\Entities\Menu", mappedBy="aclOperation",cascade={"persist"})
-     */
-    private $adminMenus;
-
-    /**
      * AclOperation constructor.
      * @param AclResource $aclResource
      * @param $name
      * @param $description
      */
-    public function __construct(AclResource $aclResource, $name, $description)
+    public function __construct(AclResource $aclResource, string $name, string $description)
     {
         $this->aclResource = $aclResource;
         $this->setName($name);
@@ -75,7 +68,7 @@ class AclOperation
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $name = Nette\Utils\Strings::trim($name);
         if (Nette\Utils\Strings::length($name) === 0)
@@ -88,7 +81,7 @@ class AclOperation
     /**
      * @return AclResource
      */
-    public function getAclResource()
+    public function getAclResource(): AclResource
     {
         return $this->aclResource;
     }
@@ -96,7 +89,7 @@ class AclOperation
     /**
      * @param Group $group
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): void
     {
         if ($this->groups->contains($group))
         {
@@ -109,7 +102,7 @@ class AclOperation
     /**
      * @param Group $group
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): void
     {
         if (!$this->groups->contains($group))
         {
@@ -122,7 +115,7 @@ class AclOperation
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -130,12 +123,12 @@ class AclOperation
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -146,13 +139,5 @@ class AclOperation
     public function getGroups()
     {
         return $this->groups;
-    }
-
-    /**
-     * @return \Dravencms\Model\Admin\Entities\Menu[]|ArrayCollection
-     */
-    public function getAdminMenus()
-    {
-        return $this->adminMenus;
     }
 }

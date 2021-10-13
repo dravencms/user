@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -14,9 +14,9 @@ class User
 {
     /**
      * @param $user
-     * @return mixed
+     * @return string
      */
-    public function formatUserName(\Dravencms\Model\User\Entities\User $user)
+    public function formatUserName(\Dravencms\Model\User\Entities\User $user): string
     {
         $parts = [];
         if ($user->getDegree()) {

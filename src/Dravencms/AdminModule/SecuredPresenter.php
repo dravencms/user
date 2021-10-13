@@ -1,14 +1,14 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule;
 
+use Dravencms\BasePresenter;
 use Dravencms\User\DefaultDataCreator;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Entities\User;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Http\IResponse;
 use Nette\Security\Permission;
-use Nette\Reflection\Method;
 
 
 /**
@@ -34,7 +34,7 @@ abstract class SecuredPresenter extends BasePresenter
      * @throws \Exception
      * @return void
      */
-    public function checkRequirements($element)
+    public function checkRequirements($element): void
     {
         parent::checkRequirements($element);
 
@@ -56,17 +56,12 @@ abstract class SecuredPresenter extends BasePresenter
 
         if ($element->hasAnnotation('isAllowed'))
         {
-            $methodReflection = Method::from($element->class, $element->name);
-
-            if ($methodReflection->hasAnnotation('isAllowed'))
-            {
-                $data = $methodReflection->getAnnotation('isAllowed');
-                $this->checkPermission($data[0], $data[1]);
-            }
+            list($resource, $operation) = $element->getAnnotation('isAllowed');
+            $this->checkPermission($resource, $operation);
         }
     }
 
-    private function assignUserInfo()
+    private function assignUserInfo(): void
     {
         if ($this->assigned) return;
 
@@ -99,12 +94,12 @@ abstract class SecuredPresenter extends BasePresenter
     }
 
     /**
-     * @param $resource
-     * @param $operation
-     * @param null $role
+     * @param string $resource
+     * @param string $operation
+     * @param string|null $role
      * @return bool
      */
-    public function isAllowed($resource, $operation, $role = null)
+    public function isAllowed(string $resource, string $operation, string $role = null): bool
     {
         if (is_null($role))
         {
@@ -130,7 +125,7 @@ abstract class SecuredPresenter extends BasePresenter
      * @param string $operation
      * @throws \Nette\Application\BadRequestException
      */
-    public function checkPermission($resource, $operation)
+    public function checkPermission(string $resource, string $operation): void
     {
         if (!$this->isAllowed($resource, $operation))
         {

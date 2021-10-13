@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -21,13 +21,14 @@
 namespace Dravencms\AdminModule\Components\User\GroupForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Repository\GroupRepository;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Model\User\Repository\AclResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Form;
 
 /**
@@ -74,8 +75,6 @@ class GroupForm extends BaseControl
         AclResourceRepository $aclResourceRepository,
         Group $group = null
     ) {
-        parent::__construct();
-
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;
         $this->groupRepository = $groupRepository;
@@ -102,7 +101,10 @@ class GroupForm extends BaseControl
         }
     }
 
-    protected function createComponentForm()
+    /**
+     * @return \Dravencms\Components\BaseForm\BaseForm
+     */
+    protected function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -139,7 +141,11 @@ class GroupForm extends BaseControl
         return $form;
     }
 
-    public function editFormValidate(Form $form)
+    /**
+     * @param Form $form
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function editFormValidate(Form $form): void
     {
         $values = $form->getValues();
         if (!$this->groupRepository->isNameFree($values->name, $this->group)) {
@@ -151,7 +157,11 @@ class GroupForm extends BaseControl
         }
     }
 
-    public function editFormSucceeded(Form $form)
+    /**
+     * @param Form $form
+     * @throws \Exception
+     */
+    public function editFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -163,7 +173,11 @@ class GroupForm extends BaseControl
             $group->setIsRegister($values->isRegister);
         } else {
             $group = new Group(
-                $values->name, $values->description, $values->color, $values->isRegister);
+                $values->name,
+                $values->description,
+                $values->color,
+                $values->isRegister
+            );
         }
 
 
@@ -179,7 +193,7 @@ class GroupForm extends BaseControl
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/GroupForm.latte');

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -8,8 +8,7 @@ namespace Dravencms\Model\User\Repository;
 
 use Dravencms\Model\User\Entities\PasswordReset;
 use Dravencms\Model\User\Entities\User;
-use Kdyby\Doctrine\EntityManager;
-use Nette;
+use Dravencms\Database\EntityManager;
 
 /**
  * Class PasswordResetRepository
@@ -17,7 +16,7 @@ use Nette;
  */
 class PasswordResetRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|PasswordReset */
     private $passwordResetRepository;
 
     /** @var EntityManager */
@@ -37,7 +36,7 @@ class PasswordResetRepository
      * @param User $user
      * @throws \Exception
      */
-    public function cleanPreviousPasswordResetsForUser(User $user)
+    public function cleanPreviousPasswordResetsForUser(User $user): void
     {
         foreach($this->passwordResetRepository->findBy(['user' => $user]) AS $passwordReset)
         {
@@ -47,10 +46,10 @@ class PasswordResetRepository
     }
 
     /**
-     * @param $hash
-     * @return mixed|null|PasswordReset
+     * @param string $hash
+     * @return PasswordReset|null
      */
-    public function getActiveByHash($hash)
+    public function getActiveByHash(string $hash): ?PasswordReset
     {
         return $this->passwordResetRepository->findOneBy(['hash' => $hash, 'isUsed' => false]);
     }

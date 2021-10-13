@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\Model\User\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Dravencms\Model\Location\Entities\StreetNumber;
 use Nette;
 
@@ -96,7 +96,7 @@ class Company
      * @param User $user
      * @param StreetNumber $streetNumber
      */
-    public function __construct($companyIdentifier, $vatIdentifier, $name, $email, $phone, $www, StreetNumber $streetNumber = null, $description = null, User $user = null)
+    public function __construct(string $companyIdentifier, string $vatIdentifier, string $name, string $email, string $phone, string $www, StreetNumber $streetNumber = null, $description = null, User $user = null)
     {
         $this->companyIdentifier = $companyIdentifier;
         $this->vatIdentifier = $vatIdentifier;
@@ -113,7 +113,7 @@ class Company
     /**
      * @param string $companyIdentifier
      */
-    public function setCompanyIdentifier($companyIdentifier)
+    public function setCompanyIdentifier(string $companyIdentifier): void
     {
         $this->companyIdentifier = $companyIdentifier;
     }
@@ -121,7 +121,7 @@ class Company
     /**
      * @param string $vatIdentifier
      */
-    public function setVatIdentifier($vatIdentifier)
+    public function setVatIdentifier(string $vatIdentifier): void
     {
         $this->vatIdentifier = $vatIdentifier;
     }
@@ -129,7 +129,7 @@ class Company
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -137,7 +137,7 @@ class Company
     /**
      * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
@@ -145,7 +145,7 @@ class Company
     /**
      * @param string $phone
      */
-    public function setPhone($phone)
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }
@@ -153,7 +153,7 @@ class Company
     /**
      * @param string $www
      */
-    public function setWww($www)
+    public function setWww(string $www): void
     {
         $this->www = $www;
     }
@@ -161,7 +161,7 @@ class Company
     /**
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -169,7 +169,7 @@ class Company
     /**
      * @param User $user
      */
-    public function setUser($user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -177,7 +177,7 @@ class Company
     /**
      * @param StreetNumber $streetNumber
      */
-    public function setStreetNumber($streetNumber)
+    public function setStreetNumber(StreetNumber $streetNumber): void
     {
         $this->streetNumber = $streetNumber;
     }
@@ -185,7 +185,7 @@ class Company
     /**
      * @return string
      */
-    public function getCompanyIdentifier()
+    public function getCompanyIdentifier(): string
     {
         return $this->companyIdentifier;
     }
@@ -193,7 +193,7 @@ class Company
     /**
      * @return string
      */
-    public function getVatIdentifier()
+    public function getVatIdentifier(): string
     {
         return $this->vatIdentifier;
     }
@@ -201,7 +201,7 @@ class Company
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -209,7 +209,7 @@ class Company
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -217,7 +217,7 @@ class Company
     /**
      * @return string
      */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -225,7 +225,7 @@ class Company
     /**
      * @return string
      */
-    public function getWww()
+    public function getWww(): string
     {
         return $this->www;
     }
@@ -233,7 +233,7 @@ class Company
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -241,7 +241,7 @@ class Company
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -249,7 +249,7 @@ class Company
     /**
      * @return StreetNumber
      */
-    public function getStreetNumber()
+    public function getStreetNumber(): StreetNumber
     {
         return $this->streetNumber;
     }
@@ -257,7 +257,7 @@ class Company
     /**
      * @return User[]|ArrayCollection
      */
-    public function getUsers()
+    public function getUsers(): ArrayCollection
     {
         return $this->users;
     }

@@ -15,10 +15,14 @@
     }
   ],
   "require": {
-    "majkl578/nette-identity-doctrine": "^v2.3-rc1",
-    "dravencms/locale": ">=v1.0.6",
+    "dravencms/application": ">=0.0.2",
+    "dravencms/database": ">=0.0.3",
+    "dravencms/base-form": ">=0.0.1",
+    "dravencms/base-grid": ">=0.0.1",
     "dravencms/templated-email": ">=v1.0",
-    "dravencms/recaptcha": ">=v2.0"
+    "dravencms/recaptcha": ">=v2.0",
+    "dravencms/locale": ">=v1.1.1",
+    "darkling/nette-identity-doctrine": "^v1.0"
   },
   "replace": {
     "dravencms/user-light": "*"

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -20,11 +20,12 @@
 
 namespace Dravencms\AdminModule\Components\User\AclOperationForm;
 
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Model\User\Entities\AclOperation;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Repository\AclOperationRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -56,8 +57,6 @@ class AclOperationForm extends Control
 
     public function __construct(AclResource $aclResource, BaseFormFactory $baseFormFactory, EntityManager $entityManager, AclOperationRepository $aclOperationRepository, AclOperation $aclOperation = null)
     {
-        parent::__construct();
-
         $this->aclResource = $aclResource;
 
         $this->baseFormFactory = $baseFormFactory;
@@ -77,7 +76,10 @@ class AclOperationForm extends Control
         }
     }
 
-    protected function createComponentForm()
+    /**
+     * @return \Dravencms\Components\BaseForm\BaseForm
+     */
+    protected function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -95,7 +97,7 @@ class AclOperationForm extends Control
         return $form;
     }
 
-    public function editFormValidate(Form $form)
+    public function editFormValidate(Form $form): void
     {
         $values = $form->getValues();
         if (!$this->aclOperationRepository->isNameFree($values->name, $this->aclResource, $this->aclOperation)) {
@@ -107,7 +109,7 @@ class AclOperationForm extends Control
         }
     }
 
-    public function editFormSucceeded(Form $form)
+    public function editFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -130,7 +132,7 @@ class AclOperationForm extends Control
         $this->onSuccess($this->aclResource);
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/AclOperationForm.latte');

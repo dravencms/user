@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
 
 namespace Dravencms\User;
 
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Dravencms\Model\User\Entities\User as UserEntity;
 use Nette;
 

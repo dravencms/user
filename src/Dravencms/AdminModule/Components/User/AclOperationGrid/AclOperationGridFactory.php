@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -27,5 +27,5 @@ interface AclOperationGridFactory
      * @param AclResource $aclResource
      * @return AclOperationGrid
      */
-    public function create(AclResource $aclResource);
+    public function create(AclResource $aclResource): AclOperationGrid;
 }

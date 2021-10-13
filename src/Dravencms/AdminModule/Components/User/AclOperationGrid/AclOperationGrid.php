@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -26,7 +26,7 @@ use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Model\User\Repository\AclOperationRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 /**
  * Description of AclOperationGrid
@@ -62,8 +62,6 @@ class AclOperationGrid extends BaseControl
      */
     public function __construct(AclResource $aclResource, AclOperationRepository $aclOperationRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
     {
-        parent::__construct();
-
         $this->aclResource = $aclResource;
         $this->baseGridFactory = $baseGridFactory;
         $this->aclOperationRepository = $aclOperationRepository;
@@ -72,10 +70,11 @@ class AclOperationGrid extends BaseControl
 
 
     /**
-     * @param $name
+     * @param string $name
      * @return Grid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentGrid($name)
+    public function createComponentGrid(string $name): Grid
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
@@ -120,8 +119,9 @@ class AclOperationGrid extends BaseControl
 
     /**
      * @param array $ids
+     * @throws \Exception
      */
-    public function gridGroupActionDelete(array $ids)
+    public function gridGroupActionDelete(array $ids): void
     {
         $this->handleDelete($ids);
     }
@@ -130,7 +130,7 @@ class AclOperationGrid extends BaseControl
      * @param $id
      * @throws \Exception
      */
-    public function handleDelete($id)
+    public function handleDelete($id): void
     {
         $aclOperations = $this->aclOperationRepository->getById($id);
         foreach ($aclOperations AS $aclOperation)
@@ -143,7 +143,7 @@ class AclOperationGrid extends BaseControl
         $this->onDelete($this->aclResource);
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/AclOperationGrid.latte');

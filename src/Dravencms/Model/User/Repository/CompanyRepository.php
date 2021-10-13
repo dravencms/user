@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -7,13 +7,12 @@ namespace Dravencms\Model\User\Repository;
 
 
 use Dravencms\Model\User\Entities\Company;
-use Dravencms\Model\User\Entities\Country;
-use Kdyby\Doctrine\EntityManager;
-use Nette;
+use Dravencms\Model\Location\Entities\Country;
+use Dravencms\Database\EntityManager;
 
 class CompanyRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|Company */
     private $companyRepository;
 
     /** @var EntityManager */
@@ -33,7 +32,7 @@ class CompanyRepository
      * @param $id
      * @return null|Company
      */
-    public function getOneById($id)
+    public function getOneById(int $id): ?Company
     {
         return $this->companyRepository->find($id);
     }
@@ -42,7 +41,7 @@ class CompanyRepository
      * @param $name
      * @return null|Company
      */
-    public function getOneByName($name)
+    public function getOneByName(string $name): ?Company
     {
         return $this->companyRepository->findOneBy(['name' => $name]);
     }
@@ -67,13 +66,12 @@ class CompanyRepository
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param Country $country
-     * @param Company $ignoreCompany
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param Company|null $ignoreCompany
+     * @return bool
      */
-    public function isCompanyNameFree($name, Country $country, Company $ignoreCompany = null)
+    public function isCompanyNameFree(string $name, Country $country, Company $ignoreCompany = null): bool
     {
         $qb = $this->companyRepository->createQueryBuilder('c')
             ->select('c')
@@ -98,13 +96,12 @@ class CompanyRepository
     }
 
     /**
-     * @param $companyIdentifier
+     * @param string $companyIdentifier
      * @param Country $country
-     * @param Company $ignoreCompany
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param Company|null $ignoreCompany
+     * @return bool
      */
-    public function isCompanyIdentifierNameFree($companyIdentifier, Country $country, Company $ignoreCompany = null)
+    public function isCompanyIdentifierNameFree(string $companyIdentifier, Country $country, Company $ignoreCompany = null): bool
     {
         $qb = $this->companyRepository->createQueryBuilder('c')
             ->select('c')

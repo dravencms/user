@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -16,20 +16,20 @@ class PasswordManager
     use Nette\SmartObject;
 
     /**
-     * @param $password
+     * @param string $password
      * @return string
      */
-    public function hash($password)
+    public function hash(string $password)
     {
         return Nette\Security\Passwords::hash($password);
     }
 
     /**
-     * @param $password
-     * @param $hash
+     * @param string $password
+     * @param string $hash
      * @return bool
      */
-    public function verify($password, $hash)
+    public function verify(string $password, string $hash)
     {
         return Nette\Security\Passwords::verify($password, $hash);
     }

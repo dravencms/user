@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -24,7 +24,7 @@ use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\GroupRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
@@ -55,14 +55,17 @@ class GroupGrid extends BaseControl
      */
     public function __construct(GroupRepository $groupRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
     {
-        parent::__construct();
-
         $this->baseGridFactory = $baseGridFactory;
         $this->groupRepository = $groupRepository;
         $this->entityManager = $entityManager;
     }
 
-    public function createComponentGrid($name)
+    /**
+     * @param string $name
+     * @return Grid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
+    public function createComponentGrid(string $name): Grid
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
@@ -117,7 +120,7 @@ class GroupGrid extends BaseControl
     /**
      * @param array $ids
      */
-    public function gridGroupActionDelete(array $ids)
+    public function gridGroupActionDelete(array $ids): void
     {
         $this->handleDelete($ids);
     }
@@ -126,7 +129,7 @@ class GroupGrid extends BaseControl
      * @param integer|array $id
      * @isAllowed(user,delete)
      */
-    public function handleDelete($id)
+    public function handleDelete($id): void
     {
         $groups = $this->groupRepository->getById($id);
         foreach ($groups AS $group) {
@@ -139,7 +142,7 @@ class GroupGrid extends BaseControl
     }
 
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/GroupGrid.latte');

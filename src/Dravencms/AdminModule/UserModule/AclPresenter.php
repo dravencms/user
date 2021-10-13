@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 namespace Dravencms\AdminModule\UserModule;
 
 /*
@@ -19,9 +19,14 @@ namespace Dravencms\AdminModule\UserModule;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+
+use Dravencms\AdminModule\Components\User\AclOperationForm\AclOperationForm;
 use Dravencms\AdminModule\Components\User\AclOperationForm\AclOperationFormFactory;
+use Dravencms\AdminModule\Components\User\AclOperationGrid\AclOperationGrid;
 use Dravencms\AdminModule\Components\User\AclOperationGrid\AclOperationGridFactory;
+use Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceForm;
 use Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceFormFactory;
+use Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGrid;
 use Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Model\User\Entities\AclOperation;
@@ -66,7 +71,7 @@ class AclPresenter extends SecuredPresenter
     /**
      * @isAllowed(user,edit)
      */
-    public function actionDefault()
+    public function actionDefault(): void
     {
         $this->template->h1 = 'ACL';
     }
@@ -75,7 +80,7 @@ class AclPresenter extends SecuredPresenter
      * @param integer|null $id
      * @isAllowed(user,edit)
      */
-    public function actionEdit($id = null)
+    public function actionEdit(int $id = null): void
     {
         if ($id) {
             $aclResource = $this->aclResourceRepository->getOneById($id);
@@ -95,7 +100,7 @@ class AclPresenter extends SecuredPresenter
      * @param integer|null $id
      * @isAllowed(user,edit)
      */
-    public function actionEditOperation($id = null)
+    public function actionEditOperation(int $id = null): void
     {
         $aclResource = $this->aclResourceRepository->getOneById($this->aclResourceId);
         if (!$aclResource)
@@ -123,7 +128,7 @@ class AclPresenter extends SecuredPresenter
      * @param integer|null $id
      * @isAllowed(user,edit)
      */
-    public function actionOperation($id)
+    public function actionOperation(int $id): void
     {
 
         $aclResource = $this->aclResourceRepository->getOneById($id);
@@ -139,9 +144,9 @@ class AclPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AclResourceGrid
+     * @return \Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGrid
      */
-    public function createComponentGridResource()
+    public function createComponentGridResource(): AclResourceGrid
     {
         $control = $this->aclResourceGridFactory->create();
         $control->onDelete[] = function()
@@ -153,9 +158,9 @@ class AclPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AclResourceForm
+     * @return \Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceForm
      */
-    public function createComponentFormResource()
+    public function createComponentFormResource(): AclResourceForm
     {
         $control = $this->aclResourceEditFormFactory->create($this->aclResource);
         $control->onSuccess[] = function()
@@ -167,9 +172,9 @@ class AclPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AclOperationGrid
+     * @return \Dravencms\AdminModule\Components\User\AclOperationGrid\AclOperationGrid
      */
-    public function createComponentGridOperation()
+    public function createComponentGridOperation(): AclOperationGrid
     {
         $control = $this->aclOperationGridFactory->create($this->aclResource);
         $control->onDelete[] = function($aclResource)
@@ -181,9 +186,9 @@ class AclPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\AclOperationForm
+     * @return \Dravencms\AdminModule\Components\User\AclOperationForm\AclOperationForm
      */
-    public function createComponentFormOperation()
+    public function createComponentFormOperation(): AclOperationForm
     {
         $control = $this->aclOperationEditFormFactory->create($this->aclResource, $this->aclOperation);
         $control->onSuccess[] = function($aclResource)

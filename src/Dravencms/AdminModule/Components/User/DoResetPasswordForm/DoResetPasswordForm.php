@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -7,11 +7,12 @@
 namespace Dravencms\AdminModule\Components\User\DoResetPasswordForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\PasswordReset;
 use Dravencms\Model\User\Repository\UserRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 
@@ -54,7 +55,6 @@ class DoResetPasswordForm extends BaseControl
         Application $application,
         PasswordManager $passwordManager
     ) {
-        parent::__construct();
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
@@ -65,9 +65,9 @@ class DoResetPasswordForm extends BaseControl
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm
+     * @return \Dravencms\Components\BaseForm\BaseForm
      */
-    public function createComponentForm()
+    public function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -88,7 +88,7 @@ class DoResetPasswordForm extends BaseControl
     /**
      * @param Form $form
      */
-    public function onValidateForm(Form $form)
+    public function onValidateForm(Form $form): void
     {
     }
 
@@ -96,7 +96,7 @@ class DoResetPasswordForm extends BaseControl
      * @param Form $form
      * @throws \Exception
      */
-    public function onSuccessForm(Form $form)
+    public function onSuccessForm(Form $form): void
     {
         $values = $form->getValues();
 
@@ -115,7 +115,7 @@ class DoResetPasswordForm extends BaseControl
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/DoResetPasswordForm.latte');

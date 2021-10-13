@@ -1,15 +1,16 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule\Components\User\UserForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\GroupRepository;
 use Dravencms\Model\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 
@@ -60,7 +61,6 @@ class UserForm extends BaseControl
         GroupRepository $groupRepository,
         User $user = null
     ) {
-        parent::__construct();
         $this->user = $user;
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $streetRepository;
@@ -95,7 +95,10 @@ class UserForm extends BaseControl
         }
     }
 
-    public function createComponentForm()
+    /**
+     * @return \Dravencms\Components\BaseForm\BaseForm
+     */
+    public function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -135,7 +138,7 @@ class UserForm extends BaseControl
     /**
      * @param Form $form
      */
-    public function onValidateForm(Form $form)
+    public function onValidateForm(Form $form): void
     {
         $values = $form->getValues();
 
@@ -153,7 +156,7 @@ class UserForm extends BaseControl
     /**
      * @param Form $form
      */
-    public function onSuccessForm(Form $form)
+    public function onSuccessForm(Form $form): void
     {
         $values = $form->getValues();
 
@@ -190,7 +193,7 @@ class UserForm extends BaseControl
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/UserForm.latte');

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule\Components\User\UserForm;
 
@@ -13,5 +13,5 @@ interface UserFormFactory
      * @param User|null $user
      * @return UserForm
      */
-    public function create(User $user = null);
+    public function create(User $user = null): UserForm;
 }

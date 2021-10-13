@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -8,7 +8,7 @@ namespace Dravencms\Model\User\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
@@ -71,12 +71,13 @@ class Group
 
     /**
      * Group constructor.
-     * @param $name
-     * @param $description
-     * @param $color
+     * @param string $name
+     * @param string $description
+     * @param string $color
      * @param bool $isRegister
+     * @throws \Exception
      */
-    public function __construct($name, $description, $color, $isRegister = false)
+    public function __construct(string $name, string $description, string $color, bool $isRegister = false)
     {
         $this->setName($name);
         $this->setDescription($description);
@@ -90,7 +91,7 @@ class Group
     /**
      * @param bool $register
      */
-    public function setIsRegister($register)
+    public function setIsRegister(bool $register): void
     {
         if (!is_bool($register))
         {
@@ -102,7 +103,7 @@ class Group
     /**
      * @param User $user
      */
-    public function addUser(User $user)
+    public function addUser(User $user): void
     {
         if ($this->users->contains($user)) {
             return;
@@ -113,7 +114,7 @@ class Group
     /**
      * @param User $user
      */
-    public function removeUser(User $user)
+    public function removeUser(User $user): void
     {
         if (!$this->users->contains($user)) {
             return;
@@ -125,7 +126,7 @@ class Group
     /**
      * @param AclOperation $aclOperation
      */
-    public function addAclOperation(AclOperation $aclOperation)
+    public function addAclOperation(AclOperation $aclOperation): void
     {
         if ($this->aclOperations->contains($aclOperation))
         {
@@ -137,7 +138,7 @@ class Group
     /**
      * @param AclOperation $aclOperation
      */
-    public function removeAclOperation(AclOperation $aclOperation)
+    public function removeAclOperation(AclOperation $aclOperation): void
     {
         if (!$this->aclOperations->contains($aclOperation))
         {
@@ -151,7 +152,7 @@ class Group
      *
      * @param ArrayCollection $aclOperations
      */
-    public function setAclOperations(ArrayCollection $aclOperations)
+    public function setAclOperations(ArrayCollection $aclOperations): void
     {
         //Remove all not in
         foreach($this->aclOperations AS $aclOperation)
@@ -176,7 +177,7 @@ class Group
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -185,7 +186,7 @@ class Group
      *
      * @return ArrayCollection|AclOperation[]
      */
-    public function getAclOperations()
+    public function getAclOperations(): ArrayCollection
     {
         return $this->aclOperations;
     }
@@ -194,7 +195,7 @@ class Group
      *
      * @return string
      */
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
@@ -203,7 +204,7 @@ class Group
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -211,7 +212,7 @@ class Group
     /**
      * @return boolean
      */
-    public function isRegister()
+    public function isRegister(): bool
     {
         return $this->isRegister;
     }
@@ -219,7 +220,7 @@ class Group
     /**
      * @param $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -227,7 +228,7 @@ class Group
     /**
      * @param $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -236,7 +237,7 @@ class Group
      * @param $color
      * @throws \Exception
      */
-    public function setColor($color)
+    public function setColor(string $color): void
     {
         if (strlen($color) != 6)
         {

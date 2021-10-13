@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule\UserModule;
 
@@ -21,7 +21,9 @@ namespace Dravencms\AdminModule\UserModule;
  * MA 02110-1301  USA
  */
 
+use Dravencms\AdminModule\Components\User\UserForm\UserForm;
 use Dravencms\AdminModule\Components\User\UserForm\UserFormFactory;
+use Dravencms\AdminModule\Components\User\UserGrid\UserGrid;
 use Dravencms\AdminModule\Components\User\UserGrid\UserGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Model\User\Entities\User;
@@ -50,7 +52,7 @@ class UserPresenter extends SecuredPresenter
     /**
      * @isAllowed(user, edit)
      */
-    public function actionDefault()
+    public function actionDefault(): void
     {
         $this->template->h1 = 'Uživatelé';
     }
@@ -60,7 +62,7 @@ class UserPresenter extends SecuredPresenter
      * @isAllowed(user, edit)
      * @throws \Exception
      */
-    public function actionEdit($id = null)
+    public function actionEdit(int $id = null): void
     {
         if ($id) {
             $user = $this->userUserRepository->getOneById($id);
@@ -77,9 +79,9 @@ class UserPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\UserForm
+     * @return \Dravencms\AdminModule\Components\User\UserForm\UserForm
      */
-    public function createComponentFormUser()
+    public function createComponentFormUser(): UserForm
     {
         $control = $this->userUserFormFactory->create($this->userFormEntity);
         $control->onSuccess[] = function()
@@ -100,9 +102,9 @@ class UserPresenter extends SecuredPresenter
     }
 
     /**
-     * @return \AdminModule\Components\User\UserGrid
+     * @return \Dravencms\AdminModule\Components\User\UserGrid\UserGrid
      */
-    public function createComponentGridUser()
+    public function createComponentGridUser(): UserGrid
     {
         $control = $this->userUserGridFactory->create();
         $control->setNamespace($this->getNamespace());

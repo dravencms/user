@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -25,7 +25,7 @@ use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\AclResourceRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 /**
  * Description of AclResourceGrid
@@ -55,18 +55,17 @@ class AclResourceGrid extends BaseControl
      */
     public function __construct(AclResourceRepository $aclResourceRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
     {
-        parent::__construct();
-
         $this->baseGridFactory = $baseGridFactory;
         $this->aclResourceRepository = $aclResourceRepository;
         $this->entityManager = $entityManager;
     }
 
     /**
-     * @param $name
-     * @return \Dravencms\Components\BaseGrid
+     * @param string $name
+     * @return Grid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentGrid($name)
+    public function createComponentGrid(string $name): Grid
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
@@ -116,8 +115,9 @@ class AclResourceGrid extends BaseControl
 
     /**
      * @param array $ids
+     * @throws \Exception
      */
-    public function gridGroupActionDelete(array $ids)
+    public function gridGroupActionDelete(array $ids): void
     {
         $this->handleDelete($ids);
     }
@@ -127,7 +127,7 @@ class AclResourceGrid extends BaseControl
      * @throws \Exception
      * @isAllowed(user, delete)
      */
-    public function handleDelete($id)
+    public function handleDelete($id): void
     {
         $aclResources = $this->aclResourceRepository->getById($id);
         foreach ($aclResources AS $aclOperation)
@@ -140,7 +140,7 @@ class AclResourceGrid extends BaseControl
         $this->onDelete();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/AclResourceGrid.latte');

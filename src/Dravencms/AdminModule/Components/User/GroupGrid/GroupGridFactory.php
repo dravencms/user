@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -26,5 +26,5 @@ interface GroupGridFactory
     /**
      * @return GroupGrid
      */
-    public function create();
+    public function create(): GroupGrid;
 }

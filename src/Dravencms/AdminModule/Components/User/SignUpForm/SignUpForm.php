@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -7,11 +7,12 @@
 namespace Dravencms\AdminModule\Components\User\SignUpForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 
@@ -44,7 +45,6 @@ class SignUpForm extends BaseControl
      */
     public function __construct(BaseFormFactory $baseFormFactory, UserRepository $streetRepository, PasswordManager $passwordManager, EntityManager $entityManager, Application $application)
     {
-        parent::__construct();
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $streetRepository;
         $this->passwordManager = $passwordManager;
@@ -54,9 +54,9 @@ class SignUpForm extends BaseControl
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm
+     * @return \Dravencms\Components\BaseForm\BaseForm
      */
-    public function createComponentForm()
+    public function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -92,7 +92,7 @@ class SignUpForm extends BaseControl
     /**
      * @param Form $form
      */
-    public function signUpFormValidate(Form $form)
+    public function signUpFormValidate(Form $form): void
     {
         $values = $form->getValues();
 
@@ -105,7 +105,7 @@ class SignUpForm extends BaseControl
      * @param Form $form
      * @throws \Exception
      */
-    public function signUpFormSucceeded(Form $form)
+    public function signUpFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -120,7 +120,7 @@ class SignUpForm extends BaseControl
     }
 
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/SignUpForm.latte');

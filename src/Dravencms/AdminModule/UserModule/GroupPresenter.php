@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 namespace Dravencms\AdminModule\UserModule;
 
 /*
@@ -20,7 +20,9 @@ namespace Dravencms\AdminModule\UserModule;
  * MA 02110-1301  USA
  */
 
+use Dravencms\AdminModule\Components\User\GroupForm\GroupForm;
 use Dravencms\AdminModule\Components\User\GroupForm\GroupFormFactory;
+use Dravencms\AdminModule\Components\User\GroupGrid\GroupGrid;
 use Dravencms\AdminModule\Components\User\GroupGrid\GroupGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
 use Dravencms\Model\User\Entities\Group;
@@ -48,7 +50,7 @@ class GroupPresenter extends SecuredPresenter
     /**
      * @isAllowed(user,edit)
      */
-    public function actionDefault()
+    public function actionDefault(): void
     {
         $this->template->h1 = 'Skupiny';
     }
@@ -57,7 +59,7 @@ class GroupPresenter extends SecuredPresenter
      * @param integer $id
      * @isAllowed(user,edit)
      */
-    public function actionEdit($id)
+    public function actionEdit(int $id): void
     {
         if ($id) {
             $group = $this->userGroupRepository->getOneById($id);
@@ -76,7 +78,7 @@ class GroupPresenter extends SecuredPresenter
     /**
      * @return \Dravencms\AdminModule\Components\User\GroupGrid\GroupGrid
      */
-    public function createComponentGridGroup()
+    public function createComponentGridGroup(): GroupGrid
     {
         $control = $this->groupGridFactory->create();
         $control->onDelete[] = function(){
@@ -89,7 +91,7 @@ class GroupPresenter extends SecuredPresenter
     /**
      * @return \Dravencms\AdminModule\Components\User\GroupForm\GroupForm
      */
-    public function createComponentFormGroup()
+    public function createComponentFormGroup(): GroupForm
     {
         $control = $this->groupFormFactory->create($this->userGroupFormEntity);
         $control->onSuccess[] = function(){

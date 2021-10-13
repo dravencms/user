@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -30,5 +30,5 @@ interface AclOperationFormFactory
      * @param AclOperation|null $aclOperation
      * @return AclOperationForm
      */
-    public function create(AclResource $aclResource, AclOperation $aclOperation = null);
+    public function create(AclResource $aclResource, AclOperation $aclOperation = null): AclOperationForm;
 }

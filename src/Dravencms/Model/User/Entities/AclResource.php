@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -9,7 +9,7 @@ namespace Dravencms\Model\User\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
@@ -43,7 +43,7 @@ class AclResource
     private $aclOperations;
 
 
-    public function __construct($name, $description)
+    public function __construct(string $name, string $description)
     {
         $this->setName($name);
 
@@ -54,7 +54,7 @@ class AclResource
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $name = Nette\Utils\Strings::trim($name);
         if (Nette\Utils\Strings::length($name) === 0)
@@ -67,7 +67,7 @@ class AclResource
     /**
      * @param AclOperation $aclOperation
      */
-    public function addAclOperation(AclOperation $aclOperation)
+    public function addAclOperation(AclOperation $aclOperation): void
     {
         if ($this->aclOperations->contains($aclOperation))
         {
@@ -79,7 +79,7 @@ class AclResource
     /**
      * @param AclOperation $aclOperation
      */
-    public function removeAclOperation(AclOperation $aclOperation)
+    public function removeAclOperation(AclOperation $aclOperation): void
     {
         if (!$this->aclOperations->contains($aclOperation))
         {
@@ -92,7 +92,7 @@ class AclResource
      *
      * @return ArrayCollection|AclOperation[]
      */
-    public function getAclOperations()
+    public function getAclOperations(): ArrayCollection
     {
         return $this->aclOperations;
     }
@@ -101,7 +101,7 @@ class AclResource
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -110,7 +110,7 @@ class AclResource
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -118,7 +118,7 @@ class AclResource
     /**
      * @param $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }

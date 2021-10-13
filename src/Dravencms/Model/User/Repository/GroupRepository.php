@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -7,7 +7,7 @@ namespace Dravencms\Model\User\Repository;
 
 
 use Dravencms\Model\User\Entities\Group;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 /**
  * Class GroupRepository
@@ -15,7 +15,7 @@ use Kdyby\Doctrine\EntityManager;
  */
 class GroupRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|Group  */
     private $groupRepository;
 
     /**
@@ -40,7 +40,7 @@ class GroupRepository
      * @param $id
      * @return null|Group
      */
-    public function getOneById($id)
+    public function getOneById(int $id): ?Group
     {
         return $this->groupRepository->find($id);
     }
@@ -48,18 +48,17 @@ class GroupRepository
     /**
      * @return array
      */
-    public function getPairs()
+    public function getPairs(): array
     {
         return $this->groupRepository->findPairs('name');
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param Group|null $ignoreGroup
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return bool
      */
-    public function isNameFree($name, Group $ignoreGroup = null)
+    public function isNameFree(string $name, Group $ignoreGroup = null): bool
     {
         $qb = $this->groupRepository->createQueryBuilder('g')
             ->select('g')
@@ -100,7 +99,7 @@ class GroupRepository
      * @param $name
      * @return Group|null
      */
-    public function getOneByName($name)
+    public function getOneByName(string $name): ?Group
     {
         return $this->groupRepository->findOneBy(['name' => $name]);
     }

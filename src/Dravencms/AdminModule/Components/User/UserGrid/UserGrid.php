@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -10,10 +10,8 @@ namespace Dravencms\AdminModule\Components\User\UserGrid;
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
-use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
-use Nette\Utils\Html;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 class UserGrid extends BaseControl
 {
@@ -40,8 +38,6 @@ class UserGrid extends BaseControl
      */
     public function __construct(UserRepository $userRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
     {
-        parent::__construct();
-
         $this->baseGridFactory = $baseGridFactory;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
@@ -50,16 +46,17 @@ class UserGrid extends BaseControl
     /**
      * @param $namespace
      */
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace): void
     {
         $this->namespace = $namespace;
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return Grid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    protected function createComponentGrid($name)
+    protected function createComponentGrid(string $name): Grid
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
@@ -121,7 +118,7 @@ class UserGrid extends BaseControl
     /**
      * @param array $ids
      */
-    public function gridGroupActionDelete(array $ids)
+    public function gridGroupActionDelete(array $ids): void
     {
         $this->handleDelete($ids);
     }
@@ -130,7 +127,7 @@ class UserGrid extends BaseControl
      * @param integer|array $id
      * @isAllowed(user, delete)
      */
-    public function handleDelete($id)
+    public function handleDelete($id): void
     {
         $users = $this->userRepository->getById($id);
         foreach($users AS $user)
@@ -143,7 +140,7 @@ class UserGrid extends BaseControl
         $this->onDelete();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/UserGrid.latte');

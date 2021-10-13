@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -20,10 +20,11 @@
 
 namespace Dravencms\AdminModule\Components\User\AclResourceForm;
 
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Repository\AclResourceRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -58,8 +59,6 @@ class AclResourceForm extends Control
      */
     public function __construct(BaseFormFactory $baseFormFactory, EntityManager $entityManager, AclResourceRepository $aclResourceRepository, AclResource $aclResource = null)
     {
-        parent::__construct();
-
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;
         $this->aclResourceRepository = $aclResourceRepository;
@@ -76,7 +75,10 @@ class AclResourceForm extends Control
         }
     }
 
-    protected function createComponentForm()
+    /**
+     * @return \Dravencms\Components\BaseForm\BaseForm
+     */
+    protected function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -96,8 +98,9 @@ class AclResourceForm extends Control
 
     /**
      * @param Form $form
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function editFormValidate(Form $form)
+    public function editFormValidate(Form $form): void
     {
         $values = $form->getValues();
         if (!$this->aclResourceRepository->isNameFree($values->name, $this->aclResource))
@@ -110,7 +113,11 @@ class AclResourceForm extends Control
         }
     }
 
-    public function editFormSucceeded(Form $form)
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\AbortException
+     */
+    public function editFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -135,7 +142,7 @@ class AclResourceForm extends Control
         $this->redirect('this');
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/AclResourceForm.latte');

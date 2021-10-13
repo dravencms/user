@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -7,12 +7,13 @@
 namespace Dravencms\AdminModule\Components\User\ResetPasswordForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\PasswordReset;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\PasswordResetRepository;
 use Dravencms\Model\User\Repository\UserRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\Application;
 use Nette\Application\UI\Form;
 use Salamek\TemplatedEmail\TemplatedEmail;
@@ -50,7 +51,6 @@ class ResetPasswordForm extends BaseControl
      */
     public function __construct(BaseFormFactory $baseFormFactory, TemplatedEmail $templatedEmail, UserRepository $userRepository, EntityManager $entityManager, Application $application, PasswordResetRepository $passwordResetRepository)
     {
-        parent::__construct();
         $this->baseFormFactory = $baseFormFactory;
         $this->templatedEmail = $templatedEmail;
         $this->userRepository = $userRepository;
@@ -61,9 +61,9 @@ class ResetPasswordForm extends BaseControl
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm
+     * @return \Dravencms\Components\BaseForm\BaseForm
      */
-    public function createComponentForm()
+    public function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -79,7 +79,10 @@ class ResetPasswordForm extends BaseControl
         return $form;
     }
 
-    public function onValidateForm(Form $form)
+    /**
+     * @param Form $form
+     */
+    public function onValidateForm(Form $form): void
     {
         $values = $form->getValues();
         if (!$this->userRepository->getOneByEmail($values->email, $this->namespace)) {
@@ -87,7 +90,11 @@ class ResetPasswordForm extends BaseControl
         }
     }
 
-    public function onSuccessForm(Form $form)
+    /**
+     * @param Form $form
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function onSuccessForm(Form $form): void
     {
         $values = $form->getValues();
 
@@ -120,7 +127,7 @@ class ResetPasswordForm extends BaseControl
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/ResetPasswordForm.latte');

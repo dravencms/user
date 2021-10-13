@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -8,7 +8,7 @@ namespace Dravencms\Model\User\Repository;
 
 use Dravencms\Model\User\Entities\AclOperation;
 use Dravencms\Model\User\Entities\AclResource;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 /**
  * Class AclOperationRepository
@@ -16,7 +16,7 @@ use Kdyby\Doctrine\EntityManager;
  */
 class AclOperationRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|AclOperation */
     private $aclOperationRepository;
 
     /**
@@ -32,7 +32,7 @@ class AclOperationRepository
      * @param $id
      * @return null|AclOperation
      */
-    public function getById($id)
+    public function getById($id): ?AclOperation
     {
         return $this->aclOperationRepository->findBy(['id' => $id]);
     }
@@ -41,7 +41,7 @@ class AclOperationRepository
      * @param $id
      * @return null|AclOperation
      */
-    public function getOneById($id)
+    public function getOneById(int $id): ?AclOperation
     {
         return $this->aclOperationRepository->find($id);
     }
@@ -50,16 +50,16 @@ class AclOperationRepository
     /**
      * @return array
      */
-    public function getPairs()
+    public function getPairs(): array
     {
         return $this->aclOperationRepository->findPairs('name');
     }
 
     /**
      * @param $name
-     * @return mixed|null|AclOperation
+     * @return AclOperation|null
      */
-    public function getOneByName($name)
+    public function getOneByName($name): ?AclOperation
     {
         return $this->aclOperationRepository->findOneBy(['name' => $name]);
     }
@@ -83,13 +83,12 @@ class AclOperationRepository
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param AclResource $aclResource
      * @param AclOperation|null $ignoreAclOperation
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return bool
      */
-    public function isNameFree($name, AclResource $aclResource, AclOperation $ignoreAclOperation = null)
+    public function isNameFree(string $name, AclResource $aclResource, AclOperation $ignoreAclOperation = null): bool
     {
         $qb = $this->aclOperationRepository->createQueryBuilder('ao')
             ->select('ao')

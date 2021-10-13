@@ -1,11 +1,15 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\AdminModule\UserModule;
 
 use Dravencms\AdminModule\BasePresenter;
+use Dravencms\AdminModule\Components\User\DoResetPasswordForm\DoResetPasswordForm;
 use Dravencms\AdminModule\Components\User\DoResetPasswordForm\DoResetPasswordFormFactory;
+use Dravencms\AdminModule\Components\User\ResetPasswordForm\ResetPasswordForm;
 use Dravencms\AdminModule\Components\User\ResetPasswordForm\ResetPasswordFormFactory;
+use Dravencms\AdminModule\Components\User\SignInForm\SignInForm;
 use Dravencms\AdminModule\Components\User\SignInForm\SignInFormFactory;
+use Dravencms\AdminModule\Components\User\SignUpForm\SignUpForm;
 use Dravencms\AdminModule\Components\User\SignUpForm\SignUpFormFactory;
 use Dravencms\Model\Admin\Entities\Menu;
 use Dravencms\Model\Admin\Repository\MenuRepository;
@@ -56,17 +60,19 @@ class SignPresenter extends BasePresenter
     }
 
     /**
-     * Sign-in form factory.
-     * @return Nette\Application\UI\Form
+     * @return \Dravencms\AdminModule\Components\User\SignInForm\SignInForm
      */
-    protected function createComponentSignInForm()
+    protected function createComponentSignInForm(): SignInForm
     {
         $signInControl = $this->signInFormFactory->create();
         $signInControl['form']->onSuccess[] = [$this, 'signInFormSucceeded'];
         return $signInControl;
     }
 
-    public function signInFormSucceeded(Form $form)
+    /**
+     * @param Form $form
+     */
+    public function signInFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -108,14 +114,17 @@ class SignPresenter extends BasePresenter
 
     }
 
-    public function actionOut()
+    public function actionOut(): void
     {
         $this->getUser()->logout();
         $this->flashMessage('You have been signed out.', 'alert-info');
         $this->redirect('in');
     }
 
-    protected function createComponentResetPasswordForm()
+    /**
+     * @return \Dravencms\AdminModule\Components\User\ResetPasswordForm\ResetPasswordForm
+     */
+    protected function createComponentResetPasswordForm(): ResetPasswordForm
     {
         $control = $this->resetPasswordFormFactory->create();
         $control->onSuccess[] = function()
@@ -127,7 +136,10 @@ class SignPresenter extends BasePresenter
     }
 
 
-    public function actionPasswordReset($hash)
+    /**
+     * @param string $hash
+     */
+    public function actionPasswordReset(string $hash): void
     {
         $foundPasswordReset = $this->userPasswordResetRepository->getActiveByHash($hash);
         if(!$foundPasswordReset)
@@ -138,7 +150,10 @@ class SignPresenter extends BasePresenter
         $this->foundPasswordReset = $foundPasswordReset;
     }
 
-    public function createComponentDoPasswordReset()
+    /**
+     * @return \Dravencms\AdminModule\Components\User\DoResetPasswordForm\DoResetPasswordForm
+     */
+    public function createComponentDoPasswordReset(): DoResetPasswordForm
     {
         $control = $this->doResetPasswordFormFactory->create($this->foundPasswordReset);
         $control->onSuccess[] = function(){
@@ -149,7 +164,7 @@ class SignPresenter extends BasePresenter
         return $control;
     }
 
-    public function renderUp()
+    public function renderUp(): void
     {
         if (!$this->allowRegister) {
             $this->error();
@@ -158,15 +173,15 @@ class SignPresenter extends BasePresenter
         $this->template->h1 = 'Registrace';
     }
 
-    public function renderIn()
+    public function renderIn(): void
     {
         $this->template->allowRegister = $this->allowRegister;
     }
 
     /**
-     * @return \AdminModule\Components\User\SignUpForm
+     * @return \Dravencms\AdminModule\Components\User\SignUpForm\SignUpForm
      */
-    public function createComponentSignUpForm()
+    public function createComponentSignUpForm(): SignUpForm
     {
         $component = $this->signUpFormFactory->create();
         $component->onSuccess[] = function()

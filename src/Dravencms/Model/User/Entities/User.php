@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\Model\User\Entities;
 
+use Dravencms\Model\Location\Entities\Street;
 use Dravencms\Model\Location\Entities\StreetNumber;
 use Dravencms\User\DefaultDataCreator;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -9,9 +10,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Doctrine\ORM\Mapping\UniqueConstraint;
-use Nette;
+use http\Exception\InvalidArgumentException;
+use Nette\Security\IIdentity;
+use Nette\SmartObject;
+use Nette\Utils\Strings;
+use Nette\Utils\Validators;
 
 /**
  * Class User
@@ -20,9 +25,9 @@ use Nette;
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true)
  * @ORM\Table(name="userUser", uniqueConstraints={@UniqueConstraint(name="user_unique", columns={"email", "namespace"})})
  */
-class User implements Nette\Security\IIdentity
+class User implements IIdentity
 {
-    use Nette\SmartObject;
+    use SmartObject;
     use Identifier;
     use TimestampableEntity;
     use SoftDeleteableEntity;
@@ -154,17 +159,18 @@ class User implements Nette\Security\IIdentity
 
     /**
      * User constructor.
-     * @param $firstName
-     * @param $lastName
-     * @param $email
-     * @param $password
-     * @param $namespace
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $email
+     * @param string $password
+     * @param string $namespace
+     * @param callable $passwordHashCallable
      * @param bool $isActive
      * @param bool $isShadow
      * @param bool $isNewsletter
-     * @param callable $passwordHashCallable
+     * @throws \Exception
      */
-    public function __construct($firstName, $lastName, $email, $password, $namespace, $isActive = true, $isShadow = false, $isNewsletter = true, callable $passwordHashCallable)
+    public function __construct(string $firstName, string $lastName, string $email, string $password, string $namespace, callable $passwordHashCallable, bool $isActive = true, bool $isShadow = false, bool $isNewsletter = true)
     {
         $this->setEmail($email);
         $this->setPassword($password, $passwordHashCallable);
@@ -186,10 +192,10 @@ class User implements Nette\Security\IIdentity
     /**
      * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
-        $email = Nette\Utils\Strings::trim(Nette\Utils\Strings::lower($email));
-        if (!Nette\Utils\Validators::isEmail($email)) throw new Nette\InvalidArgumentException(sprintf('Invalid $email value %s', $email));
+        $email = Strings::trim(Strings::lower($email));
+        if (!Validators::isEmail($email)) throw new InvalidArgumentException(sprintf('Invalid $email value %s', $email));
         $this->email = $email;
     }
 
@@ -197,10 +203,10 @@ class User implements Nette\Security\IIdentity
      * @param string $password
      * @param callable $hash
      */
-    public function setPassword($password, callable $hash)
+    public function setPassword(string $password, callable $hash): void
     {
-        $password = Nette\Utils\Strings::trim($password);
-        if (Nette\Utils\Strings::length($password) === 0) throw new Nette\InvalidArgumentException('Password cannot be empty');
+        $password = Strings::trim($password);
+        if (Strings::length($password) === 0) throw new InvalidArgumentException('Password cannot be empty');
         $this->password = $hash($password);
     }
 
@@ -208,7 +214,7 @@ class User implements Nette\Security\IIdentity
      * @param string $password
      * @param callable $hash
      */
-    public function changePassword($password, callable $hash)
+    public function changePassword(string $password, callable $hash): void
     {
         $this->setPassword($password, $hash);
     }
@@ -218,7 +224,7 @@ class User implements Nette\Security\IIdentity
      * @param callable $verifyPassword
      * @return bool
      */
-    public function verifyPassword($password, callable $verifyPassword)
+    public function verifyPassword(string $password, callable $verifyPassword): bool
     {
         return $verifyPassword($password, $this->password);
     }
@@ -227,12 +233,17 @@ class User implements Nette\Security\IIdentity
      * Returns a list of roles that the user is a member of.
      * @return Group[]
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->groups;
     }
-    
-    public function initializeDefaultData(DefaultDataCreator $defaultDataCreator)
+
+    /**
+     * @param DefaultDataCreator $defaultDataCreator
+     * @return bool
+     * @throws \Exception
+     */
+    public function initializeDefaultData(DefaultDataCreator $defaultDataCreator): bool
     {
         if ($this->isInitialized) return false;
 
@@ -246,7 +257,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param \DateTimeInterface $lastActivity
      */
-    public function setLastActivity(\DateTimeInterface $lastActivity)
+    public function setLastActivity(\DateTimeInterface $lastActivity): void
     {
         $this->lastActivity = $lastActivity;
     }
@@ -254,7 +265,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param string $degree
      */
-    public function setDegree($degree)
+    public function setDegree(string $degree): void
     {
         $this->degree = $degree;
     }
@@ -262,7 +273,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param string $firstName
      */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
     }
@@ -270,7 +281,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param string $lastName
      */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
     }
@@ -278,7 +289,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param string $phone
      */
-    public function setPhone($phone)
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }
@@ -286,7 +297,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param boolean $isActive
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
     }
@@ -294,7 +305,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param StreetNumber $streetNumber
      */
-    public function setStreetNumber($streetNumber)
+    public function setStreetNumber(StreetNumber $streetNumber): void
     {
         $this->streetNumber = $streetNumber;
     }
@@ -302,7 +313,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param Gender $gender
      */
-    public function setGender($gender)
+    public function setGender(Gender $gender): void
     {
         $this->gender = $gender;
     }
@@ -310,7 +321,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param Company $company
      */
-    public function setCompany($company)
+    public function setCompany(Company $company = null): void
     {
         $this->company = $company;
     }
@@ -318,7 +329,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param Group $group
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): void
     {
         if ($this->groups->contains($group))
         {
@@ -331,7 +342,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param ArrayCollection $groups
      */
-    public function setGroups(ArrayCollection $groups)
+    public function setGroups(ArrayCollection $groups): void
     {
         //Remove all not in
         foreach($this->groups AS $group)
@@ -356,7 +367,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @param Group $group
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): void
     {
         if (!$this->groups->contains($group))
         {
@@ -369,7 +380,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getDegree()
+    public function getDegree(): string
     {
         return $this->degree;
     }
@@ -377,7 +388,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -385,7 +396,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -393,7 +404,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -401,7 +412,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -409,7 +420,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return boolean
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
@@ -417,7 +428,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -425,7 +436,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return boolean
      */
-    public function isShadow()
+    public function isShadow(): bool
     {
         return $this->isShadow;
     }
@@ -433,7 +444,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return boolean
      */
-    public function isNewsletter()
+    public function isNewsletter(): bool
     {
         return $this->isNewsletter;
     }
@@ -441,7 +452,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -449,7 +460,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return \DateTimeInterface
      */
-    public function getLastActivity()
+    public function getLastActivity(): \DateTimeInterface
     {
         return $this->lastActivity;
     }
@@ -457,7 +468,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return StreetNumber
      */
-    public function getStreetNumber()
+    public function getStreetNumber(): StreetNumber
     {
         return $this->streetNumber;
     }
@@ -465,15 +476,15 @@ class User implements Nette\Security\IIdentity
     /**
      * @return Gender
      */
-    public function getGender()
+    public function getGender(): Gender
     {
         return $this->gender;
     }
 
     /**
-     * @return Company
+     * @return Company|null
      */
-    public function getCompany()
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
@@ -481,7 +492,7 @@ class User implements Nette\Security\IIdentity
     /**
      * @return ArrayCollection|PasswordReset[]
      */
-    public function getPasswordResets()
+    public function getPasswordResets(): ArrayCollection
     {
         return $this->passwordResets;
     }
@@ -489,8 +500,13 @@ class User implements Nette\Security\IIdentity
     /**
      * @return ArrayCollection|Company[]
      */
-    public function getCompanies()
+    public function getCompanies(): ArrayCollection
     {
         return $this->companies;
+    }
+
+    public function getData()
+    {
+        return [];
     }
 }

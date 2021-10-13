@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -6,11 +6,11 @@
 namespace Dravencms\Model\User\Repository;
 
 use Dravencms\Model\User\Entities\User;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 
 class UserRepository
 {
-    /** @var \Kdyby\Doctrine\EntityRepository */
+    /** @var \Doctrine\Persistence\ObjectRepository|User */
     private $userRepository;
 
     public function __construct(EntityManager $entityManager)
@@ -19,7 +19,7 @@ class UserRepository
     }
 
     /**
-     * @return \Kdyby\Doctrine\EntityRepository
+     * @return \Doctrine\Persistence\ObjectRepository|User
      */
     public function getUserRepository()
     {
@@ -27,20 +27,20 @@ class UserRepository
     }
 
     /**
-     * @param $email
-     * @param $namespace
-     * @return User
+     * @param string $email
+     * @param string $namespace
+     * @return User|null
      */
-    public function getOneByEmail($email, $namespace)
+    public function getOneByEmail(string $email, string $namespace): ?User
     {
         return $this->userRepository->findOneBy(['email' => $email, 'namespace' => $namespace]);
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return null|User
      */
-    public function getOneById($id)
+    public function getOneById(int $id): ?User
     {
         return $this->userRepository->find($id);
     }
@@ -59,7 +59,7 @@ class UserRepository
      * @param bool $isShadow
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getUsersQueryBuilder($namespace, $isShadow = false)
+    public function getUsersQueryBuilder(string $namespace, bool $isShadow = false)
     {
         $qb = $this->userRepository->createQueryBuilder('u')
             ->select('u')
@@ -79,7 +79,7 @@ class UserRepository
      * @param User|null $ignoreUser
      * @return bool
      */
-    public function isEmailFree($newEmail, $namespace, User $ignoreUser = null)
+    public function isEmailFree(string $newEmail, string $namespace, User $ignoreUser = null): bool
     {
         $qb = $this->userRepository->createQueryBuilder('u')
             ->select('u')
@@ -103,7 +103,7 @@ class UserRepository
      * @param $namespace
      * @return User[]
      */
-    public function getAll($namespace)
+    public function getAll(string $namespace)
     {
         return $this->userRepository->findBy(['namespace' => $namespace]);
     }

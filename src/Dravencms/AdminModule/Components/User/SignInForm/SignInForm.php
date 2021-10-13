@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -7,6 +7,7 @@
 namespace Dravencms\AdminModule\Components\User\SignInForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Nette\Application\UI\Form;
 
@@ -21,14 +22,13 @@ class SignInForm extends BaseControl
      */
     public function __construct(BaseFormFactory $baseFormFactory)
     {
-        parent::__construct();
         $this->baseFormFactory = $baseFormFactory;
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm
+     * @return \Dravencms\Components\BaseForm\BaseForm
      */
-    public function createComponentForm()
+    public function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -46,7 +46,7 @@ class SignInForm extends BaseControl
         return $form;
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/SignInForm.latte');

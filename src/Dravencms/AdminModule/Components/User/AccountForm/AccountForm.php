@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /*
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -20,11 +20,12 @@
 
 namespace Dravencms\AdminModule\Components\User\AccountForm;
 
+use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Model\User\Repository\UserRepository;
-use Kdyby\Doctrine\EntityManager;
+use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -55,8 +56,6 @@ class AccountForm extends Control
         UserRepository $userRepository,
         User $user
     ) {
-        parent::__construct();
-
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
@@ -73,9 +72,9 @@ class AccountForm extends Control
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm
+     * @return \Dravencms\Components\BaseForm\BaseForm
      */
-    protected function createComponentForm()
+    protected function createComponentForm(): BaseForm
     {
         $form = $this->baseFormFactory->create();
 
@@ -100,7 +99,7 @@ class AccountForm extends Control
     /**
      * @param Form $form
      */
-    public function editFormValidate(Form $form)
+    public function editFormValidate(Form $form): void
     {
         $values = $form->getValues();
         if (!$this->userRepository->isEmailFree($values->email, $this->user->getNamespace(), $this->user)) {
@@ -112,7 +111,7 @@ class AccountForm extends Control
      * @param Form $form
      * @throws \Exception
      */
-    public function editFormSucceeded(Form $form)
+    public function editFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
 
@@ -127,7 +126,7 @@ class AccountForm extends Control
         $this->onSuccess();
     }
 
-    public function render()
+    public function render(): void
     {
         $template = $this->template;
         $template->setFile(__DIR__ . '/AccountForm.latte');

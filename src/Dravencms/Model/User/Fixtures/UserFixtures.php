@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
@@ -9,7 +9,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class UserFixtures extends AbstractFixture implements DependentFixtureInterface
 {
@@ -22,12 +22,12 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
     {
         $this->passwordManager = new PasswordManager();
     }
+
     /**
-     * Load data fixtures with the passed EntityManager
-     *
      * @param ObjectManager $manager
+     * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $users = [];
         $users['admin@example.com'] = [
@@ -48,9 +48,9 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
     /**
      * Get the order of this fixture
      *
-     * @return integer
+     * @return array
      */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return ['Dravencms\Model\User\Fixtures\GroupFixtures'];
     }

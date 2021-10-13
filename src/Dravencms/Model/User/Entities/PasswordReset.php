@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\Model\User\Entities;
 
@@ -7,7 +7,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Kdyby\Doctrine\Entities\Attributes\Identifier;
+use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
@@ -59,7 +59,7 @@ class PasswordReset
     /**
      * @return string
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
@@ -67,7 +67,7 @@ class PasswordReset
     /**
      * @return boolean
      */
-    public function isUsed()
+    public function isUsed(): bool
     {
         return $this->isUsed;
     }
@@ -75,7 +75,7 @@ class PasswordReset
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -83,7 +83,7 @@ class PasswordReset
     /**
      * @param boolean $isUsed
      */
-    public function setIsUsed($isUsed)
+    public function setIsUsed(bool $isUsed): void
     {
         $this->isUsed = $isUsed;
     }

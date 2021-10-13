@@ -1,30 +1,28 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Dravencms\User\DI;
 
-use Kdyby\Console\DI\ConsoleExtension;
-use Nette;
-use Nette\DI\Compiler;
-use Nette\DI\Configurator;
+use Dravencms\User\User;
+use Nette\Bridges\ApplicationLatte\LatteFactory;
+use Nette\DI\CompilerExtension;
 
 /**
  * Class UserExtension
  * @package Dravencms\User\DI
  */
-class UserExtension extends Nette\DI\CompilerExtension
+class UserExtension extends CompilerExtension
 {
-    public function loadConfiguration()
+    public static $prefix = 'user';
+
+    public function loadConfiguration(): void
     {
-        $config = $this->getConfig();
         $builder = $this->getContainerBuilder();
+        $builder->addDefinition($this->prefix(self::$prefix))
+            ->setFactory(User::class);
 
-
-        $builder->addDefinition($this->prefix('user'))
-            ->setClass('Dravencms\User\User', []);
-
-        $builder->addDefinition($this->prefix('filters'))
-            ->setClass('Dravencms\Latte\User\Filters\User')
-            ->setInject(FALSE);
+        $builder->addDefinition($this->prefix(self::$prefix.'filters'))
+            ->setFactory(\Dravencms\Latte\User\Filters\User::class)
+            ->setAutowired(false);
 
         $this->loadComponents();
         $this->loadModels();
@@ -32,105 +30,58 @@ class UserExtension extends Nette\DI\CompilerExtension
     }
 
 
-    /**
-     * @param Configurator $config
-     * @param string $extensionName
-     */
-    public static function register(Configurator $config, $extensionName = 'userExtension')
-    {
-        $config->onCompile[] = function (Configurator $config, Compiler $compiler) use ($extensionName) {
-            $compiler->addExtension($extensionName, new UserExtension());
-        };
-    }
-
-
     public function beforeCompile()
     {
         $builder = $this->getContainerBuilder();
-        $registerToLatte = function (Nette\DI\ServiceDefinition $def) {
-            $def->addSetup('?->onCompile[] = function($engine) { Dravencms\Latte\User\Macros\Acl::install($engine->getCompiler()); }', ['@self']);
 
-            $def->addSetup('addFilter', ['formatUserName', [$this->prefix('@filters'), 'formatUserName']]);
-        };
-
-        $latteFactoryService = $builder->getByType('Nette\Bridges\ApplicationLatte\ILatteFactory');
-        if (!$latteFactoryService || !self::isOfType($builder->getDefinition($latteFactoryService)->getClass(), 'Latte\engine')) {
-            $latteFactoryService = 'nette.latteFactory';
-        }
-
-        if ($builder->hasDefinition($latteFactoryService) && self::isOfType($builder->getDefinition($latteFactoryService)->getClass(), 'Latte\Engine')) {
-            $registerToLatte($builder->getDefinition($latteFactoryService));
-        }
-
-        if ($builder->hasDefinition('nette.latte')) {
-            $registerToLatte($builder->getDefinition('nette.latte'));
-        }
+        $latteFactoryService = $builder->getByType(LatteFactory::class);
+        $latteFactoryService->addSetup('addFilter', ['formatUserName', [$this->prefix('@'.self::$prefix.'filters'), 'formatUserName']]);
+        $latteFactoryService->addSetup('?->onCompile[] = function($engine) { Dravencms\Latte\User\Macros\Acl::install($engine->getCompiler()); }', ['@self']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfig(array $defaults = [], $expand = true)
-    {
-        $defaults = [
-        ];
 
-        return parent::getConfig($defaults, $expand);
-    }
-
-    protected function loadComponents()
+    protected function loadComponents(): void
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->loadFromFile(__DIR__ . '/components.neon') as $i => $command) {
             $cli = $builder->addDefinition($this->prefix('components.' . $i))
-                ->setInject(FALSE); // lazy injects
+                ->setAutowired(false);
             if (is_string($command)) {
-                $cli->setImplement($command);
+                $cli->setFactory($command);
             } else {
                 throw new \InvalidArgumentException;
             }
         }
     }
 
-    protected function loadModels()
+    protected function loadModels(): void
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->loadFromFile(__DIR__ . '/models.neon') as $i => $command) {
             $cli = $builder->addDefinition($this->prefix('models.' . $i))
-                ->setInject(FALSE); // lazy injects
+                ->setAutowired(false);
             if (is_string($command)) {
-                $cli->setClass($command);
+                $cli->setFactory($command);
             } else {
                 throw new \InvalidArgumentException;
             }
         }
     }
 
-    protected function loadConsole()
+    protected function loadConsole(): void
     {
         $builder = $this->getContainerBuilder();
 
         foreach ($this->loadFromFile(__DIR__ . '/console.neon') as $i => $command) {
             $cli = $builder->addDefinition($this->prefix('cli.' . $i))
-                ->addTag(ConsoleExtension::TAG_COMMAND)
-                ->setInject(FALSE); // lazy injects
+                ->setAutowired(false);
 
             if (is_string($command)) {
-                $cli->setClass($command);
-
+                $cli->setFactory($command);
             } else {
                 throw new \InvalidArgumentException;
             }
         }
     }
 
-    /**
-     * @param string $class
-     * @param string $type
-     * @return bool
-     */
-    private static function isOfType($class, $type)
-    {
-        return $class === $type || is_subclass_of($class, $type);
-    }
 }

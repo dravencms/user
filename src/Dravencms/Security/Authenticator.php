@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -39,19 +39,17 @@ class Authenticator implements Nette\Security\IAuthenticator
     /**
      * @param string $namespace
      */
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace): void
     {
         $this->namespace = $namespace ?: null;
     }
 
     /**
-     * Performs an authentication against e.g. database.
-     * and returns IIdentity on success or throws AuthenticationException
      * @param array $credentials
-     * @return IIdentity
+     * @return User
      * @throws AuthenticationException
      */
-    function authenticate(array $credentials)
+    function authenticate(array $credentials): User
     {
         list ($email, $password) = $credentials;
 
