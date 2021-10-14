@@ -1,3 +1,8 @@
 extensions:
     user: Dravencms\User\DI\UserExtension
     doctrine2identity: Darkling\Doctrine2Identity\DI\IdentityExtension
+
+
+nettrine.orm.annotations:
+    mapping:
+        Dravencms\Model\User: %appDir%/../vendor/dravencms/user/src/Dravencms/Model/User
