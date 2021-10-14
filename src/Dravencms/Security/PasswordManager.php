@@ -5,7 +5,10 @@
 
 namespace Dravencms\Security;
 
-use Nette;
+
+
+use Nette\Security\Passwords;
+use Nette\SmartObject;
 
 /**
  * Class PasswordManager
@@ -13,15 +16,26 @@ use Nette;
  */
 class PasswordManager
 {
-    use Nette\SmartObject;
+    use SmartObject;
+
+    private $passwords;
+
+    /**
+     * PasswordManager constructor.
+     * @param Passwords $passwords
+     */
+    public function __construct(Passwords $passwords)
+    {
+        $this->passwords = $passwords;
+    }
 
     /**
      * @param string $password
      * @return string
      */
-    public function hash(string $password)
+    public function hash(string $password): string
     {
-        return Nette\Security\Passwords::hash($password);
+        return $this->passwords->hash($password);
     }
 
     /**
@@ -29,9 +43,9 @@ class PasswordManager
      * @param string $hash
      * @return bool
      */
-    public function verify(string $password, string $hash)
+    public function verify(string $password, string $hash): bool
     {
-        return Nette\Security\Passwords::verify($password, $hash);
+        return $this->passwords->verify($password, $hash);
     }
 
 }
