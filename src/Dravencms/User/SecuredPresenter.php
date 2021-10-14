@@ -1,9 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Dravencms\AdminModule;
+namespace Dravencms\User;
 
 use Dravencms\BasePresenter;
-use Dravencms\User\DefaultDataCreator;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Database\EntityManager;
@@ -16,6 +15,8 @@ use Nette\Security\Permission;
  */
 abstract class SecuredPresenter extends BasePresenter
 {
+    public static $redirectUnauthorizedTo = null;
+
     /** @var EntityManager @inject */
     public $entityManager;
 
@@ -40,7 +41,11 @@ abstract class SecuredPresenter extends BasePresenter
 
         if (!$this->getUser()->isLoggedIn())
         {
-            $this->redirect(':Admin:User:Sign:In', ['backlink' => $this->storeRequest()]);
+            if (is_null(self::$redirectUnauthorizedTo)) {
+                $this->error('Unauthorized', IResponse::S401_UNAUTHORIZED);
+            } else {
+                $this->redirect(':Admin:User:Sign:In', ['backlink' => $this->storeRequest()]);
+            }
         }
         elseif ($this->getUser()->isLoggedIn())
         {
