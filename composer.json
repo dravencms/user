@@ -15,6 +15,7 @@
     }
   ],
   "require": {
+    "nette/security": "^3.1.4",
     "dravencms/application": ">=0.0.2",
     "dravencms/database": ">=0.0.3",
     "dravencms/base-form": ">=0.0.1",
