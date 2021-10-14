@@ -8,7 +8,6 @@
 
 namespace Dravencms\User;
 
-use Nette\Security\IIdentity;
 
 trait TUserPresenter
 {

@@ -14,8 +14,6 @@ use Nette\Security\Permission;
  */
 trait TSecuredPresenter
 {
-    public static $redirectUnauthorizedTo = null;
-
     /** @var EntityManager @inject */
     public $entityManager;
 
@@ -40,7 +38,7 @@ trait TSecuredPresenter
 
         if (!$this->getUser()->isLoggedIn())
         {
-            if (is_null(self::$redirectUnauthorizedTo)) {
+            if (!property_exists(new self, 'redirectUnauthorizedTo') || is_null(self::$redirectUnauthorizedTo)) {
                 $this->error('Unauthorized', IResponse::S401_UNAUTHORIZED);
             } else {
                 $this->redirect(':Admin:User:Sign:In', ['backlink' => $this->storeRequest()]);
