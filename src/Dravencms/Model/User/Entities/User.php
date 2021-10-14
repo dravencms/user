@@ -2,7 +2,6 @@
 
 namespace Dravencms\Model\User\Entities;
 
-use Dravencms\Model\Location\Entities\Street;
 use Dravencms\Model\Location\Entities\StreetNumber;
 use Dravencms\User\DefaultDataCreator;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -234,7 +233,7 @@ class User implements IIdentity
      */
     public function getRoles(): array
     {
-        return $this->groups;
+        return $this->groups->toArray();
     }
 
     /**
