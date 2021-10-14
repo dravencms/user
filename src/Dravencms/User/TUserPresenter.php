@@ -21,7 +21,7 @@ trait TUserPresenter
     }
 
     /**
-     * @return IIdentity|null
+     * @return \Dravencms\Model\User\Entities\User|null
      * @throws \Exception
      */
     public function getUserEntity(): ?\Dravencms\Model\User\Entities\User
