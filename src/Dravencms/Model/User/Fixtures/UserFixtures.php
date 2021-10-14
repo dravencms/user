@@ -29,6 +29,10 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        $passwordGenerator = function($password) {
+            return $this->passwordManager->hash($password);
+        };
+
         $users = [];
         $users['admin@example.com'] = [
             'password' => 'adminExample',
@@ -37,9 +41,9 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
         ];
         foreach($users AS $email => $data)
         {
-            $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Front', true, false, true, function($password) { return $this->passwordManager->hash($password); });
+            $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Front', $passwordGenerator, true, false, true);
             $manager->persist($user);
-            $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Admin', true, false, true, function($password) { return $this->passwordManager->hash($password); });
+            $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Admin', $passwordGenerator,true, false, true);
             $user->addGroup($this->getReference('user-group-administrator'));
             $manager->persist($user);
         }

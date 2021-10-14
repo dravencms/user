@@ -12,7 +12,6 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Doctrine\ORM\Mapping\UniqueConstraint;
-use http\Exception\InvalidArgumentException;
 use Nette\Security\IIdentity;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -195,7 +194,7 @@ class User implements IIdentity
     public function setEmail(string $email): void
     {
         $email = Strings::trim(Strings::lower($email));
-        if (!Validators::isEmail($email)) throw new InvalidArgumentException(sprintf('Invalid $email value %s', $email));
+        if (!Validators::isEmail($email)) throw new \InvalidArgumentException(sprintf('Invalid $email value %s', $email));
         $this->email = $email;
     }
 
@@ -206,7 +205,7 @@ class User implements IIdentity
     public function setPassword(string $password, callable $hash): void
     {
         $password = Strings::trim($password);
-        if (Strings::length($password) === 0) throw new InvalidArgumentException('Password cannot be empty');
+        if (Strings::length($password) === 0) throw new \InvalidArgumentException('Password cannot be empty');
         $this->password = $hash($password);
     }
 

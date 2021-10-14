@@ -179,9 +179,10 @@ class UserForm extends BaseControl
         }
         else
         {
-            $user = new User($values->firstName, $values->lastName, $values->email, $values->password, $this->namespace, $values->isActive, false, true, function($password){
+            $passwordGenerator = function($password) {
                 return $this->passwordManager->hash($password);
-            });
+            };
+            $user = new User($values->firstName, $values->lastName, $values->email, $values->password, $this->namespace, $passwordGenerator, $values->isActive, false, true);
         }
 
         $groups = new ArrayCollection($this->groupRepository->getById($values->groups));

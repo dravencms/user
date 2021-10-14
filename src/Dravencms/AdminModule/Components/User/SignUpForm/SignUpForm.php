@@ -109,9 +109,11 @@ class SignUpForm extends BaseControl
     {
         $values = $form->getValues();
 
-        $newUser = new User($values->firstName, $values->lastName, $values->email, $values->password, $this->namespace, false, false, true, function ($password) {
+        $passwordGenerator = function($password) {
             return $this->passwordManager->hash($password);
-        });
+        };
+
+        $newUser = new User($values->firstName, $values->lastName, $values->email, $values->password, $this->namespace, $passwordGenerator,false, false, true);
 
         $this->entityManager->persist($newUser);
         $this->entityManager->flush();
