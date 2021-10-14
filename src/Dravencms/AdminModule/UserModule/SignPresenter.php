@@ -52,7 +52,7 @@ class SignPresenter extends BasePresenter
 
     private $foundPasswordReset = null;
 
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         $this->authenticator->setNamespace($this->getUser()->getStorage()->getNamespace());
