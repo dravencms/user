@@ -15,12 +15,14 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
 {
     /** @var PasswordManager */
     private $passwordManager;
+
     /**
-     * UsersFixtures constructor.
+     * UserFixtures constructor.
+     * @param PasswordManager $passwordManager
      */
-    public function __construct()
+    public function __construct(PasswordManager $passwordManager)
     {
-        $this->passwordManager = new PasswordManager();
+        $this->passwordManager = $passwordManager;
     }
 
     /**
