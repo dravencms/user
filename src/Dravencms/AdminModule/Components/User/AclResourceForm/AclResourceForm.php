@@ -76,9 +76,9 @@ class AclResourceForm extends Control
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm\BaseForm
+     * @return Form
      */
-    protected function createComponentForm(): BaseForm
+    protected function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 

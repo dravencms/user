@@ -71,10 +71,11 @@ class AccountForm extends Control
         }
     }
 
+
     /**
-     * @return \Dravencms\Components\BaseForm\BaseForm
+     * @return Form
      */
-    protected function createComponentForm(): BaseForm
+    protected function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
@@ -85,7 +86,7 @@ class AccountForm extends Control
             ->setRequired('Prosím zadejte příjmení.');
 
         $form->addText('email')
-            ->setType('email')
+            ->setHtmlType('email')
             ->addRule(Form::EMAIL, 'Prosím zadejte email.')
             ->setRequired('Prosím zadejte email.');
         

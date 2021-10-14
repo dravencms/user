@@ -61,9 +61,9 @@ class ResetPasswordForm extends BaseControl
     }
 
     /**
-     * @return \Dravencms\Components\BaseForm\BaseForm
+     * @return Form
      */
-    public function createComponentForm(): BaseForm
+    public function createComponentForm(): Form
     {
         $form = $this->baseFormFactory->create();
 
