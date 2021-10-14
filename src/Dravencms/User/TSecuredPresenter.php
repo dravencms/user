@@ -2,7 +2,6 @@
 
 namespace Dravencms\User;
 
-use Dravencms\BasePresenter;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Database\EntityManager;
@@ -13,7 +12,7 @@ use Nette\Security\Permission;
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
-abstract class SecuredPresenter extends BasePresenter
+trait SecuredPresenter
 {
     public static $redirectUnauthorizedTo = null;
 
