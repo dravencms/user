@@ -12,7 +12,7 @@ use Nette\Security\Permission;
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
  */
-trait SecuredPresenter
+trait TSecuredPresenter
 {
     public static $redirectUnauthorizedTo = null;
 
