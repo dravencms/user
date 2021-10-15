@@ -22,8 +22,7 @@
     "dravencms/base-grid": ">=0.0.1",
     "dravencms/templated-email": ">=v1.0",
     "dravencms/recaptcha": ">=v2.0",
-    "dravencms/locale": ">=v1.1.1",
-    "darkling/nette-identity-doctrine": "^v1.0"
+    "dravencms/locale": ">=v1.1.1"
   },
   "replace": {
     "dravencms/user-light": "*"

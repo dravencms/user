@@ -1,7 +1,5 @@
 extensions:
     user: Dravencms\User\DI\UserExtension
-    doctrine2identity: Darkling\Doctrine2Identity\DI\IdentityExtension
-
 
 nettrine.orm.annotations:
     mapping:
