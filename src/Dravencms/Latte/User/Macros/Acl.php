@@ -37,9 +37,9 @@ class Acl extends MacroSet
             return 'ob_start()';
         }
         if ($node->prefix === $node::PREFIX_TAG) {
-            return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->isAlloweds)) {' : 'if ($_l->isAlloweds[] = (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserAclService()->isAllowed(%node.args))) {');
+            return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->isAlloweds)) {' : 'if ($_l->isAlloweds[] = (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserService()->isAllowed(%node.args))) {');
         }
-        return $writer->write('if (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserAclService()->isAllowed(%node.args)) {');
+        return $writer->write('if (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserService()->isAllowed(%node.args)) {');
     }
 
     /**
@@ -54,7 +54,7 @@ class Acl extends MacroSet
             if ($node->args === '') {
                 throw new CompileException('Missing condition in {if} macro.');
             }
-            return $writer->write('if (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserAclService()->isAllowed(%node.args)) '
+            return $writer->write('if (property_exists($this, "filters") ? call_user_func($this->filters->isAllowed, %node.args) : $template->getUserService()->isAllowed(%node.args)) '
                 . (isset($node->data->else) ? '{ ob_end_clean(); ob_end_flush(); }' : 'ob_end_flush();')
                 . ' else '
                 . (isset($node->data->else) ? '{ $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; }' : 'ob_end_clean();')

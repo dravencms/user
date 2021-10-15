@@ -35,7 +35,7 @@ class UserExtension extends CompilerExtension
         $latteFactoryService = $builder->getDefinitionByType(LatteFactory::class)->getResultDefinition();
         $latteFactoryService->addSetup('addFilter', ['formatUserName', [$this->prefix('@filters'), 'formatUserName']]);
         $latteFactoryService->addSetup('addFilter', ['isAllowed', [$this->prefix('@filters'), 'isAllowed']]);
-        $latteFactoryService->addSetup('addFilter', ['getUserAclService', [$this->prefix('@filters'), 'getUserAclService']]);
+        $latteFactoryService->addSetup('addFilter', ['getUserService', [$this->prefix('@filters'), 'getUserService']]);
         $latteFactoryService->addSetup('Dravencms\Latte\User\Macros\Acl::install(?->getCompiler())', ['@self']);
     }
 

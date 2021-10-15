@@ -152,7 +152,7 @@ class User implements IIdentity
      *  }
      * )
      */
-    protected $groups;
+    private $groups;
 
 
     /**
@@ -376,9 +376,9 @@ class User implements IIdentity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDegree(): string
+    public function getDegree(): ?string
     {
         return $this->degree;
     }

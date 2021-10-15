@@ -4,9 +4,11 @@ namespace Dravencms\User;
 
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Database\EntityManager;
+use Nette\Application\UI\ComponentReflection;
+use Nette\Application\UI\MethodReflection;
 use Nette\Http\IResponse;
 use Dravencms\Security\UserAcl;
-
+use Nette\Security\Authorizator;
 
 
 /**
@@ -20,8 +22,8 @@ trait TSecuredPresenter
     /** @var DefaultDataCreator @inject */
     public $defaultDataCreator;
 
-    /** @var UserAcl @inject */
-    public $userAcl;
+    /** @var Authorizator @inject */
+    public $authorizator;
 
     /** @var bool */
     private $assigned = false;
@@ -56,10 +58,12 @@ trait TSecuredPresenter
         }
 
 
-        if ($element->hasAnnotation('isAllowed'))
+        if ($element instanceof \ReflectionMethod && $element->hasAnnotation('isAllowed'))
         {
-            list($resource, $operation) = $element->getAnnotation('isAllowed');
-            $this->userAcl->checkPermission($resource, $operation);
+            list($resource, $operation) = ComponentReflection::parseAnnotation($element, 'isAllowed');
+            if (!$this->authorizator->isAllowed($resource, $operation)) {
+                //$this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
+            }
         }
     }
 
@@ -69,9 +73,10 @@ trait TSecuredPresenter
 
         /** @var User $user */
         $user = $this->getUser()->getIdentity();
+        bdump($user);
         $user->setLastActivity(new \DateTime());
         $this->entityManager->flush();
-        $this->userAcl->initiate();
+        $this->authorizator->initiate();
         $this->template->userInfo = $user;
 
         $this->assigned = true;
@@ -85,6 +90,6 @@ trait TSecuredPresenter
      * @return bool
      */
     public function isAllowed(string $resource, string $operation, string $role = null): bool {
-        return $this->userAcl->isAllowed($resource, $operation, $role);
+        return $this->authorizator->isAllowed($resource, $operation, $role);
     }
 }

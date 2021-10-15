@@ -14,11 +14,11 @@ use Dravencms\Security\UserAcl;
  */
 class User
 {
-    private $userAcl;
+    private $user;
 
-    public function __construct(UserAcl $userAcl)
+    public function __construct(\Nette\Security\User $user)
     {
-        $this->userAcl = $userAcl;
+        $this->user = $user;
     }
 
 
@@ -44,16 +44,16 @@ class User
      * @param string|null $role
      * @return bool
      */
-    public function isAllowed(string $resource, string $operation, string $role = null) : bool
+    public function isAllowed(string $resource, string $operation) : bool
     {
-        return $this->userAcl->isAllowed($resource, $operation, $role);
+        return $this->user->isAllowed($resource, $operation);
     }
 
     /**
      * @return UserAcl
      */
-    public function getUserAclService() : UserAcl
+    public function getUserService() : \Nette\Security\User
     {
-        return $this->userAcl;
+        return $this->user;
     }
 }

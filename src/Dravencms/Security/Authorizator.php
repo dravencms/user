@@ -9,35 +9,55 @@
 namespace Dravencms\Security;
 
 
+use Dravencms\Model\User\Entities\User;
 use Nette\Security\IIdentity;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\Security\UserStorage;
 
 
-class UserAcl
+class Authorizator implements \Nette\Security\Authorizator
 {
-    /** @var \Nette\Security\User */
-    private $user;
+    /** @var UserStorage */
+    private $userStorage;
+
+    /** @var Authenticator */
+    private $authenticator;
 
     /** @var Permission */
     private $acl;
+
+    /** @var null|User */
+    private $identity = null;
 
     /**
      * UserAcl constructor.
      * @param \Nette\Security\User $user
      */
-    public function __construct(\Nette\Security\User $user)
+    public function __construct(UserStorage $userStorage, Authenticator $authenticator)
     {
-        $this->user = $user;
+        $this->userStorage = $userStorage;
+        $this->authenticator = $authenticator;
+    }
+
+    private function getUserIdentity(): User {
+
+        if (is_null($this->identity)){
+            [$loggedIn, $identity, $logoutReason] = $this->userStorage->getState();
+            $this->identity = $this->authenticator->wakeupIdentity($identity);
+        }
+
+        return $this->identity;
     }
 
     public function initiate()
     {
         $acl = new Permission();
-        
+
+        $identity = $this->getUserIdentity();
+
         /** @var Group $role */
-        foreach ($this->user->getIdentity()->getRoles() AS $role)
+        foreach ($identity->getRoles() AS $role)
         {
             $acl->addRole($role->getName());
 
@@ -48,6 +68,7 @@ class UserAcl
                 {
                     $acl->addResource($resourceName);
                 }
+
                 $acl->allow($role->getName(), $resourceName, $aclOperation->getName());
             }
         }
@@ -61,14 +82,15 @@ class UserAcl
      * @param string|null $role
      * @return bool
      */
-    public function isAllowed(string $resource, string $operation, string $role = null): bool
+    public function isAllowed($role, $resource, $privilege): bool
     {
         if (is_null($role))
         {
+            $identity = $this->getUserIdentity();
             /** @var Group $role */
-            foreach ($this->user->getIdentity()->getRoles() AS $role)
+            foreach ($identity->getRoles() AS $role)
             {
-                if ($this->acl->hasResource($resource) && $this->acl->isAllowed($role->getName(), $resource, $operation))
+                if ($this->acl->hasResource($resource) && $this->acl->isAllowed($role->getName(), $resource, $privilege))
                 {
                     return true;
                 }
@@ -76,22 +98,9 @@ class UserAcl
         }
         else
         {
-            return ($this->acl->hasResource($resource) && $this->acl->isAllowed($role, $resource, $operation));
+            return ($this->acl->hasResource($resource) && $this->acl->isAllowed($role->getName(), $resource, $privilege));
         }
 
         return false;
-    }
-
-    /**
-     * @param string $resource
-     * @param string $operation
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function checkPermission(string $resource, string $operation): void
-    {
-        if (!$this->isAllowed($resource, $operation))
-        {
-            $this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
-        }
     }
 }

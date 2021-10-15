@@ -61,7 +61,6 @@ class UserGrid extends BaseControl
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
 
-        $this->entityManager->getFilters()->enable('soft-deleteable');
         $grid->setDataSource($this->userRepository->getUsersQueryBuilder($this->namespace));
 
         $grid->addColumnText('namespace', 'Namespace')

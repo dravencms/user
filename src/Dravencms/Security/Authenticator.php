@@ -8,13 +8,15 @@ namespace Dravencms\Security;
 
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
-use Nette;
 use Nette\Security\AuthenticationException;
+use Nette\Security\IAuthenticator;
+use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
+use Nette\SmartObject;
 
-class Authenticator implements Nette\Security\IAuthenticator
+class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
 {
-    use Nette\SmartObject;
+    use SmartObject;
     
     /** @var PasswordManager */
     private $passwordManager;
@@ -37,45 +39,62 @@ class Authenticator implements Nette\Security\IAuthenticator
     }
 
     /**
+     * @param IIdentity $identity
+     * @return IIdentity
+     */
+    public function sleepIdentity(IIdentity $identity): IIdentity
+    {
+        //Save only simple identity with id
+        return new Nette\Security\SimpleIdentity($identity->getId());
+    }
+
+    /**
+     * @param IIdentity $identity
+     * @return IIdentity|null
+     */
+    public function wakeupIdentity(IIdentity $identity): ?IIdentity
+    {
+        return $this->userRepository->getOneById($identity->getId());
+    }
+
+    /**
      * @param string $namespace
      */
     public function setNamespace(string $namespace): void
     {
         $this->namespace = $namespace ?: null;
     }
-
+    
     /**
      * @param array $credentials
      * @return User
      * @throws AuthenticationException
      */
-    function authenticate(array $credentials): User
+    function authenticate(string $user, string $password): User
     {
-        list ($email, $password) = $credentials;
-
-        $criteria = ['email' => $email];
+        $criteria = ['email' => $user];
 
         if ($this->namespace) $criteria['namespace'] = $this->namespace;
 
         /** @var User|null $user */
-        $user = $this->userRepository->getUserRepository()->findOneBy($criteria);
+        $foundUser = $this->userRepository->getUserRepository()->findOneBy($criteria);
 
-        if (!$user) {
+        if (!$foundUser) {
             throw new AuthenticationException('User not found', self::IDENTITY_NOT_FOUND);
         }
 
-        if (!$user->isActive())
+        if (!$foundUser->isActive())
         {
             throw new AuthenticationException('User is not active', self::IDENTITY_NOT_FOUND);
         }
 
-        $verifyPassword = $user->verifyPassword($password, function($password, $hash) { return $this->passwordManager->verify($password, $hash); });
+        $verifyPassword = $foundUser->verifyPassword($password, function($password, $hash) { return $this->passwordManager->verify($password, $hash); });
         if (!$verifyPassword) {
             throw new AuthenticationException('Invalid credentials', self::INVALID_CREDENTIAL);
         }
 
         // Entity User implements IIdentity - can return as User Identity
-        return $user;
+        return $foundUser;
     }
 
 }
