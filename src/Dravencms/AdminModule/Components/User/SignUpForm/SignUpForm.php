@@ -7,14 +7,12 @@
 namespace Dravencms\AdminModule\Components\User\SignUpForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
-use Nette\Application\Application;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 
 class SignUpForm extends BaseControl
 {
@@ -31,7 +29,7 @@ class SignUpForm extends BaseControl
     private $entityManager;
 
     /** @var string */
-    private $namespace = 'Front';
+    private $namespace = 'Admin';
 
     public $onSuccess = [];
 
@@ -41,16 +39,18 @@ class SignUpForm extends BaseControl
      * @param UserRepository $streetRepository
      * @param PasswordManager $passwordManager
      * @param EntityManager $entityManager
-     * @param Application $application
      */
-    public function __construct(BaseFormFactory $baseFormFactory, UserRepository $streetRepository, PasswordManager $passwordManager, EntityManager $entityManager, Application $application)
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        UserRepository $streetRepository,
+        PasswordManager $passwordManager,
+        EntityManager $entityManager
+    )
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->userRepository = $streetRepository;
         $this->passwordManager = $passwordManager;
         $this->entityManager = $entityManager;
-
-        $this->namespace = $application->getPresenter()->getUser()->getStorage()->getNamespace();
     }
 
     /**
@@ -69,7 +69,7 @@ class SignUpForm extends BaseControl
             ->setRequired('Prosím zadejte příjmení.');
 
         $form->addText('email')
-            ->setType('email')
+            ->setHtmlType('email')
             ->addRule(Form::EMAIL, 'Prosím zadejte email.')
             ->setRequired('Prosím zadejte email.');
 

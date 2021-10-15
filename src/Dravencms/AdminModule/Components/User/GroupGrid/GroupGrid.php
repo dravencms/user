@@ -25,8 +25,10 @@ use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\GroupRepository;
 use Dravencms\Database\EntityManager;
+use Nette\Security\User;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 
 /**
  * Description of GroupGrid
@@ -44,6 +46,9 @@ class GroupGrid extends BaseControl
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var User */
+    private $user;
+
     /** @var array */
     public $onDelete = [];
 
@@ -51,12 +56,18 @@ class GroupGrid extends BaseControl
      * GroupGrid constructor.
      * @param GroupRepository $groupRepository
      * @param BaseGridFactory $baseGridFactory
+     * @param User $user
      * @param EntityManager $entityManager
      */
-    public function __construct(GroupRepository $groupRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
+    public function __construct(
+        GroupRepository $groupRepository,
+        BaseGridFactory $baseGridFactory,
+        User $user,
+        EntityManager $entityManager)
     {
         $this->baseGridFactory = $baseGridFactory;
         $this->groupRepository = $groupRepository;
+        $this->user = $user;
         $this->entityManager = $entityManager;
     }
 
@@ -90,7 +101,7 @@ class GroupGrid extends BaseControl
 
         $grid->addColumnBoolean('isRegister', 'Přidána při registraci');
 
-        if ($this->presenter->isAllowed('user', 'edit'))
+        if ($this->user->isAllowed('user', 'edit'))
         {
             $grid->addAction('edit', '')
                     ->setIcon('pencil')
@@ -98,12 +109,12 @@ class GroupGrid extends BaseControl
                     ->setClass('btn btn-xs btn-primary');
         }
 
-        if ($this->presenter->isAllowed('user', 'delete')) {
+        if ($this->user->isAllowed('user', 'delete')) {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
                 ->setTitle('Smazat')
                 ->setClass('btn btn-xs btn-danger ajax')
-                ->setConfirm('Do you really want to delete row %s?', 'name');
+                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'name'));
 
             $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }

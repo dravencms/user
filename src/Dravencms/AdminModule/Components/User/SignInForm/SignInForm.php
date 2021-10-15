@@ -7,9 +7,8 @@
 namespace Dravencms\AdminModule\Components\User\SignInForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 
 class SignInForm extends BaseControl
 {
@@ -45,6 +44,7 @@ class SignInForm extends BaseControl
 
         return $form;
     }
+
 
     public function render(): void
     {

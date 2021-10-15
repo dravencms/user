@@ -7,15 +7,13 @@
 namespace Dravencms\AdminModule\Components\User\ResetPasswordForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\PasswordReset;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\PasswordResetRepository;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
-use Nette\Application\Application;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 use Salamek\TemplatedEmail\TemplatedEmail;
 
 class ResetPasswordForm extends BaseControl
@@ -36,7 +34,7 @@ class ResetPasswordForm extends BaseControl
     private $passwordResetRepository;
 
     /** @var string */
-    private $namespace = 'Front';
+    private $namespace = 'Admin';
 
     public $onSuccess = [];
 
@@ -46,18 +44,21 @@ class ResetPasswordForm extends BaseControl
      * @param TemplatedEmail $templatedEmail
      * @param UserRepository $userRepository
      * @param EntityManager $entityManager
-     * @param Application $application
      * @param PasswordResetRepository $passwordResetRepository
      */
-    public function __construct(BaseFormFactory $baseFormFactory, TemplatedEmail $templatedEmail, UserRepository $userRepository, EntityManager $entityManager, Application $application, PasswordResetRepository $passwordResetRepository)
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        TemplatedEmail $templatedEmail,
+        UserRepository $userRepository,
+        EntityManager $entityManager,
+        PasswordResetRepository $passwordResetRepository
+    )
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->templatedEmail = $templatedEmail;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->passwordResetRepository = $passwordResetRepository;
-
-        $this->namespace = $application->getPresenter()->getUser()->getStorage()->getNamespace();
     }
 
     /**

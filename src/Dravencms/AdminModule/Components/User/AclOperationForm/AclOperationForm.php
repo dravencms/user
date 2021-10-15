@@ -20,14 +20,14 @@
 
 namespace Dravencms\AdminModule\Components\User\AclOperationForm;
 
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Model\User\Entities\AclOperation;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
+use Nette\Security\User;
 
 /**
  * Description of AclResourceEditForm
@@ -51,11 +51,20 @@ class AclOperationForm extends Control
     /** @var AclOperation */
     private $aclOperation;
 
+    /** @var User */
+    private $user;
+
     /** @var array */
     public $onSuccess = [];
 
 
-    public function __construct(AclResource $aclResource, BaseFormFactory $baseFormFactory, EntityManager $entityManager, AclOperationRepository $aclOperationRepository, AclOperation $aclOperation = null)
+    public function __construct(
+        AclResource $aclResource,
+        BaseFormFactory $baseFormFactory,
+        EntityManager $entityManager,
+        AclOperationRepository $aclOperationRepository,
+        User $user,
+        AclOperation $aclOperation = null)
     {
         $this->aclResource = $aclResource;
 
@@ -63,6 +72,7 @@ class AclOperationForm extends Control
         $this->entityManager = $entityManager;
         $this->aclOperationRepository = $aclOperationRepository;
         $this->aclOperation = $aclOperation;
+        $this->user = $user;
 
 
         if ($this->aclOperation)
@@ -104,7 +114,7 @@ class AclOperationForm extends Control
             $form->addError('Tento název je již zabrán.');
         }
 
-        if (!$this->presenter->isAllowed('user', 'edit')) {
+        if (!$this->user->isAllowed('user', 'edit')) {
             $form->addError('Nemáte oprávění editovat ACL.');
         }
     }

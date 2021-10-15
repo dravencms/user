@@ -6,8 +6,6 @@
 namespace Dravencms\Latte\User\Filters;
 
 
-use Dravencms\Security\UserAcl;
-
 /**
  * Class User
  * @package Latte\Filters
@@ -41,7 +39,6 @@ class User
     /**
      * @param string $resource
      * @param string $operation
-     * @param string|null $role
      * @return bool
      */
     public function isAllowed(string $resource, string $operation) : bool
@@ -50,7 +47,7 @@ class User
     }
 
     /**
-     * @return UserAcl
+     * @return \Nette\Security\User
      */
     public function getUserService() : \Nette\Security\User
     {

@@ -11,11 +11,11 @@ use Dravencms\AdminModule\Components\User\SignInForm\SignInForm;
 use Dravencms\AdminModule\Components\User\SignInForm\SignInFormFactory;
 use Dravencms\AdminModule\Components\User\SignUpForm\SignUpForm;
 use Dravencms\AdminModule\Components\User\SignUpForm\SignUpFormFactory;
+use Dravencms\Flash;
 use Dravencms\Model\Admin\Entities\Menu;
 use Dravencms\Model\Admin\Repository\MenuRepository;
 use Dravencms\Security\Authenticator;
 use Dravencms\Model\User\Repository\PasswordResetRepository;
-use Nette;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 
@@ -55,7 +55,7 @@ class SignPresenter extends BasePresenter
     public function startup(): void
     {
         parent::startup();
-        $this->authenticator->setNamespace($this->getUser()->getStorage()->getNamespace());
+        $this->authenticator->setNamespace('Admin');
         $this->allowRegister = false; //!FIXME INTO CONFIG
     }
 
@@ -117,7 +117,7 @@ class SignPresenter extends BasePresenter
     public function actionOut(): void
     {
         $this->getUser()->logout();
-        $this->flashMessage('You have been signed out.', 'alert-info');
+        $this->flashMessage('You have been signed out.', Flash::INFO);
         $this->redirect('in');
     }
 
@@ -129,7 +129,7 @@ class SignPresenter extends BasePresenter
         $control = $this->resetPasswordFormFactory->create();
         $control->onSuccess[] = function()
         {
-            $this->flashMessage('Email with reset url was send.', 'alert-success');
+            $this->flashMessage('Email with reset url was send.', Flash::SUCCESS);
             $this->redirect('in');
         };
         return $control;
@@ -157,7 +157,7 @@ class SignPresenter extends BasePresenter
     {
         $control = $this->doResetPasswordFormFactory->create($this->foundPasswordReset);
         $control->onSuccess[] = function(){
-            $this->flashMessage('Password has been successfully changed', 'alert-success');
+            $this->flashMessage('Password has been successfully changed', Flash::SUCCESS);
             $this->redirect('Sign:in');
         };
 
@@ -186,7 +186,7 @@ class SignPresenter extends BasePresenter
         $component = $this->signUpFormFactory->create();
         $component->onSuccess[] = function()
         {
-            $this->flashMessage('Registrace proběhla úspěšně.', 'alert-success');
+            $this->flashMessage('Registrace proběhla úspěšně.', Flash::SUCCESS);
             $this->redirect('Sign:in');
         };
         return $component;

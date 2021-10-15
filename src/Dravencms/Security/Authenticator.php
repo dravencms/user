@@ -9,9 +9,9 @@ namespace Dravencms\Security;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
 use Nette\Security\AuthenticationException;
-use Nette\Security\IAuthenticator;
 use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 use Nette\SmartObject;
 
 class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
@@ -45,7 +45,7 @@ class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
     public function sleepIdentity(IIdentity $identity): IIdentity
     {
         //Save only simple identity with id
-        return new Nette\Security\SimpleIdentity($identity->getId());
+        return new SimpleIdentity($identity->getId());
     }
 
     /**

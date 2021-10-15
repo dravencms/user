@@ -20,14 +20,13 @@
 
 namespace Dravencms\AdminModule\Components\User\AccountForm;
 
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 
 /**
  * Description of AccountForm

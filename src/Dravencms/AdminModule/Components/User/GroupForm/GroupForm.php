@@ -21,7 +21,6 @@
 namespace Dravencms\AdminModule\Components\User\GroupForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Repository\GroupRepository;
@@ -29,7 +28,8 @@ use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Model\User\Repository\AclResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dravencms\Database\EntityManager;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
+use Nette\Security\User;
 
 /**
  * Description of SearchForm
@@ -53,6 +53,9 @@ class GroupForm extends BaseControl
     /** @var AclResourceRepository */
     private $aclResourceRepository;
 
+    /** @var User */
+    private $user;
+
     /** @var Group */
     private $group = null;
 
@@ -65,6 +68,7 @@ class GroupForm extends BaseControl
      * @param AclOperationRepository $aclOperationRepository
      * @param GroupRepository $groupRepository
      * @param AclResourceRepository $aclResourceRepository
+     * @param User $user
      * @param Group|null $group
      */
     public function __construct(
@@ -73,6 +77,7 @@ class GroupForm extends BaseControl
         AclOperationRepository $aclOperationRepository,
         GroupRepository $groupRepository,
         AclResourceRepository $aclResourceRepository,
+        User $user,
         Group $group = null
     ) {
         $this->baseFormFactory = $baseFormFactory;
@@ -80,6 +85,7 @@ class GroupForm extends BaseControl
         $this->groupRepository = $groupRepository;
         $this->aclOperationRepository = $aclOperationRepository;
         $this->aclResourceRepository = $aclResourceRepository;
+        $this->user = $user;
         $this->group = $group;
 
         if ($this->group)
@@ -143,7 +149,6 @@ class GroupForm extends BaseControl
 
     /**
      * @param Form $form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function editFormValidate(Form $form): void
     {
@@ -152,7 +157,7 @@ class GroupForm extends BaseControl
             $form->addError('Tento název skupiny je již zabrán.');
         }
 
-        if (!$this->presenter->isAllowed('user', 'edit')) {
+        if (!$this->user->isAllowed('user', 'edit')) {
             $form->addError('Nemáte oprávění editovat ACL skupiny.');
         }
     }

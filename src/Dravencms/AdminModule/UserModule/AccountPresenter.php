@@ -25,6 +25,7 @@ use Dravencms\AdminModule\Components\User\AccountForm\AccountFormFactory;
 use Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordForm;
 use Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordFormFactory;
 use Dravencms\AdminModule\SecuredPresenter;
+use Dravencms\Flash;
 use Dravencms\Model\User\Repository\UserRepository;
 
 /**
@@ -58,7 +59,7 @@ class AccountPresenter extends SecuredPresenter
         $control = $this->accountFormFactory->create($this->getUserEntity());
         $control->onSuccess[] = function()
         {
-            $this->flashMessage('Změny byly uloženy.', 'alert-success');
+            $this->flashMessage('Změny byly uloženy.', Flash::SUCCESS);
             $this->redirect('Account:');
         };
         return $control;
@@ -72,7 +73,7 @@ class AccountPresenter extends SecuredPresenter
         $control = $this->accountPasswordFormFactory->create($this->getUserEntity());
         $control->onSuccess[] = function()
         {
-            $this->flashMessage('Heslo bylo změněno a byli jste odhlášeni, prosím přihlašte se novým heslem.', 'alert-success');
+            $this->flashMessage('Heslo bylo změněno a byli jste odhlášeni, prosím přihlašte se novým heslem.', Flash::SUCCESS);
             $this->getUser()->logout();
             $this->redirect('Account:#password-change');
         };

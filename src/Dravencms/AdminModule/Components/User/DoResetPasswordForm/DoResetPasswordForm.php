@@ -7,14 +7,12 @@
 namespace Dravencms\AdminModule\Components\User\DoResetPasswordForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\PasswordReset;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
-use Nette\Application\Application;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 
 class DoResetPasswordForm extends BaseControl
 {
@@ -33,8 +31,6 @@ class DoResetPasswordForm extends BaseControl
     /** @var PasswordManager */
     private $passwordManager;
 
-    /** @var string */
-    private $namespace = 'Front';
 
     public $onSuccess = [];
 
@@ -44,7 +40,6 @@ class DoResetPasswordForm extends BaseControl
      * @param BaseFormFactory $baseFormFactory
      * @param UserRepository $userRepository
      * @param EntityManager $entityManager
-     * @param Application $application
      * @param PasswordManager $passwordManager
      */
     public function __construct(
@@ -52,7 +47,6 @@ class DoResetPasswordForm extends BaseControl
         BaseFormFactory $baseFormFactory,
         UserRepository $userRepository,
         EntityManager $entityManager,
-        Application $application,
         PasswordManager $passwordManager
     ) {
         $this->baseFormFactory = $baseFormFactory;
@@ -60,8 +54,6 @@ class DoResetPasswordForm extends BaseControl
         $this->entityManager = $entityManager;
         $this->passwordReset = $passwordReset;
         $this->passwordManager = $passwordManager;
-
-        $this->namespace = $application->getPresenter()->getUser()->getStorage()->getNamespace();
     }
 
     /**

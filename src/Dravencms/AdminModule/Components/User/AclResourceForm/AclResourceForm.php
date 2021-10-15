@@ -20,13 +20,13 @@
 
 namespace Dravencms\AdminModule\Components\User\AclResourceForm;
 
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Repository\AclResourceRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
+use Nette\Security\User;
 
 /**
  * Description of AclResourceEditForm
@@ -47,6 +47,9 @@ class AclResourceForm extends Control
     /** @var AclResource */
     private $aclResource;
 
+    /** @var User */
+    private $user;
+
     /** @var array */
     public $onSuccess = [];
 
@@ -55,14 +58,21 @@ class AclResourceForm extends Control
      * @param BaseFormFactory $baseFormFactory
      * @param EntityManager $entityManager
      * @param AclResourceRepository $aclResourceRepository
+     * @param User $user
      * @param AclResource|null $aclResource
      */
-    public function __construct(BaseFormFactory $baseFormFactory, EntityManager $entityManager, AclResourceRepository $aclResourceRepository, AclResource $aclResource = null)
+    public function __construct(
+        BaseFormFactory $baseFormFactory,
+        EntityManager $entityManager,
+        AclResourceRepository $aclResourceRepository,
+        User $user,
+        AclResource $aclResource = null)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;
         $this->aclResourceRepository = $aclResourceRepository;
         $this->aclResource = $aclResource;
+        $this->user = $user;
 
         if ($this->aclResource)
         {
@@ -98,7 +108,6 @@ class AclResourceForm extends Control
 
     /**
      * @param Form $form
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function editFormValidate(Form $form): void
     {
@@ -108,7 +117,7 @@ class AclResourceForm extends Control
             $form->addError('Name is not free');
         }
 
-        if (!$this->presenter->isAllowed('user', 'edit')) {
+        if (!$this->user->isAllowed('user', 'edit')) {
             $form->addError('Nemáte oprávění editovat ACL.');
         }
     }

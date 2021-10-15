@@ -12,6 +12,8 @@ use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
+use Nette\Security\User;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 
 class UserGrid extends BaseControl
 {
@@ -27,20 +29,29 @@ class UserGrid extends BaseControl
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var User */
+    private $user;
+
     /** @var array */
     public $onDelete = [];
 
     /**
-     * MenuGrid constructor.
+     * UserGrid constructor.
      * @param UserRepository $userRepository
      * @param BaseGridFactory $baseGridFactory
+     * @param User $user
      * @param EntityManager $entityManager
      */
-    public function __construct(UserRepository $userRepository, BaseGridFactory $baseGridFactory, EntityManager $entityManager)
+    public function __construct(
+        UserRepository $userRepository,
+        BaseGridFactory $baseGridFactory,
+        User $user,
+        EntityManager $entityManager)
     {
         $this->baseGridFactory = $baseGridFactory;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
+        $this->user = $user;
     }
 
     /**
@@ -88,19 +99,19 @@ class UserGrid extends BaseControl
 
         $grid->addColumnBoolean('isActive', 'Active');
 
-        if ($this->presenter->isAllowed('user', 'edit')) {
+        if ($this->user->isAllowed('user', 'edit')) {
             $grid->addAction('edit', '')
                 ->setTitle('Upravit')
                 ->setIcon('pencil')
                 ->setClass('btn btn-xs btn-primary');
         }
 
-        if ($this->presenter->isAllowed('user', 'delete')) {
+        if ($this->user->isAllowed('user', 'delete')) {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
                 ->setTitle('Smazat')
                 ->setClass('btn btn-xs btn-danger ajax')
-                ->setConfirm('Do you really want to delete row %s?', 'email');
+                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'email'));
 
             $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }

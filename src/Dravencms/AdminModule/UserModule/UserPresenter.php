@@ -26,6 +26,7 @@ use Dravencms\AdminModule\Components\User\UserForm\UserFormFactory;
 use Dravencms\AdminModule\Components\User\UserGrid\UserGrid;
 use Dravencms\AdminModule\Components\User\UserGrid\UserGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
+use Dravencms\Flash;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Model\User\Repository\UserRepository;
 
@@ -89,12 +90,12 @@ class UserPresenter extends SecuredPresenter
             // If editing my self, log out
             if ($this->getUserEntity() == $this->userFormEntity) {
                 $this->getUser()->logout();
-                $this->flashMessage('Changes has been made to Your account. You have been signed out.', 'alert-info');
+                $this->flashMessage('Changes has been made to Your account. You have been signed out.', Flash::INFO);
                 $this->redirect('Sign:in');
             }
             else
             {
-                $this->flashMessage('Changes has been saved.', 'alert-success');
+                $this->flashMessage('Changes has been saved.', Flash::SUCCESS);
                 $this->redirect('User:');
             }
         };
@@ -110,7 +111,7 @@ class UserPresenter extends SecuredPresenter
         $control->setNamespace($this->getNamespace());
         $control->onDelete[] = function()
         {
-            $this->flashMessage('User has been successfully deleted.', 'alert-success');
+            $this->flashMessage('User has been successfully deleted.', Flash::INFO);
             $this->redirect('User:');
         };
         return $control;

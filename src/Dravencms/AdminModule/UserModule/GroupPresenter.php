@@ -25,6 +25,7 @@ use Dravencms\AdminModule\Components\User\GroupForm\GroupFormFactory;
 use Dravencms\AdminModule\Components\User\GroupGrid\GroupGrid;
 use Dravencms\AdminModule\Components\User\GroupGrid\GroupGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
+use Dravencms\Flash;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Repository\GroupRepository;
 
@@ -56,10 +57,10 @@ class GroupPresenter extends SecuredPresenter
     }
 
     /**
-     * @param integer $id
+     * @param integer|null $id
      * @isAllowed(user,edit)
      */
-    public function actionEdit(int $id): void
+    public function actionEdit(int $id = null): void
     {
         if ($id) {
             $group = $this->userGroupRepository->getOneById($id);
@@ -82,7 +83,7 @@ class GroupPresenter extends SecuredPresenter
     {
         $control = $this->groupGridFactory->create();
         $control->onDelete[] = function(){
-            $this->flashMessage('Group has been successfully deleted', 'alert-success');
+            $this->flashMessage('Group has been successfully deleted', Flash::SUCCESS);
             $this->redirect('Group:');
         };
         return $control;
@@ -95,7 +96,7 @@ class GroupPresenter extends SecuredPresenter
     {
         $control = $this->groupFormFactory->create($this->userGroupFormEntity);
         $control->onSuccess[] = function(){
-            $this->flashMessage('Group has been successfully saved', 'alert-success');
+            $this->flashMessage('Group has been successfully saved', Flash::SUCCESS);
             $this->redirect('Group:');
         };
 

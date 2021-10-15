@@ -3,7 +3,6 @@
 namespace Dravencms\AdminModule\Components\User\UserForm;
 
 use Dravencms\Components\BaseControl\BaseControl;
-use Dravencms\Components\BaseForm\BaseForm;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Security\PasswordManager;
 use Dravencms\Model\User\Entities\User;
@@ -11,8 +10,7 @@ use Dravencms\Model\User\Repository\GroupRepository;
 use Dravencms\Model\User\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dravencms\Database\EntityManager;
-use Nette\Application\Application;
-use Nette\Application\UI\Form;
+use Dravencms\Components\BaseForm\Form;
 
 /**
  * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
@@ -37,8 +35,11 @@ class UserForm extends BaseControl
     /** @var GroupRepository */
     private $groupRepository;
 
+    /** @var \Nette\Security\User */
+    private $securityUser;
+
     /** @var string */
-    private $namespace = 'Front';
+    private $namespace = 'Admin';
 
     public $onSuccess = [];
 
@@ -47,18 +48,18 @@ class UserForm extends BaseControl
      * @param BaseFormFactory $baseFormFactory
      * @param UserRepository $streetRepository
      * @param EntityManager $entityManager
-     * @param Application $application
      * @param PasswordManager $passwordManager
      * @param GroupRepository $groupRepository
+     * @param \Nette\Security\User $securityUser
      * @param User|null $user
      */
     public function __construct(
         BaseFormFactory $baseFormFactory,
         UserRepository $streetRepository,
         EntityManager $entityManager,
-        Application $application,
         PasswordManager $passwordManager,
         GroupRepository $groupRepository,
+        \Nette\Security\User $securityUser,
         User $user = null
     ) {
         $this->user = $user;
@@ -67,8 +68,8 @@ class UserForm extends BaseControl
         $this->entityManager = $entityManager;
         $this->passwordManager = $passwordManager;
         $this->groupRepository = $groupRepository;
+        $this->securityUser = $securityUser;
 
-        $this->namespace = $application->getPresenter()->getUser()->getStorage()->getNamespace();
 
         if ($this->user)
         {
@@ -111,7 +112,7 @@ class UserForm extends BaseControl
             ->setRequired('Prosím zadejte příjmení.');
 
         $form->addText('email')
-            ->setType('email')
+            ->setHtmlType('email')
             ->addRule(Form::EMAIL, 'Prosím zadejte email.')
             ->setRequired('Prosím zadejte email.');
 
@@ -148,7 +149,7 @@ class UserForm extends BaseControl
         }
 
         //Kontrola opraveni
-        if (!$this->presenter->isAllowed('user', 'edit')) {
+        if (!$this->securityUser->isAllowed('user', 'edit')) {
             $form->addError('Nemáte oprávění editovat uživatele.');
         }
     }

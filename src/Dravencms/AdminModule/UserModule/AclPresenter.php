@@ -29,6 +29,7 @@ use Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceFormFactory
 use Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGrid;
 use Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGridFactory;
 use Dravencms\AdminModule\SecuredPresenter;
+use Dravencms\Flash;
 use Dravencms\Model\User\Entities\AclOperation;
 use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Model\User\Repository\AclOperationRepository;
@@ -125,7 +126,7 @@ class AclPresenter extends SecuredPresenter
     }
 
     /**
-     * @param integer|null $id
+     * @param integer $id
      * @isAllowed(user,edit)
      */
     public function actionOperation(int $id): void
@@ -151,7 +152,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclResourceGridFactory->create();
         $control->onDelete[] = function()
         {
-            $this->flashMessage('Resource has been successfully deleted', 'alert-success');
+            $this->flashMessage('Resource has been successfully deleted', Flash::SUCCESS);
             $this->redirect('Acl:');
         };
         return $control;
@@ -165,7 +166,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclResourceEditFormFactory->create($this->aclResource);
         $control->onSuccess[] = function()
         {
-            $this->flashMessage('Resource has been successfully saved', 'alert-success');
+            $this->flashMessage('Resource has been successfully saved', Flash::SUCCESS);
             $this->redirect('Acl:');
         };
         return $control;
@@ -179,7 +180,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclOperationGridFactory->create($this->aclResource);
         $control->onDelete[] = function($aclResource)
         {
-            $this->flashMessage('Operation has been successfully deleted', 'alert-success');
+            $this->flashMessage('Operation has been successfully deleted', Flash::SUCCESS);
             $this->redirect('Acl:operation', $aclResource->getId());
         };
         return $control;
@@ -193,7 +194,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclOperationEditFormFactory->create($this->aclResource, $this->aclOperation);
         $control->onSuccess[] = function($aclResource)
         {
-            $this->flashMessage('Operation has been successfully saved', 'alert-success');
+            $this->flashMessage('Operation has been successfully saved', Flash::SUCCESS);
             $this->redirect('Acl:operation', $aclResource->getId());
         };
         return $control;
