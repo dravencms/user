@@ -76,4 +76,15 @@ trait TSecuredPresenter
 
         $this->assigned = true;
     }
+
+    /**
+     * @deprecated replace with UserAcl::isAllowed
+     * @param string $resource
+     * @param string $operation
+     * @param string|null $role
+     * @return bool
+     */
+    public function isAllowed(string $resource, string $operation, string $role = null): bool {
+        return $this->userAcl->isAllowed($resource, $operation, $role);
+    }
 }
