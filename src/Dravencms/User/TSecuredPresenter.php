@@ -61,8 +61,8 @@ trait TSecuredPresenter
         if ($element instanceof \ReflectionMethod && $element->hasAnnotation('isAllowed'))
         {
             list($resource, $operation) = ComponentReflection::parseAnnotation($element, 'isAllowed');
-            if (!$this->authorizator->isAllowed($resource, $operation)) {
-                //$this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
+            if (!$this->authorizator->isAllowed(null, $resource, $operation)) {
+                $this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
             }
         }
     }
@@ -89,6 +89,7 @@ trait TSecuredPresenter
      * @return bool
      */
     public function isAllowed(string $resource, string $operation, string $role = null): bool {
+        trigger_error('presenter::isAllowed is deprecated, use Security/User::isAllowed', E_USER_DEPRECATED);
         return $this->authorizator->isAllowed($resource, $operation, $role);
     }
 }
