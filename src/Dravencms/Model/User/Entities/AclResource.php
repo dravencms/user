@@ -7,6 +7,7 @@ namespace Dravencms\Model\User\Entities;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
@@ -90,9 +91,9 @@ class AclResource
 
     /**
      *
-     * @return ArrayCollection|AclOperation[]
+     * @return Collection|AclOperation[]
      */
-    public function getAclOperations(): ArrayCollection
+    public function getAclOperations(): Collection
     {
         return $this->aclOperations;
     }
