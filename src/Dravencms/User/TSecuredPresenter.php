@@ -2,11 +2,11 @@
 
 namespace Dravencms\User;
 
-use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Database\EntityManager;
 use Nette\Http\IResponse;
-use Nette\Security\Permission;
+use Dravencms\Security\UserAcl;
+
 
 
 /**
@@ -20,8 +20,8 @@ trait TSecuredPresenter
     /** @var DefaultDataCreator @inject */
     public $defaultDataCreator;
 
-    /** @var \Nette\Security\Permission */
-    private $acl;
+    /** @var UserAcl @inject */
+    public $userAcl;
 
     /** @var bool */
     private $assigned = false;
@@ -59,7 +59,7 @@ trait TSecuredPresenter
         if ($element->hasAnnotation('isAllowed'))
         {
             list($resource, $operation) = $element->getAnnotation('isAllowed');
-            $this->checkPermission($resource, $operation);
+            $this->userAcl->checkPermission($resource, $operation);
         }
     }
 
@@ -71,49 +71,9 @@ trait TSecuredPresenter
         $user = $this->getUser()->getIdentity();
         $user->setLastActivity(new \DateTime());
         $this->entityManager->flush();
-
+        $this->userAcl->initiate();
         $this->template->userInfo = $user;
 
         $this->assigned = true;
-    }
-
-    /**
-     * @param string $resource
-     * @param string $operation
-     * @param string|null $role
-     * @return bool
-     */
-    public function isAllowed(string $resource, string $operation, string $role = null): bool
-    {
-        if (is_null($role))
-        {
-            /** @var Group $role */
-            foreach ($this->user->getRoles() AS $role)
-            {
-                if ($this->acl->hasResource($resource) && $this->acl->isAllowed($role->getName(), $resource, $operation))
-                {
-                    return true;
-                }
-            }
-        }
-        else
-        {
-            return ($this->acl->hasResource($resource) && $this->acl->isAllowed($role, $resource, $operation));
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $resource
-     * @param string $operation
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function checkPermission(string $resource, string $operation): void
-    {
-        if (!$this->isAllowed($resource, $operation))
-        {
-            $this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
-        }
     }
 }

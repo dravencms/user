@@ -12,15 +12,13 @@ use Nette\DI\CompilerExtension;
  */
 class UserExtension extends CompilerExtension
 {
-    public static $prefix = 'user';
-
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
-        $builder->addDefinition($this->prefix(self::$prefix))
+        $builder->addDefinition($this->prefix('user'))
             ->setFactory(User::class);
 
-        $builder->addDefinition($this->prefix(self::$prefix.'filters'))
+        $builder->addDefinition($this->prefix('filters'))
             ->setFactory(\Dravencms\Latte\User\Filters\User::class)
             ->setAutowired(false);
 
@@ -35,7 +33,9 @@ class UserExtension extends CompilerExtension
         $builder = $this->getContainerBuilder();
 
         $latteFactoryService = $builder->getDefinitionByType(LatteFactory::class)->getResultDefinition();
-        $latteFactoryService->addSetup('addFilter', ['formatUserName', [$this->prefix('@'.self::$prefix.'filters'), 'formatUserName']]);
+        $latteFactoryService->addSetup('addFilter', ['formatUserName', [$this->prefix('@filters'), 'formatUserName']]);
+        $latteFactoryService->addSetup('addFilter', ['isAllowed', [$this->prefix('@filters'), 'isAllowed']]);
+        $latteFactoryService->addSetup('addFilter', ['getUserAclService', [$this->prefix('@filters'), 'getUserAclService']]);
         $latteFactoryService->addSetup('Dravencms\Latte\User\Macros\Acl::install(?->getCompiler())', ['@self']);
     }
 

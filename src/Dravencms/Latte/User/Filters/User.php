@@ -6,12 +6,22 @@
 namespace Dravencms\Latte\User\Filters;
 
 
+use Dravencms\Security\UserAcl;
+
 /**
  * Class User
  * @package Latte\Filters
  */
 class User
 {
+    private $userAcl;
+
+    public function __construct(UserAcl $userAcl)
+    {
+        $this->userAcl = $userAcl;
+    }
+
+
     /**
      * @param $user
      * @return string
@@ -26,5 +36,24 @@ class User
         $parts[] = $user->getLastName();
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * @param string $resource
+     * @param string $operation
+     * @param string|null $role
+     * @return bool
+     */
+    public function isAllowed(string $resource, string $operation, string $role = null) : bool
+    {
+        return $this->userAcl->isAllowed($resource, $operation, $role);
+    }
+
+    /**
+     * @return UserAcl
+     */
+    public function getUserAclService() : UserAcl
+    {
+        return $this->userAcl;
     }
 }

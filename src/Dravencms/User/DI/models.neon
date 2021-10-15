@@ -1,5 +1,6 @@
 - Dravencms\Security\Authenticator
 - Dravencms\Security\PasswordManager
+- Dravencms\Security\UserAcl
 
 - Dravencms\User\DefaultDataCreator
 
