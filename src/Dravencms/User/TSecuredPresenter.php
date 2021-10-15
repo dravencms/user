@@ -38,7 +38,7 @@ trait TSecuredPresenter
 
         if (!$this->getUser()->isLoggedIn())
         {
-            if (!property_exists(new self, 'redirectUnauthorizedTo') || is_null(self::$redirectUnauthorizedTo)) {
+            if (is_null(self::$redirectUnauthorizedTo)) {
                 $this->error('Unauthorized', IResponse::S401_UNAUTHORIZED);
             } else {
                 $this->redirect(':Admin:User:Sign:In', ['backlink' => $this->storeRequest()]);
@@ -73,24 +73,6 @@ trait TSecuredPresenter
         $this->entityManager->flush();
 
         $this->template->userInfo = $user;
-
-        $this->acl = new Permission;
-
-        /** @var Group $role */
-        foreach ($user->getRoles() AS $role)
-        {
-            $this->acl->addRole($role->getName());
-
-            foreach($role->getAclOperations() AS $aclOperation)
-            {
-                $resourceName = $aclOperation->getAclResource()->getName();
-                if (!$this->acl->hasResource($resourceName))
-                {
-                    $this->acl->addResource($resourceName);
-                }
-                $this->acl->allow($role->getName(), $resourceName, $aclOperation->getName());
-            }
-        }
 
         $this->assigned = true;
     }
