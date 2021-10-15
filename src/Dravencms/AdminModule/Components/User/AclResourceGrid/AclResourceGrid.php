@@ -93,7 +93,7 @@ class AclResourceGrid extends BaseControl
 
         if ($this->user->isAllowed('user', 'edit'))
         {
-            $grid->addAction('operation', 'Operace')
+            $grid->addAction('operation', 'Operace', 'operation')
                 ->setIcon('lock')
                 ->setTitle('Operace')
                 ->setClass('btn btn-xs btn-default');

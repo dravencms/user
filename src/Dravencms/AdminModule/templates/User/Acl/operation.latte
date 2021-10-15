@@ -1,6 +1,6 @@
 {block #content}
     <p n:isAllowed="user, edit">
-        <a n:href="editOperation" class="btn btn-primary"><i class="glyphicon glyphicon-plus icon-plus"></i>Vložit novou operaci</a>
+        <a n:href="editOperation, aclResourceId => $aclResource->getId()" class="btn btn-primary"><i class="glyphicon glyphicon-plus icon-plus"></i>Vložit novou operaci</a>
     </p>
     {control gridOperation}
 {/block}

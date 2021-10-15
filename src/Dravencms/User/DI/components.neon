@@ -1,7 +1,3 @@
-- Dravencms\AdminModule\Components\User\SignInForm\SignInFormFactory
-- Dravencms\AdminModule\Components\User\ResetPasswordForm\ResetPasswordFormFactory
-- Dravencms\AdminModule\Components\User\SignUpForm\SignUpFormFactory
-- Dravencms\AdminModule\Components\User\DoResetPasswordForm\DoResetPasswordFormFactory
 - Dravencms\AdminModule\Components\User\UserGrid\UserGridFactory
 - Dravencms\AdminModule\Components\User\UserForm\UserFormFactory
 - Dravencms\AdminModule\Components\User\GroupForm\GroupFormFactory
@@ -10,5 +6,3 @@
 - Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceFormFactory
 - Dravencms\AdminModule\Components\User\AclOperationGrid\AclOperationGridFactory
 - Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGridFactory
-- Dravencms\AdminModule\Components\User\AccountForm\AccountFormFactory
-- Dravencms\AdminModule\Components\User\AccountPasswordForm\AccountPasswordFormFactory

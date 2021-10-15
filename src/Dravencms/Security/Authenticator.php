@@ -14,7 +14,7 @@ use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 use Nette\SmartObject;
 
-class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
+class Authenticator implements \Nette\Security\Authenticator, IdentityHandler
 {
     use SmartObject;
     
@@ -29,11 +29,13 @@ class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
 
     /**
      * Authenticator constructor.
+     * @param string $namespace
      * @param PasswordManager $passwordManager
      * @param UserRepository $userRepository
      */
-    public function __construct(PasswordManager $passwordManager, UserRepository $userRepository)
+    public function __construct(string $namespace, PasswordManager $passwordManager, UserRepository $userRepository)
     {
+        $this->namespace = $namespace;
         $this->passwordManager = $passwordManager;
         $this->userRepository = $userRepository;
     }
@@ -57,14 +59,6 @@ class Authenticator implements \Nette\Security\Authenticator,IdentityHandler
         return $this->userRepository->getOneById($identity->getId());
     }
 
-    /**
-     * @param string $namespace
-     */
-    public function setNamespace(string $namespace): void
-    {
-        $this->namespace = $namespace ?: null;
-    }
-    
     /**
      * @param array $credentials
      * @return User

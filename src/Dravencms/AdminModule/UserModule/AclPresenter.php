@@ -63,9 +63,6 @@ class AclPresenter extends SecuredPresenter
     /** @var AclResource */
     protected $aclResource = null;
 
-    /** @persistent */
-    public $aclResourceId;
-
     /** @var AclOperation|null */
     private $aclOperation = null;
 
@@ -101,14 +98,14 @@ class AclPresenter extends SecuredPresenter
      * @param integer|null $id
      * @isAllowed(user,edit)
      */
-    public function actionEditOperation(int $id = null): void
+    public function actionEditOperation(int $id = null, int $aclResourceId): void
     {
-        $aclResource = $this->aclResourceRepository->getOneById($this->aclResourceId);
+        $aclResource = $this->aclResourceRepository->getOneById($aclResourceId);
         if (!$aclResource)
         {
             $this->error('Resource not found!');
         }
-
+        
         $this->aclResource = $aclResource;
 
         if ($id) {
@@ -141,7 +138,8 @@ class AclPresenter extends SecuredPresenter
         $this->template->h1 = 'ACL '.$aclResource->getName();
 
         $this->aclResource = $aclResource;
-        $this->aclResourceId = $aclResource->getId();
+
+        $this->template->aclResource = $this->aclResource;
     }
 
     /**

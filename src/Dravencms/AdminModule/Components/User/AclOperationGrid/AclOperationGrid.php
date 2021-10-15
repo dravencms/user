@@ -104,7 +104,7 @@ class AclOperationGrid extends BaseControl
 
         if ($this->user->isAllowed('user', 'edit'))
         {
-            $grid->addAction('editOperation', '')
+            $grid->addAction('editOperation', '', 'editOperation', ['aclResourceId' => 'aclResource.id', 'id'])
                     ->setIcon('pencil')
                     ->setTitle('Upravit')
                     ->setClass('btn btn-xs btn-primary');
