@@ -73,7 +73,6 @@ trait TSecuredPresenter
 
         /** @var User $user */
         $user = $this->getUser()->getIdentity();
-        bdump($user);
         $user->setLastActivity(new \DateTime());
         $this->entityManager->flush();
         $this->authorizator->initiate();
