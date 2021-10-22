@@ -8,7 +8,7 @@ The best way to install dravencms/user is using  [Composer](http://getcomposer.o
 
 
 ```sh
-$ composer require dravencms/user:@dev
+$ composer require dravencms/user
 ```
 
 Then you have to register extension in `config.neon`.
@@ -16,5 +16,4 @@ Then you have to register extension in `config.neon`.
 ```yaml
 extensions:
 	user: Dravencms\User\DI\UserExtension
-	doctrine2identity: Majkl578\NetteAddons\Doctrine2Identity\DI\IdentityExtension
 ```
