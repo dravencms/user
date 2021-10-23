@@ -64,7 +64,7 @@ class Authenticator implements \Nette\Security\Authenticator, IdentityHandler
      * @return User
      * @throws AuthenticationException
      */
-    function authenticate(string $user, string $password): User
+    function authenticate(string $user, string $password): IIdentity
     {
         $criteria = ['email' => $user];
 
