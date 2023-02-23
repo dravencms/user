@@ -30,9 +30,9 @@ class AclOperationRepository
 
     /**
      * @param $id
-     * @return null|AclOperation
+     * @return AclOperation[]
      */
-    public function getById($id): ?AclOperation
+    public function getById($id)
     {
         return $this->aclOperationRepository->findBy(['id' => $id]);
     }
