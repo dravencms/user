@@ -28,7 +28,7 @@ use Dravencms\Model\User\Entities\AclResource;
 use Dravencms\Model\User\Repository\AclOperationRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Security\User;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 
 /**
  * Description of AclOperationGrid
@@ -85,7 +85,7 @@ class AclOperationGrid extends BaseControl
     /**
      * @param string $name
      * @return Grid
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws \Contributte\Datagrid\Exception\DatagridException
      */
     public function createComponentGrid(string $name): Grid
     {

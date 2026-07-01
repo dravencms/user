@@ -4,7 +4,7 @@ namespace Dravencms\Model\User\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Dravencms\Model\Location\Entities\StreetNumber;
 use Nette;
@@ -12,9 +12,9 @@ use Nette;
 /**
  * Class Company
  * @package App\Model\Entities
- * @ORM\Entity
- * @ORM\Table(name="userCompany")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "userCompany")]
 class Company
 {
     use Nette\SmartObject;
@@ -23,65 +23,65 @@ class Company
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,unique=true,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: true)]
     private $companyIdentifier;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,unique=true,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: true)]
     private $vatIdentifier;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255)
      */
+    #[ORM\Column(type: "string", length: 255)]
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255, nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $email;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255, nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $phone;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $www;
 
 
     /**
      * @var string
-     * @ORM\Column(type="text",nullable=true)
      */
+    #[ORM\Column(type: "text", nullable: true)]
     private $description;
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="companies")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id",nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: "User", inversedBy: "companies")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: true)]
     private $user;
 
     /**
      * @var StreetNumber
-     * @ORM\ManyToOne(targetEntity="Dravencms\Model\Location\Entities\StreetNumber", inversedBy="companies")
-     * @ORM\JoinColumn(name="street_number_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber", inversedBy: "companies")]
+    #[ORM\JoinColumn(name: "street_number_id", referencedColumnName: "id")]
     private $streetNumber;
 
     /**
      * @var ArrayCollection|User[]
-     * @ORM\OneToMany(targetEntity="User", mappedBy="company",cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: "User", mappedBy: "company", cascade: ["persist"])]
     private $users;
 
     /**
@@ -96,7 +96,7 @@ class Company
      * @param User $user
      * @param StreetNumber $streetNumber
      */
-    public function __construct(string $companyIdentifier, string $vatIdentifier, string $name, string $email, string $phone, string $www, StreetNumber $streetNumber = null, $description = null, User $user = null)
+    public function __construct(string $companyIdentifier, string $vatIdentifier, string $name, string $email, string $phone, string $www, ?StreetNumber $streetNumber = null, $description = null, ?User $user = null)
     {
         $this->companyIdentifier = $companyIdentifier;
         $this->vatIdentifier = $vatIdentifier;

@@ -30,5 +30,5 @@ interface AclOperationFormFactory
      * @param AclOperation|null $aclOperation
      * @return AclOperationForm
      */
-    public function create(AclResource $aclResource, AclOperation $aclOperation = null): AclOperationForm;
+    public function create(AclResource $aclResource, ?AclOperation $aclOperation = null): AclOperationForm;
 }

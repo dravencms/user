@@ -65,10 +65,8 @@ class UserRepository
             ->select('u')
             ->where('u.isShadow = :isShadow')
             ->andWhere('u.namespace = :namespace')
-            ->setParameters([
-                'namespace' => $namespace,
-                'isShadow' => $isShadow
-            ]);
+            ->setParameter('namespace', $namespace)
+            ->setParameter('isShadow', $isShadow);
 
         return $qb;
     }
@@ -79,16 +77,14 @@ class UserRepository
      * @param User|null $ignoreUser
      * @return bool
      */
-    public function isEmailFree(string $newEmail, string $namespace, User $ignoreUser = null): bool
+    public function isEmailFree(string $newEmail, string $namespace, ?User $ignoreUser = null): bool
     {
         $qb = $this->userRepository->createQueryBuilder('u')
             ->select('u')
             ->where('u.email = :email')
             ->andWhere('u.namespace = :namespace')
-            ->setParameters([
-                'email' => $newEmail,
-                'namespace' => $namespace
-            ]);
+            ->setParameter('email', $newEmail)
+            ->setParameter('namespace', $namespace);
 
         if ($ignoreUser)
         {

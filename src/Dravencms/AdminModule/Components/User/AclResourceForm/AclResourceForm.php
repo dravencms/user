@@ -66,7 +66,7 @@ class AclResourceForm extends Control
         EntityManager $entityManager,
         AclResourceRepository $aclResourceRepository,
         User $user,
-        AclResource $aclResource = null)
+        ?AclResource $aclResource = null)
     {
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;

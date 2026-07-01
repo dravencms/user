@@ -8,16 +8,16 @@ namespace Dravencms\Model\User\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Nette;
 
 /**
  * Class AclOperation
- * @ORM\Entity
- * @ORM\Table(name="userAclOperation", uniqueConstraints={@UniqueConstraint(name="resorce_name", columns={"aclresource_id", "name"})})
  */
+#[ORM\Entity]
+#[ORM\Table(name: "userAclOperation", uniqueConstraints: [new ORM\UniqueConstraint(name: "resorce_name", columns: ["aclresource_id", "name"])])]
 class AclOperation
 {
     use Nette\SmartObject;
@@ -26,28 +26,28 @@ class AclOperation
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=6000,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 6000, nullable: true)]
     private $description;
 
     /**
      * @var \Doctrine\Common\Collections\Collection|Group[]
      *
-     * @ORM\ManyToMany(targetEntity="Group", mappedBy="aclOperations")
      */
+    #[ORM\ManyToMany(targetEntity: "Group", mappedBy: "aclOperations")]
     private $groups;
 
     /**
      * @var AclResource
-     * @ORM\ManyToOne(targetEntity="AclResource", inversedBy="aclOperations")
-     * @ORM\JoinColumn(name="aclresource_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: "AclResource", inversedBy: "aclOperations")]
+    #[ORM\JoinColumn(name: "aclresource_id", referencedColumnName: "id")]
     private $aclResource;
 
     /**

@@ -78,14 +78,12 @@ class AclResourceRepository
      * @param AclResource|null $ignoreAclResource
      * @return bool
      */
-    public function isNameFree(string $name, AclResource $ignoreAclResource = null): bool
+    public function isNameFree(string $name, ?AclResource $ignoreAclResource = null): bool
     {
         $qb = $this->aclResourceRepository->createQueryBuilder('ar')
             ->select('ar')
             ->where('ar.name = :name')
-            ->setParameters([
-                'name' => $name
-            ]);
+            ->setParameter('name', $name);
 
         if ($ignoreAclResource)
         {

@@ -73,11 +73,7 @@ class AclOperationRepository
         $qb = $this->aclOperationRepository->createQueryBuilder('ao')
             ->select('ao')
             ->where('ao.aclResource = :aclResource')
-            ->setParameters(
-                [
-                    'aclResource' => $aclResource
-                ]
-            );
+            ->setParameter('aclResource', $aclResource);
 
         return $qb;
     }
@@ -88,17 +84,15 @@ class AclOperationRepository
      * @param AclOperation|null $ignoreAclOperation
      * @return bool
      */
-    public function isNameFree(string $name, AclResource $aclResource, AclOperation $ignoreAclOperation = null): bool
+    public function isNameFree(string $name, AclResource $aclResource, ?AclOperation $ignoreAclOperation = null): bool
     {
         $qb = $this->aclOperationRepository->createQueryBuilder('ao')
             ->select('ao')
             ->join('ao.aclResource', 'ar')
             ->where('ao.name = :name')
             ->andWhere('ar = :aclResource')
-            ->setParameters([
-                'name' => $name,
-                'aclResource' => $aclResource
-            ]);
+            ->setParameter('name', $name)
+            ->setParameter('aclResource', $aclResource);
 
         if ($ignoreAclOperation)
         {

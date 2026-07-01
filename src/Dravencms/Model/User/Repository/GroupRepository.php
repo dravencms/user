@@ -58,14 +58,12 @@ class GroupRepository
      * @param Group|null $ignoreGroup
      * @return bool
      */
-    public function isNameFree(string $name, Group $ignoreGroup = null): bool
+    public function isNameFree(string $name, ?Group $ignoreGroup = null): bool
     {
         $qb = $this->groupRepository->createQueryBuilder('g')
             ->select('g')
             ->where('g.name = :name')
-            ->setParameters([
-                'name' => $name
-            ]);
+            ->setParameter('name', $name);
 
         if ($ignoreGroup)
         {

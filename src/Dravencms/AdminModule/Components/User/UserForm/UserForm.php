@@ -60,7 +60,7 @@ class UserForm extends BaseControl
         PasswordManager $passwordManager,
         GroupRepository $groupRepository,
         \Nette\Security\User $securityUser,
-        User $user = null
+        ?User $user = null
     ) {
         $this->user = $user;
         $this->baseFormFactory = $baseFormFactory;

@@ -1,6 +1,22 @@
 extensions:
     user: Dravencms\User\DI\UserExtension
 
-nettrine.orm.annotations:
-    mapping:
-        Dravencms\Model\User: %appDir%/../vendor/dravencms/user/src/Dravencms/Model/User
+services:
+    user.aclPresenter:
+        class: Dravencms\AdminModule\UserModule\AclPresenter
+
+    user.groupPresenter:
+        class: Dravencms\AdminModule\UserModule\GroupPresenter
+
+    user.userPresenter:
+        class: Dravencms\AdminModule\UserModule\UserPresenter
+
+nettrine.orm:
+    managers:
+        default:
+            mapping:
+                user:
+                    type: attributes
+                    directories:
+                        - %appDir%/../vendor/dravencms/user/src/Dravencms/Model/User
+                    namespace: Dravencms\Model\User

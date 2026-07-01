@@ -21,13 +21,15 @@
 
 namespace Dravencms\AdminModule\Components\User\AclResourceGrid;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\AclResourceRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Security\User;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 
 /**
  * Description of AclResourceGrid
@@ -74,7 +76,7 @@ class AclResourceGrid extends BaseControl
     /**
      * @param string $name
      * @return Grid
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws \Contributte\Datagrid\Exception\DatagridException
      */
     public function createComponentGrid(string $name): Grid
     {
@@ -136,8 +138,8 @@ class AclResourceGrid extends BaseControl
     /**
      * @param $id
      * @throws \Exception
-     * @isAllowed(user, delete)
      */
+    #[IsAllowed('user', 'delete')]
     public function handleDelete($id): void
     {
         $aclResources = $this->aclResourceRepository->getById($id);

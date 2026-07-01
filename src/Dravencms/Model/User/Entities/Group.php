@@ -8,15 +8,15 @@ namespace Dravencms\Model\User\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
  * Class Group
- * @ORM\Entity
- * @ORM\Table(name="userGroup")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "userGroup")]
 class Group
 {
     use Nette\SmartObject;
@@ -25,49 +25,41 @@ class Group
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,unique=true,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: false)]
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=6000,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 6000, nullable: true)]
     private $description;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=6,unique=true,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 6, unique: true, nullable: true)]
     private $color;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isRegister;
 
     /**
      * @var \Doctrine\Common\Collections\Collection|User[]
      *
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      */
+    #[ORM\ManyToMany(targetEntity: "User", mappedBy: "groups")]
     private $users;
 
     /**
      * @var \Doctrine\Common\Collections\Collection|AclOperation[]
      *
-     * @ORM\ManyToMany(targetEntity="AclOperation", inversedBy="groups")
-     * @ORM\JoinTable(
-     *  name="user_group_acloperation",
-     *  joinColumns={
-     *      @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     *  },
-     *  inverseJoinColumns={
-     *      @ORM\JoinColumn(name="acloperation_id", referencedColumnName="id")
-     *  }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: "AclOperation", inversedBy: "groups")]
+    #[ORM\JoinTable(name: "user_group_acloperation", joinColumns: [new ORM\JoinColumn(name: "group_id", referencedColumnName: "id")], inverseJoinColumns: [new ORM\JoinColumn(name: "acloperation_id", referencedColumnName: "id")])]
     private $aclOperations;
 
     /**

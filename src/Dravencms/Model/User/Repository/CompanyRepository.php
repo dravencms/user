@@ -71,7 +71,7 @@ class CompanyRepository
      * @param Company|null $ignoreCompany
      * @return bool
      */
-    public function isCompanyNameFree(string $name, Country $country, Company $ignoreCompany = null): bool
+    public function isCompanyNameFree(string $name, Country $country, ?Company $ignoreCompany = null): bool
     {
         $qb = $this->companyRepository->createQueryBuilder('c')
             ->select('c')
@@ -81,10 +81,8 @@ class CompanyRepository
             ->join('zc.city', 'ci')
             ->where('c.name = :name')
             ->andWhere('ci.country = :country')
-            ->setParameters([
-                'name' => $name,
-                'country' => $country
-            ]);
+            ->setParameter('name', $name)
+            ->setParameter('country', $country);
 
         if ($ignoreCompany)
         {
@@ -101,7 +99,7 @@ class CompanyRepository
      * @param Company|null $ignoreCompany
      * @return bool
      */
-    public function isCompanyIdentifierNameFree(string $companyIdentifier, Country $country, Company $ignoreCompany = null): bool
+    public function isCompanyIdentifierNameFree(string $companyIdentifier, Country $country, ?Company $ignoreCompany = null): bool
     {
         $qb = $this->companyRepository->createQueryBuilder('c')
             ->select('c')
@@ -111,10 +109,8 @@ class CompanyRepository
             ->join('zc.city', 'ci')
             ->where('c.companyIdentifier = :companyIdentifier')
             ->andWhere('ci.country = :country')
-            ->setParameters([
-                'companyIdentifier' => $companyIdentifier,
-                'country' => $country
-            ]);
+            ->setParameter('companyIdentifier', $companyIdentifier)
+            ->setParameter('country', $country);
 
         if ($ignoreCompany)
         {

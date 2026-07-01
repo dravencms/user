@@ -2,6 +2,8 @@
 
 namespace Dravencms\AdminModule\UserModule;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 /*
  * Copyright (C) 2013 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -50,9 +52,7 @@ class UserPresenter extends SecuredPresenter
     private $userFormEntity = null;
     
     
-    /**
-     * @isAllowed(user, edit)
-     */
+    #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
         $this->template->h1 = 'Uživatelé';
@@ -60,10 +60,12 @@ class UserPresenter extends SecuredPresenter
 
     /**
      * @param integer $id
-     * @isAllowed(user, edit)
+     */
+    /**
      * @throws \Exception
      */
-    public function actionEdit(int $id = null): void
+    #[IsAllowed('user', 'edit')]
+    public function actionEdit(?int $id = null): void
     {
         if ($id) {
             $user = $this->userUserRepository->getOneById($id);

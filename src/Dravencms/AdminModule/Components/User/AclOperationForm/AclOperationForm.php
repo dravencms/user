@@ -64,7 +64,7 @@ class AclOperationForm extends Control
         EntityManager $entityManager,
         AclOperationRepository $aclOperationRepository,
         User $user,
-        AclOperation $aclOperation = null)
+        ?AclOperation $aclOperation = null)
     {
         $this->aclResource = $aclResource;
 

@@ -1,6 +1,8 @@
 <?php declare(strict_types = 1);
 namespace Dravencms\AdminModule\UserModule;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 /*
  * Copyright (C) 2013 Adam Schubert <adam.schubert@sg1-game.net>.
  *
@@ -66,9 +68,7 @@ class AclPresenter extends SecuredPresenter
     /** @var AclOperation|null */
     private $aclOperation = null;
 
-    /**
-     * @isAllowed(user,edit)
-     */
+    #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
         $this->template->h1 = 'ACL';
@@ -76,9 +76,9 @@ class AclPresenter extends SecuredPresenter
 
     /**
      * @param integer|null $id
-     * @isAllowed(user,edit)
      */
-    public function actionEdit(int $id = null): void
+    #[IsAllowed('user', 'edit')]
+    public function actionEdit(?int $id = null): void
     {
         if ($id) {
             $aclResource = $this->aclResourceRepository->getOneById($id);
@@ -96,16 +96,16 @@ class AclPresenter extends SecuredPresenter
 
     /**
      * @param integer|null $id
-     * @isAllowed(user,edit)
      */
-    public function actionEditOperation(int $id = null, int $aclResourceId): void
+    #[IsAllowed('user', 'edit')]
+    public function actionEditOperation(int $aclResourceId, ?int $id = null): void
     {
         $aclResource = $this->aclResourceRepository->getOneById($aclResourceId);
         if (!$aclResource)
         {
             $this->error('Resource not found!');
         }
-        
+
         $this->aclResource = $aclResource;
 
         if ($id) {
@@ -124,8 +124,8 @@ class AclPresenter extends SecuredPresenter
 
     /**
      * @param integer $id
-     * @isAllowed(user,edit)
      */
+    #[IsAllowed('user', 'edit')]
     public function actionOperation(int $id): void
     {
 

@@ -28,5 +28,5 @@ interface GroupFormFactory
      * @param Group $group
      * @return GroupForm
      */
-    public function create(Group $group = null): GroupForm;
+    public function create(?Group $group = null): GroupForm;
 }

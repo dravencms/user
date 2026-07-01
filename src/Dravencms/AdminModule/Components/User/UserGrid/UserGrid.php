@@ -7,13 +7,15 @@
 
 namespace Dravencms\AdminModule\Components\User\UserGrid;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
 use Dravencms\Model\User\Repository\UserRepository;
 use Dravencms\Database\EntityManager;
 use Nette\Security\User;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 
 class UserGrid extends BaseControl
 {
@@ -65,7 +67,7 @@ class UserGrid extends BaseControl
     /**
      * @param string $name
      * @return Grid
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws \Contributte\Datagrid\Exception\DatagridException
      */
     protected function createComponentGrid(string $name): Grid
     {
@@ -135,8 +137,8 @@ class UserGrid extends BaseControl
 
     /**
      * @param integer|array $id
-     * @isAllowed(user, delete)
      */
+    #[IsAllowed('user', 'delete')]
     public function handleDelete($id): void
     {
         $users = $this->userRepository->getById($id);

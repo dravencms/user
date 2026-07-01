@@ -1,6 +1,8 @@
 <?php declare(strict_types = 1);
 namespace Dravencms\AdminModule\UserModule;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 /*
  * Copyright (C) 2013 Adam Schubert <adam.schubert@winternet.cz>.
  *
@@ -48,9 +50,7 @@ class GroupPresenter extends SecuredPresenter
     /** @var Group|null */
     private $userGroupFormEntity = null;
 
-    /**
-     * @isAllowed(user,edit)
-     */
+    #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
         $this->template->h1 = 'Skupiny';
@@ -58,9 +58,9 @@ class GroupPresenter extends SecuredPresenter
 
     /**
      * @param integer|null $id
-     * @isAllowed(user,edit)
      */
-    public function actionEdit(int $id = null): void
+    #[IsAllowed('user', 'edit')]
+    public function actionEdit(?int $id = null): void
     {
         if ($id) {
             $group = $this->userGroupRepository->getOneById($id);

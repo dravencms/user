@@ -13,5 +13,5 @@ interface UserFormFactory
      * @param User|null $user
      * @return UserForm
      */
-    public function create(User $user = null): UserForm;
+    public function create(?User $user = null): UserForm;
 }

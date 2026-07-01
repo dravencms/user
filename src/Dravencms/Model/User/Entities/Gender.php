@@ -4,16 +4,16 @@ namespace Dravencms\Model\User\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
  * Class Gender
  * @package App\Model\Entities
- * @ORM\Entity
- * @ORM\Table(name="userGender")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "userGender")]
 class Gender
 {
     use Nette\SmartObject;
@@ -22,19 +22,19 @@ class Gender
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,unique=true,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: false)]
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isDefault;
 
     /**
      * @var ArrayCollection|User[]
-     * @ORM\OneToMany(targetEntity="User", mappedBy="gender",cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: "User", mappedBy: "gender", cascade: ["persist"])]
     private $users;
 }

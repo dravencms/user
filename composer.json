@@ -27,9 +27,6 @@
   "replace": {
     "dravencms/user-light": "*"
   },
-  "conflicts": {
-    "dravencms/user-light": "*"
-  },
   "require-dev": {
     "nette/tester": "@dev"
   },

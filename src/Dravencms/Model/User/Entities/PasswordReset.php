@@ -5,18 +5,18 @@ namespace Dravencms\Model\User\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\SoftDeleteableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
  * Class PasswordReset
  * @package App\Model\Entities
- * @ORM\Entity
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true)
- * @ORM\Table(name="userPasswordReset")
  */
+#[ORM\Entity]
+#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: true)]
+#[ORM\Table(name: "userPasswordReset")]
 class PasswordReset
 {
     use Nette\SmartObject;
@@ -26,21 +26,21 @@ class PasswordReset
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="passwordResets")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: "User", inversedBy: "passwordResets")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     private $user;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=32,unique=true,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 32, unique: true, nullable: false)]
     private $hash;
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean", nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isUsed;
 
     /**

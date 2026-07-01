@@ -28,5 +28,5 @@ interface AclResourceFormFactory
      * @param AclResource|null $aclResource
      * @return AclResourceForm
      */
-    public function create(AclResource $aclResource = null): AclResourceForm;
+    public function create(?AclResource $aclResource = null): AclResourceForm;
 }

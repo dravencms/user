@@ -78,7 +78,7 @@ class GroupForm extends BaseControl
         GroupRepository $groupRepository,
         AclResourceRepository $aclResourceRepository,
         User $user,
-        Group $group = null
+        ?Group $group = null
     ) {
         $this->baseFormFactory = $baseFormFactory;
         $this->entityManager = $entityManager;

@@ -9,16 +9,16 @@ namespace Dravencms\Model\User\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Nette;
 
 /**
  * Class AclResource
  * @package App\Model\Entities
- * @ORM\Entity
- * @ORM\Table(name="userAclResource")
  */
+#[ORM\Entity]
+#[ORM\Table(name: "userAclResource")]
 class AclResource
 {
     use Nette\SmartObject;
@@ -27,20 +27,20 @@ class AclResource
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,unique=true,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: false)]
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=6000,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 6000, nullable: true)]
     private $description;
 
     /**
      * @var ArrayCollection|AclOperation[]
-     * @ORM\OneToMany(targetEntity="AclOperation", mappedBy="aclResource",cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: "AclOperation", mappedBy: "aclResource", cascade: ["persist"])]
     private $aclOperations;
 
 

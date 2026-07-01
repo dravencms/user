@@ -4,10 +4,8 @@ namespace Dravencms\User;
 
 use Dravencms\Model\User\Entities\User;
 use Dravencms\Database\EntityManager;
-use Nette\Application\UI\ComponentReflection;
-use Nette\Application\UI\MethodReflection;
 use Nette\Http\IResponse;
-use Dravencms\Security\UserAcl;
+use Dravencms\User\Attributes\IsAllowed;
 use Nette\Security\Authorizator;
 
 
@@ -58,9 +56,11 @@ trait TSecuredPresenter
         }
 
 
-        if ($element instanceof \ReflectionMethod && $element->hasAnnotation('isAllowed'))
+        if ($element instanceof \ReflectionMethod && $attributes = $element->getAttributes(IsAllowed::class))
         {
-            list($resource, $operation) = ComponentReflection::parseAnnotation($element, 'isAllowed');
+            $requirement = $attributes[0]->newInstance();
+            $resource = $requirement->resource;
+            $operation = $requirement->operation;
             if (!$this->authorizator->isAllowed(null, $resource, $operation)) {
                 $this->error('FORBIDDEN '.$resource.':'.$operation, IResponse::S403_FORBIDDEN);
             }
@@ -88,7 +88,7 @@ trait TSecuredPresenter
      * @param string|null $role
      * @return bool
      */
-    public function isAllowed(string $resource, string $operation, string $role = null): bool {
+    public function isAllowed(string $resource, string $operation, ?string $role = null): bool {
         trigger_error('presenter::isAllowed is deprecated, use Security/User::isAllowed', E_USER_DEPRECATED);
         return $this->authorizator->isAllowed($resource, $operation, $role);
     }

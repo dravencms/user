@@ -7,8 +7,8 @@ use Dravencms\User\DefaultDataCreator;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Dravencms\Database\Attributes\SoftDeleteableEntity;
+use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use Nette\Security\IIdentity;
@@ -19,10 +19,10 @@ use Nette\Utils\Validators;
 /**
  * Class User
  * @package App\Model\Entities
- * @ORM\Entity
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true)
- * @ORM\Table(name="userUser", uniqueConstraints={@UniqueConstraint(name="user_unique", columns={"email", "namespace"})})
  */
+#[ORM\Entity]
+#[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: true)]
+#[ORM\Table(name: "userUser", uniqueConstraints: [new ORM\UniqueConstraint(name: "user_unique", columns: ["email", "namespace"])])]
 class User implements IIdentity
 {
     use SmartObject;
@@ -35,123 +35,115 @@ class User implements IIdentity
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $degree;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private $firstName;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private $lastName;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private $email;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private $phone;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=255,nullable=false)
      */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private $password;
 
     /**
      * @var string
-     * @ORM\Column(type="string",length=50,nullable=true)
      */
+    #[ORM\Column(type: "string", length: 50, nullable: true)]
     private $namespace;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isActive;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isShadow;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isNewsletter;
 
     /**
      * @var \DateTimeInterface
-     * @ORM\Column(type="datetime",nullable=false)
      */
+    #[ORM\Column(type: "datetime", nullable: false)]
     private $lastActivity;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean",nullable=false)
      */
+    #[ORM\Column(type: "boolean", nullable: false)]
     private $isInitialized;
 
     /**
      * @var StreetNumber
-     * @ORM\ManyToOne(targetEntity="Dravencms\Model\Location\Entities\StreetNumber", inversedBy="users")
-     * @ORM\JoinColumn(name="street_number_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber", inversedBy: "users")]
+    #[ORM\JoinColumn(name: "street_number_id", referencedColumnName: "id")]
     private $streetNumber;
 
     /**
      * @var Gender
-     * @ORM\ManyToOne(targetEntity="Gender", inversedBy="users")
-     * @ORM\JoinColumn(name="gender_id", referencedColumnName="id")
      */
+    #[ORM\ManyToOne(targetEntity: "Gender", inversedBy: "users")]
+    #[ORM\JoinColumn(name: "gender_id", referencedColumnName: "id")]
     private $gender;
 
     /**
      * @var Company
-     * @ORM\ManyToOne(targetEntity="Company", inversedBy="users")
-     * @ORM\JoinColumn(name="company_id", referencedColumnName="id",nullable=true)
      */
+    #[ORM\ManyToOne(targetEntity: "Company", inversedBy: "users")]
+    #[ORM\JoinColumn(name: "company_id", referencedColumnName: "id", nullable: true)]
     private $company;
 
     /**
      * @var ArrayCollection|PasswordReset[]
-     * @ORM\OneToMany(targetEntity="PasswordReset", mappedBy="user",cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: "PasswordReset", mappedBy: "user", cascade: ["persist"])]
     private $passwordResets;
 
     /**
      * @var ArrayCollection|Company[]
-     * @ORM\OneToMany(targetEntity="Company", mappedBy="user",cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: "Company", mappedBy: "user", cascade: ["persist"])]
     private $companies;
 
     /**
      * @var \Doctrine\Common\Collections\Collection|Group[]
      *
-     * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
-     * @ORM\JoinTable(
-     *  name="user_aclgroup",
-     *  joinColumns={
-     *      @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *  },
-     *  inverseJoinColumns={
-     *      @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     *  }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: "Group", inversedBy: "users")]
+    #[ORM\JoinTable(name: "user_aclgroup", joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")], inverseJoinColumns: [new ORM\JoinColumn(name: "group_id", referencedColumnName: "id")])]
     private $groups;
 
 
@@ -319,7 +311,7 @@ class User implements IIdentity
     /**
      * @param Company $company
      */
-    public function setCompany(Company $company = null): void
+    public function setCompany(?Company $company = null): void
     {
         $this->company = $company;
     }

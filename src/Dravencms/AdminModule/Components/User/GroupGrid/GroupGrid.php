@@ -20,6 +20,8 @@
 
 namespace Dravencms\AdminModule\Components\User\GroupGrid;
 
+
+use Dravencms\User\Attributes\IsAllowed;
 use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseGrid\BaseGridFactory;
 use Dravencms\Components\BaseGrid\Grid;
@@ -28,7 +30,7 @@ use Dravencms\Database\EntityManager;
 use Nette\Security\User;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
-use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
+use Contributte\Datagrid\Column\Action\Confirmation\StringConfirmation;
 
 /**
  * Description of GroupGrid
@@ -74,7 +76,7 @@ class GroupGrid extends BaseControl
     /**
      * @param string $name
      * @return Grid
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws \Contributte\Datagrid\Exception\DatagridException
      */
     public function createComponentGrid(string $name): Grid
     {
@@ -138,8 +140,8 @@ class GroupGrid extends BaseControl
 
     /**
      * @param integer|array $id
-     * @isAllowed(user,delete)
      */
+    #[IsAllowed('user', 'delete')]
     public function handleDelete($id): void
     {
         $groups = $this->groupRepository->getById($id);
