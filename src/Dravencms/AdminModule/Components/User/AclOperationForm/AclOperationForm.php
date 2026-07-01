@@ -36,6 +36,7 @@ use Nette\Security\User;
  */
 class AclOperationForm extends Control
 {
+
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
@@ -74,16 +75,6 @@ class AclOperationForm extends Control
         $this->aclOperation = $aclOperation;
         $this->user = $user;
 
-
-        if ($this->aclOperation)
-        {
-            $this['form']->setDefaults(
-                [
-                    'name' => $this->aclOperation->getName(),
-                    'description' => $this->aclOperation->getDescription()
-                ]
-            );
-        }
     }
 
     /**
@@ -103,6 +94,14 @@ class AclOperationForm extends Control
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
+
+        if ($this->aclOperation) {
+            $form->setDefaults([
+                'name' => $this->aclOperation->getName(),
+                'description' => $this->aclOperation->getDescription(),
+            ]);
+        }
+
 
         return $form;
     }

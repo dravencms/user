@@ -17,6 +17,7 @@ use Dravencms\Components\BaseForm\Form;
  */
 class UserForm extends BaseControl
 {
+
     /** @var User|null */
     private $user = null;
 
@@ -70,30 +71,6 @@ class UserForm extends BaseControl
         $this->groupRepository = $groupRepository;
         $this->securityUser = $securityUser;
 
-
-        if ($this->user)
-        {
-            $groups = [];
-
-            foreach($this->user->getRoles() AS $group)
-            {
-                $groups[$group->getId()] = $group->getId();
-            }
-
-
-            $this['form']->setDefaults([
-                'degree' => $this->user->getDegree(),
-                'firstName' => $this->user->getFirstName(),
-                'lastName' => $this->user->getLastName(),
-                'email' => $this->user->getEmail(),
-                'groups' => $groups,
-                'isActive' => $this->user->isActive()
-            ]);
-        }
-        else
-        {
-            $this['form']['password']->setRequired('Zadejte prosím heslo');
-        }
     }
 
     /**
@@ -133,6 +110,24 @@ class UserForm extends BaseControl
 
         $form->onValidate[] = [$this, 'onValidateForm'];
         $form->onSuccess[] = [$this, 'onSuccessForm'];
+        if ($this->user) {
+            $groups = [];
+            foreach ($this->user->getRoles() as $group) {
+                $groups[$group->getId()] = $group->getId();
+            }
+
+            $form->setDefaults([
+                'degree' => $this->user->getDegree(),
+                'firstName' => $this->user->getFirstName(),
+                'lastName' => $this->user->getLastName(),
+                'email' => $this->user->getEmail(),
+                'groups' => $groups,
+                'isActive' => $this->user->isActive(),
+            ]);
+        } else {
+            $form['password']->setRequired('Zadejte prosím heslo');
+        }
+
         return $form;
     }
 

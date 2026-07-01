@@ -35,6 +35,7 @@ use Nette\Security\User;
  */
 class AclResourceForm extends Control
 {
+
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
@@ -73,16 +74,6 @@ class AclResourceForm extends Control
         $this->aclResourceRepository = $aclResourceRepository;
         $this->aclResource = $aclResource;
         $this->user = $user;
-
-        if ($this->aclResource)
-        {
-            $this['form']->setDefaults(
-                [
-                    'name' => $this->aclResource->getName(),
-                    'description' => $this->aclResource->getDescription()
-                ]
-            );
-        }
     }
 
     /**
@@ -102,6 +93,14 @@ class AclResourceForm extends Control
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
+
+        if ($this->aclResource) {
+            $form->setDefaults([
+                'name' => $this->aclResource->getName(),
+                'description' => $this->aclResource->getDescription(),
+            ]);
+        }
+
 
         return $form;
     }

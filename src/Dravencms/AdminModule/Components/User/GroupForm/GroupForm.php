@@ -38,6 +38,7 @@ use Nette\Security\User;
  */
 class GroupForm extends BaseControl
 {
+
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
@@ -87,24 +88,6 @@ class GroupForm extends BaseControl
         $this->aclResourceRepository = $aclResourceRepository;
         $this->user = $user;
         $this->group = $group;
-
-        if ($this->group)
-        {
-            $aclOperationIds = [];
-
-            foreach ($this->group->getAclOperations() AS $aclOperation)
-            {
-                $aclOperationIds[$aclOperation->getId()] = $aclOperation->getId();
-            }
-
-            $this['form']->setDefaults([
-                'name' => $this->group->getName(),
-                'description' => $this->group->getDescription(),
-                'color' => $this->group->getColor(),
-                'aclOperation' => $aclOperationIds,
-                'isRegister' => $this->group->isRegister()
-            ]);
-        }
     }
 
     /**
@@ -144,6 +127,21 @@ class GroupForm extends BaseControl
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
+        if ($this->group) {
+            $aclOperationIds = [];
+            foreach ($this->group->getAclOperations() as $aclOperation) {
+                $aclOperationIds[$aclOperation->getId()] = $aclOperation->getId();
+            }
+
+            $form->setDefaults([
+                'name' => $this->group->getName(),
+                'description' => $this->group->getDescription(),
+                'color' => $this->group->getColor(),
+                'aclOperation' => $aclOperationIds,
+                'isRegister' => $this->group->isRegister(),
+            ]);
+        }
+
         return $form;
     }
 
