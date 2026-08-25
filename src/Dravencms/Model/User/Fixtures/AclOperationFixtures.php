@@ -8,6 +8,7 @@ namespace Dravencms\Model\User\Fixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Dravencms\Model\User\Entities\AclOperation;
 use Dravencms\Model\User\Entities\AclResource;
+use Dravencms\Model\User\Entities\Group;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -31,12 +32,12 @@ class AclOperationFixtures extends AbstractFixture implements DependentFixtureIn
         foreach ($operations AS $resourceName => $operationList)
         {
             /** @var AclResource $aclResource */
-            $aclResource = $this->getReference('user-acl-resource-'.$resourceName);
+            $aclResource = $this->getReference('user-acl-resource-'.$resourceName, AclResource::class);
             foreach ($operationList AS $operationName => $operationDescription)
             {
                 $aclOperation = new AclOperation($aclResource, $operationName, $operationDescription);
                 //Allow all operations to administrator group
-                $aclOperation->addGroup($this->getReference('user-group-administrator'));
+                $aclOperation->addGroup($this->getReference('user-group-administrator', Group::class));
                 $manager->persist($aclOperation);
                 $this->addReference('user-acl-operation-'.$resourceName.'-'.$operationName, $aclOperation);
             }

@@ -26,15 +26,15 @@ class AdminMenuFixtures extends AbstractFixture implements DependentFixtureInter
 
         $menu = $manager->getRepository(Menu::class);
         // Users
-        $root = new Menu('Users', null, 'fa-users', $this->getReference('user-acl-operation-user-edit'), null);
+        $root = new Menu('Users', null, 'fa-users', $this->getReference('user-acl-operation-user-edit', \Dravencms\Model\User\Entities\AclOperation::class), null);
         $manager->persist($root);
-        $child = new Menu('Overview', ':Admin:User:User', 'fa-bars', $this->getReference('user-acl-operation-user-edit'));
+        $child = new Menu('Overview', ':Admin:User:User', 'fa-bars', $this->getReference('user-acl-operation-user-edit', \Dravencms\Model\User\Entities\AclOperation::class));
         $manager->persist($child);
         $menu->persistAsLastChildOf($child, $root);
-        $child = new Menu('Groups', ':Admin:User:Group', 'fa-sitemap', $this->getReference('user-acl-operation-user-edit'));
+        $child = new Menu('Groups', ':Admin:User:Group', 'fa-sitemap', $this->getReference('user-acl-operation-user-edit', \Dravencms\Model\User\Entities\AclOperation::class));
         $manager->persist($child);
         $menu->persistAsLastChildOf($child, $root);
-        $child = new Menu('Acl', ':Admin:User:Acl', 'fa-unlock', $this->getReference('user-acl-operation-user-edit'));
+        $child = new Menu('Acl', ':Admin:User:Acl', 'fa-unlock', $this->getReference('user-acl-operation-user-edit', \Dravencms\Model\User\Entities\AclOperation::class));
         $manager->persist($child);
         $menu->persistAsLastChildOf($child, $root);
         $manager->flush();

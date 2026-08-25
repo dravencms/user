@@ -7,6 +7,7 @@ namespace Dravencms\Model\User\Fixtures;
 
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Dravencms\Security\PasswordManager;
+use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Entities\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
@@ -46,7 +47,7 @@ class UserFixtures extends AbstractFixture implements DependentFixtureInterface
             $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Front', $passwordGenerator, true, false, true);
             $manager->persist($user);
             $user = new User($data['firstName'], $data['lastName'], $email, $data['password'], 'Admin', $passwordGenerator,true, false, true);
-            $user->addGroup($this->getReference('user-group-administrator'));
+            $user->addGroup($this->getReference('user-group-administrator', Group::class));
             $manager->persist($user);
         }
         $manager->flush();
