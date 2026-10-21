@@ -74,7 +74,7 @@ class Company
     /**
      * @var StreetNumber
      */
-    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber", inversedBy: "companies")]
+    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber")]
     #[ORM\JoinColumn(name: "street_number_id", referencedColumnName: "id")]
     private $streetNumber;
 

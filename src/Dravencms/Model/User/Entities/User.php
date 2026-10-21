@@ -108,7 +108,7 @@ class User implements IIdentity
     /**
      * @var StreetNumber
      */
-    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber", inversedBy: "users")]
+    #[ORM\ManyToOne(targetEntity: "Dravencms\Model\Location\Entities\StreetNumber")]
     #[ORM\JoinColumn(name: "street_number_id", referencedColumnName: "id")]
     private $streetNumber;
 
