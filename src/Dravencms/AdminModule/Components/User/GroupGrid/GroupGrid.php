@@ -89,8 +89,8 @@ class GroupGrid extends BaseControl
                 ->setRenderer(function($row)
                 {
                     $el = Html::el('span', Strings::upper($row->getName()));
-                    $el->class = 'label label-default';
-                    $el->style = 'background: #'.$row->getColor().';';
+                    $el->class = 'badge text-white';
+                    $el->style = 'background-color: #'.$row->getColor().';';
                     return $el;
                 })
                 ->setSortable()
@@ -108,14 +108,14 @@ class GroupGrid extends BaseControl
             $grid->addAction('edit', '')
                     ->setIcon('pencil')
                     ->setTitle('Upravit')
-                    ->setClass('btn btn-xs btn-primary');
+                    ->setClass('btn btn-sm btn-primary');
         }
 
         if ($this->user->isAllowed('user', 'delete')) {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
                 ->setTitle('Smazat')
-                ->setClass('btn btn-xs btn-danger ajax')
+                ->setClass('btn btn-sm btn-danger ajax')
                 ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'name'));
 
             $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
