@@ -1,0 +1,81 @@
+admin:
+    field:
+        namespace: Namespace
+        degree: Academic title
+        firstName: First name
+        lastName: Last name
+        email: Email
+        groups: Groups
+        active: Active
+        name: Name
+        description: Description
+        registrationDefault: Assign on registration
+        password: Password
+        passwordAgain: Repeat password
+        color: Color
+        permissions: Permissions
+
+    action:
+        edit: Edit
+        delete: Delete
+        save: Save
+        operations: Operations
+        exportFiltered: 'CSV export (filtered)'
+        exportAll: CSV export
+        createUser: Create user
+        createGroup: Create group
+        createResource: Create permission resource
+        createOperation: Create operation
+        createCompany: Create company
+
+    title:
+        users: Users
+        newUser: New user
+        editUser: 'Edit user "%name%"'
+        groups: Groups
+        newGroup: New group
+        editGroup: 'Edit group "%name%"'
+        acl: Access control
+        newResource: New permission resource
+        editResource: 'Edit permission resource "%name%"'
+        newOperation: New operation
+        editOperation: 'Edit operation "%name%"'
+        resourceOperations: 'Operations for "%name%"'
+
+    validation:
+        firstNameRequired: Please enter a first name.
+        lastNameRequired: Please enter a last name.
+        emailRequired: Please enter an email.
+        emailInvalid: Please enter a valid email.
+        emailTaken: This email is already in use. Please choose another.
+        passwordRequired: Please enter a password.
+        passwordAgainRequired: Please repeat the password.
+        passwordMinLength: The password must contain at least %d characters.
+        passwordsMismatch: Passwords do not match.
+        nameRequired: Please enter a name.
+        descriptionRequired: Please enter a description.
+        colorRequired: Please enter a color.
+        colorInvalid: The color must be in hexadecimal format.
+        nameTaken: This name is already in use.
+        groupNameTaken: This group name is already in use.
+        aclForbidden: You do not have permission to edit access control.
+        groupForbidden: You do not have permission to edit groups.
+        userForbidden: You do not have permission to edit users.
+
+    confirm:
+        delete: 'Are you sure you want to delete "%s"?'
+
+    flash:
+        accountChangedSignOut: Your account has been updated. You have been signed out.
+        saved: Changes have been saved.
+        userDeleted: The user has been deleted.
+        groupDeleted: The group has been deleted.
+        groupSaved: The group has been saved.
+        resourceDeleted: The permission resource has been deleted.
+        resourceSaved: The permission resource has been saved.
+        operationDeleted: The operation has been deleted.
+        operationSaved: The operation has been saved.
+
+    error:
+        resourceNotFound: Permission resource not found.
+        operationNotFound: Operation not found.

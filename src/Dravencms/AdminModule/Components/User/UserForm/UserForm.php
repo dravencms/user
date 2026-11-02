@@ -83,30 +83,30 @@ class UserForm extends BaseControl
         $form->addText('degree');
 
         $form->addText('firstName')
-            ->setRequired('Prosím zadejte jméno.');
+            ->setRequired('user.admin.validation.firstNameRequired');
 
         $form->addText('lastName')
-            ->setRequired('Prosím zadejte příjmení.');
+            ->setRequired('user.admin.validation.lastNameRequired');
 
         $form->addText('email')
             ->setHtmlType('email')
-            ->addRule(Form::EMAIL, 'Prosím zadejte email.')
-            ->setRequired('Prosím zadejte email.');
+            ->addRule(Form::EMAIL, 'user.admin.validation.emailInvalid')
+            ->setRequired('user.admin.validation.emailRequired');
 
         $form->addPassword('password')
             ->addConditionOn($form["password"], Form::FILLED)
-                ->addRule(Form::MIN_LENGTH, 'Heslo musí mít alespon %d znaků.', 8);
+                ->addRule(Form::MIN_LENGTH, 'user.admin.validation.passwordMinLength', 8);
 
         $form->addPassword('passwordAgain')
             ->addConditionOn($form["password"], Form::FILLED)
-                ->setRequired(true)
-                ->addRule(Form::EQUAL, 'Hesla nejsou shodná.', $form['password']);
+                ->setRequired('user.admin.validation.passwordAgainRequired')
+                ->addRule(Form::EQUAL, 'user.admin.validation.passwordsMismatch', $form['password']);
 
         $form->addMultiSelect('groups', null, $this->groupRepository->getPairs());
         
         $form->addCheckbox('isActive');
 
-        $form->addSubmit('send');
+        $form->addSubmit('send', 'user.admin.action.save');
 
         $form->onValidate[] = [$this, 'onValidateForm'];
         $form->onSuccess[] = [$this, 'onSuccessForm'];
@@ -125,7 +125,7 @@ class UserForm extends BaseControl
                 'isActive' => $this->user->isActive(),
             ]);
         } else {
-            $form['password']->setRequired('Zadejte prosím heslo');
+            $form['password']->setRequired('user.admin.validation.passwordRequired');
         }
 
         return $form;
@@ -140,12 +140,12 @@ class UserForm extends BaseControl
 
         if (!$this->userRepository->isEmailFree($values->email, $this->namespace, $this->user))
         {
-            $form->addError('Tento email již je zabrán, zvolte prosím jiný.');
+            $form->addError('user.admin.validation.emailTaken');
         }
 
         //Kontrola opraveni
         if (!$this->securityUser->isAllowed('user', 'edit')) {
-            $form->addError('Nemáte oprávění editovat uživatele.');
+            $form->addError('user.admin.validation.userForbidden');
         }
     }
 

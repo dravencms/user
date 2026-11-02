@@ -76,34 +76,34 @@ class UserGrid extends BaseControl
 
         $grid->setDataSource($this->userRepository->getUsersQueryBuilder($this->namespace));
 
-        $grid->addColumnText('namespace', 'Namespace')
+        $grid->addColumnText('namespace', 'user.admin.field.namespace')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('degree', 'Titul')
+        $grid->addColumnText('degree', 'user.admin.field.degree')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('firstName', 'Jméno')
+        $grid->addColumnText('firstName', 'user.admin.field.firstName')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('lastName', 'Příjmení')
+        $grid->addColumnText('lastName', 'user.admin.field.lastName')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('email', 'Email')
+        $grid->addColumnText('email', 'user.admin.field.email')
             ->setSortable()
             ->setFilterText();
 
-        $grid->addColumnText('groups', 'Skupiny')
+        $grid->addColumnText('groups', 'user.admin.field.groups')
             ->setTemplate(__DIR__.'/groups.latte');
 
-        $grid->addColumnBoolean('isActive', 'Active');
+        $grid->addColumnBoolean('isActive', 'user.admin.field.active');
 
         if ($this->user->isAllowed('user', 'edit')) {
             $grid->addAction('edit', '')
-                ->setTitle('Upravit')
+                ->setTitle('user.admin.action.edit')
                 ->setIcon('pencil')
                 ->setClass('btn btn-sm btn-primary');
         }
@@ -111,18 +111,18 @@ class UserGrid extends BaseControl
         if ($this->user->isAllowed('user', 'delete')) {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
-                ->setTitle('Smazat')
+                ->setTitle('user.admin.action.delete')
                 ->setClass('btn btn-sm btn-danger ajax')
-                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'email'));
+                ->setConfirmation(new StringConfirmation('user.admin.confirm.delete', 'email'));
 
-            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
+            $grid->addGroupAction('user.admin.action.delete')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->addExportCsvFiltered('Csv export (filtered)', 'users_filtered.csv')
-            ->setTitle('Csv export (filtered)');
+        $grid->addExportCsvFiltered('user.admin.action.exportFiltered', 'users_filtered.csv')
+            ->setTitle('user.admin.action.exportFiltered');
 
-        $grid->addExportCsv('Csv export', 'users_all.csv')
-            ->setTitle('Csv export');
+        $grid->addExportCsv('user.admin.action.exportAll', 'users_all.csv')
+            ->setTitle('user.admin.action.exportAll');
 
         return $grid;
     }

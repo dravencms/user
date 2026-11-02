@@ -85,7 +85,7 @@ class GroupGrid extends BaseControl
 
         $grid->setDataSource($this->groupRepository->getGroupQueryBuilder());
 
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'user.admin.field.name')
                 ->setRenderer(function($row)
                 {
                     $el = Html::el('span', Strings::upper($row->getName()));
@@ -96,36 +96,36 @@ class GroupGrid extends BaseControl
                 ->setSortable()
                 ->setFilterText();
 
-        $grid->addColumnText('description', 'Popis')
+        $grid->addColumnText('description', 'user.admin.field.description')
                 ->setSortable()
                 ->setFilterText();
 
 
-        $grid->addColumnBoolean('isRegister', 'Přidána při registraci');
+        $grid->addColumnBoolean('isRegister', 'user.admin.field.registrationDefault');
 
         if ($this->user->isAllowed('user', 'edit'))
         {
             $grid->addAction('edit', '')
                     ->setIcon('pencil')
-                    ->setTitle('Upravit')
+                    ->setTitle('user.admin.action.edit')
                     ->setClass('btn btn-sm btn-primary');
         }
 
         if ($this->user->isAllowed('user', 'delete')) {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
-                ->setTitle('Smazat')
+                ->setTitle('user.admin.action.delete')
                 ->setClass('btn btn-sm btn-danger ajax')
-                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'name'));
+                ->setConfirmation(new StringConfirmation('user.admin.confirm.delete', 'name'));
 
-            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
+            $grid->addGroupAction('user.admin.action.delete')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->addExportCsvFiltered('Csv export (filtered)', 'groups_filtered.csv')
-            ->setTitle('Csv export (filtered)');
+        $grid->addExportCsvFiltered('user.admin.action.exportFiltered', 'groups_filtered.csv')
+            ->setTitle('user.admin.action.exportFiltered');
 
-        $grid->addExportCsv('Csv export', 'groups_all.csv')
-            ->setTitle('Csv export');
+        $grid->addExportCsv('user.admin.action.exportAll', 'groups_all.csv')
+            ->setTitle('user.admin.action.exportAll');
         
         return $grid;
     }

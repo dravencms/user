@@ -85,12 +85,12 @@ class AclOperationForm extends Control
         $form = $this->baseFormFactory->create();
 
         $form->addText('name')
-            ->setRequired('Prosím zadejte název.');
+            ->setRequired('user.admin.validation.nameRequired');
 
         $form->addTextArea('description')
-            ->setRequired('Prosím zadejte název.');
+            ->setRequired('user.admin.validation.descriptionRequired');
 
-        $form->addSubmit('send');
+        $form->addSubmit('send', 'user.admin.action.save');
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
@@ -110,11 +110,11 @@ class AclOperationForm extends Control
     {
         $values = $form->getValues();
         if (!$this->aclOperationRepository->isNameFree($values->name, $this->aclResource, $this->aclOperation)) {
-            $form->addError('Tento název je již zabrán.');
+            $form->addError('user.admin.validation.nameTaken');
         }
 
         if (!$this->user->isAllowed('user', 'edit')) {
-            $form->addError('Nemáte oprávění editovat ACL.');
+            $form->addError('user.admin.validation.aclForbidden');
         }
     }
 

@@ -1,6 +1,6 @@
 {block #content}
     <p n:if="isAllowed('user', 'edit')">
-        <a n:href="Group:edit" class="btn btn-primary"><i class="fa fa-plus"></i>Vložit novou skupinu</a>
+        <a n:href="Group:edit" class="btn btn-primary"><i class="fa fa-plus"></i>{_'user.admin.action.createGroup'}</a>
     </p>
     {control gridGroup}
 {/block}

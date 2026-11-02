@@ -1,0 +1,81 @@
+admin:
+    field:
+        namespace: Jmenný prostor
+        degree: Titul
+        firstName: Jméno
+        lastName: Příjmení
+        email: E-mail
+        groups: Skupiny
+        active: Aktivní
+        name: Název
+        description: Popis
+        registrationDefault: Přiřadit při registraci
+        password: Heslo
+        passwordAgain: Heslo znovu
+        color: Barva
+        permissions: Oprávnění
+
+    action:
+        edit: Upravit
+        delete: Smazat
+        save: Uložit
+        operations: Operace
+        exportFiltered: 'Export CSV (filtrovaný)'
+        exportAll: Export CSV
+        createUser: Vytvořit uživatele
+        createGroup: Vytvořit skupinu
+        createResource: Vytvořit zdroj oprávnění
+        createOperation: Vytvořit operaci
+        createCompany: Vytvořit společnost
+
+    title:
+        users: Uživatelé
+        newUser: Nový uživatel
+        editUser: 'Úprava uživatele "%name%"'
+        groups: Skupiny
+        newGroup: Nová skupina
+        editGroup: 'Úprava skupiny "%name%"'
+        acl: Řízení přístupu
+        newResource: Nový zdroj oprávnění
+        editResource: 'Úprava zdroje oprávnění "%name%"'
+        newOperation: Nová operace
+        editOperation: 'Úprava operace "%name%"'
+        resourceOperations: 'Operace zdroje "%name%"'
+
+    validation:
+        firstNameRequired: Zadejte prosím jméno.
+        lastNameRequired: Zadejte prosím příjmení.
+        emailRequired: Zadejte prosím e-mail.
+        emailInvalid: Zadejte prosím platný e-mail.
+        emailTaken: Tento e-mail je již používán. Zvolte prosím jiný.
+        passwordRequired: Zadejte prosím heslo.
+        passwordAgainRequired: Zadejte prosím heslo znovu.
+        passwordMinLength: Heslo musí mít alespoň %d znaků.
+        passwordsMismatch: Hesla se neshodují.
+        nameRequired: Zadejte prosím název.
+        descriptionRequired: Zadejte prosím popis.
+        colorRequired: Zadejte prosím barvu.
+        colorInvalid: Barva musí být zadána v hexadecimálním formátu.
+        nameTaken: Tento název je již používán.
+        groupNameTaken: Tento název skupiny je již používán.
+        aclForbidden: Nemáte oprávnění upravovat řízení přístupu.
+        groupForbidden: Nemáte oprávnění upravovat skupiny.
+        userForbidden: Nemáte oprávnění upravovat uživatele.
+
+    confirm:
+        delete: 'Opravdu chcete smazat záznam "%s"?'
+
+    flash:
+        accountChangedSignOut: Váš účet byl upraven. Byli jste odhlášeni.
+        saved: Změny byly uloženy.
+        userDeleted: Uživatel byl smazán.
+        groupDeleted: Skupina byla smazána.
+        groupSaved: Skupina byla uložena.
+        resourceDeleted: Zdroj oprávnění byl smazán.
+        resourceSaved: Zdroj oprávnění byl uložen.
+        operationDeleted: Operace byla smazána.
+        operationSaved: Operace byla uložena.
+
+    error:
+        resourceNotFound: Zdroj oprávnění nebyl nalezen.
+        operationNotFound: Operace nebyla nalezena.

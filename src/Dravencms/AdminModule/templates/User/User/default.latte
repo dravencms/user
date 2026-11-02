@@ -1,6 +1,6 @@
 {block #content}
     <p n:if="isAllowed('user', 'edit')">
-        <a n:href="User:edit" class="btn btn-primary"><i class="fa fa-plus"></i> Vytvořit nového uživatele</a>
+        <a n:href="User:edit" class="btn btn-primary"><i class="fa fa-plus"></i> {_'user.admin.action.createUser'}</a>
     </p>
     {control gridUser}
 {/block}

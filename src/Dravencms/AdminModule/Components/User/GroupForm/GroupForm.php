@@ -98,14 +98,14 @@ class GroupForm extends BaseControl
         $form = $this->baseFormFactory->create();
 
         $form->addText('name')
-            ->setRequired('Prosím zadejte název.');
+            ->setRequired('user.admin.validation.nameRequired');
 
         $form->addTextArea('description')
-            ->setRequired('Prosím zadejte popis.');
+            ->setRequired('user.admin.validation.descriptionRequired');
 
         $form->addText('color')
-            ->setRequired('Prosím zadejte barvu.')
-            ->addRule(Form::PATTERN, 'Barva musi byt zadana v HEX formatu', '^[0-9a-f]{3,6}$');
+            ->setRequired('user.admin.validation.colorRequired')
+            ->addRule(Form::PATTERN, 'user.admin.validation.colorInvalid', '^[0-9a-f]{3,6}$');
 
         $aclOperationOptions = [];
         foreach ($this->aclResourceRepository->getAll() AS $aclResource)
@@ -123,7 +123,7 @@ class GroupForm extends BaseControl
 
         $form->addCheckbox('isRegister');
 
-        $form->addSubmit('send');
+        $form->addSubmit('send', 'user.admin.action.save');
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
@@ -152,11 +152,11 @@ class GroupForm extends BaseControl
     {
         $values = $form->getValues();
         if (!$this->groupRepository->isNameFree($values->name, $this->group)) {
-            $form->addError('Tento název skupiny je již zabrán.');
+            $form->addError('user.admin.validation.groupNameTaken');
         }
 
         if (!$this->user->isAllowed('user', 'edit')) {
-            $form->addError('Nemáte oprávění editovat ACL skupiny.');
+            $form->addError('user.admin.validation.groupForbidden');
         }
     }
 

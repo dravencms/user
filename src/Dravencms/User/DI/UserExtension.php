@@ -2,6 +2,7 @@
 
 namespace Dravencms\User\DI;
 
+use Contributte\Translation\DI\TranslationProviderInterface;
 use Dravencms\User\User;
 use Nette\Bridges\ApplicationLatte\LatteFactory;
 use Nette\DI\CompilerExtension;
@@ -10,8 +11,13 @@ use Nette\DI\CompilerExtension;
  * Class UserExtension
  * @package Dravencms\User\DI
  */
-class UserExtension extends CompilerExtension
+class UserExtension extends CompilerExtension implements TranslationProviderInterface
 {
+    public function getTranslationResources(): array
+    {
+        return [__DIR__ . '/../lang'];
+    }
+
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();

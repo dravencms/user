@@ -55,7 +55,7 @@ class UserPresenter extends SecuredPresenter
     #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
-        $this->template->h1 = 'Uživatelé';
+        $this->template->h1 = $this->translator->translate('user.admin.title.users');
     }
 
     /**
@@ -74,10 +74,10 @@ class UserPresenter extends SecuredPresenter
             }
 
             $this->userFormEntity = $user;
-            $this->template->h1 = 'Editace uživatele „' . $user->getFirstName() . ' ' . $user->getLastName() . '“';
+            $this->template->h1 = $this->translator->translate('user.admin.title.editUser', ['name' => $user->getFirstName() . ' ' . $user->getLastName()]);
 
         } else {
-            $this->template->h1 = 'New user';
+            $this->template->h1 = $this->translator->translate('user.admin.title.newUser');
         }
     }
 
@@ -92,12 +92,12 @@ class UserPresenter extends SecuredPresenter
             // If editing my self, log out
             if ($this->getUserEntity() == $this->userFormEntity) {
                 $this->getUser()->logout();
-                $this->flashMessage('Changes has been made to Your account. You have been signed out.', Flash::INFO);
+                $this->flashMessage($this->translator->translate('user.admin.flash.accountChangedSignOut'), Flash::INFO);
                 $this->redirect('Sign:in');
             }
             else
             {
-                $this->flashMessage('Changes has been saved.', Flash::SUCCESS);
+                $this->flashMessage($this->translator->translate('user.admin.flash.saved'), Flash::SUCCESS);
                 $this->redirect('User:');
             }
         };
@@ -113,7 +113,7 @@ class UserPresenter extends SecuredPresenter
         $control->setNamespace($this->getNamespace());
         $control->onDelete[] = function()
         {
-            $this->flashMessage('User has been successfully deleted.', Flash::INFO);
+            $this->flashMessage($this->translator->translate('user.admin.flash.userDeleted'), Flash::INFO);
             $this->redirect('User:');
         };
         return $control;

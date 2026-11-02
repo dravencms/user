@@ -53,7 +53,7 @@ class GroupPresenter extends SecuredPresenter
     #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
-        $this->template->h1 = 'Skupiny';
+        $this->template->h1 = $this->translator->translate('user.admin.title.groups');
     }
 
     /**
@@ -70,9 +70,9 @@ class GroupPresenter extends SecuredPresenter
 
             $this->userGroupFormEntity = $group;
 
-            $this->template->h1 = 'Editace skupiny „' . $group->getName() . '“';
+            $this->template->h1 = $this->translator->translate('user.admin.title.editGroup', ['name' => $group->getName()]);
         } else {
-            $this->template->h1 = 'Nová skupina';
+            $this->template->h1 = $this->translator->translate('user.admin.title.newGroup');
         }
     }
 
@@ -83,7 +83,7 @@ class GroupPresenter extends SecuredPresenter
     {
         $control = $this->groupGridFactory->create();
         $control->onDelete[] = function(){
-            $this->flashMessage('Group has been successfully deleted', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.groupDeleted'), Flash::SUCCESS);
             $this->redirect('Group:');
         };
         return $control;
@@ -96,7 +96,7 @@ class GroupPresenter extends SecuredPresenter
     {
         $control = $this->groupFormFactory->create($this->userGroupFormEntity);
         $control->onSuccess[] = function(){
-            $this->flashMessage('Group has been successfully saved', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.groupSaved'), Flash::SUCCESS);
             $this->redirect('Group:');
         };
 

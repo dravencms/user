@@ -94,11 +94,11 @@ class AclOperationGrid extends BaseControl
 
         $grid->setDataSource($this->aclOperationRepository->getAclOperationQueryBuilder($this->aclResource));
 
-        $grid->addColumnText('name', 'Název')
+        $grid->addColumnText('name', 'user.admin.field.name')
                 ->setSortable()
                 ->setFilterText();
 
-        $grid->addColumnText('description', 'Popis')
+        $grid->addColumnText('description', 'user.admin.field.description')
                 ->setSortable()
                 ->setFilterText();
 
@@ -106,7 +106,7 @@ class AclOperationGrid extends BaseControl
         {
             $grid->addAction('editOperation', '', 'editOperation', ['aclResourceId' => 'aclResource.id', 'id'])
                     ->setIcon('pencil')
-                    ->setTitle('Upravit')
+                    ->setTitle('user.admin.action.edit')
                     ->setClass('btn btn-sm btn-primary');
         }
 
@@ -114,18 +114,18 @@ class AclOperationGrid extends BaseControl
         {
             $grid->addAction('delete', '', 'delete!')
                 ->setIcon('trash')
-                ->setTitle('Smazat')
+                ->setTitle('user.admin.action.delete')
                 ->setClass('btn btn-sm btn-danger ajax')
-                ->setConfirmation(new StringConfirmation('Do you really want to delete row %s?', 'name'));
+                ->setConfirmation(new StringConfirmation('user.admin.confirm.delete', 'name'));
 
-            $grid->addGroupAction('Smazat')->onSelect[] = [$this, 'gridGroupActionDelete'];
+            $grid->addGroupAction('user.admin.action.delete')->onSelect[] = [$this, 'gridGroupActionDelete'];
         }
 
-        $grid->addExportCsvFiltered('Csv export (filtered)', 'acl_resource_filtered.csv')
-            ->setTitle('Csv export (filtered)');
+        $grid->addExportCsvFiltered('user.admin.action.exportFiltered', 'acl_resource_filtered.csv')
+            ->setTitle('user.admin.action.exportFiltered');
 
-        $grid->addExportCsv('Csv export', 'acl_resource_all.csv')
-            ->setTitle('Csv export');
+        $grid->addExportCsv('user.admin.action.exportAll', 'acl_resource_all.csv')
+            ->setTitle('user.admin.action.exportAll');
 
         return $grid;
     }

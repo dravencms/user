@@ -84,12 +84,12 @@ class AclResourceForm extends Control
         $form = $this->baseFormFactory->create();
 
         $form->addText('name')
-            ->setRequired('Prosím zadejte název.');
+            ->setRequired('user.admin.validation.nameRequired');
 
         $form->addTextArea('description')
-            ->setRequired('Prosím zadejte název.');
+            ->setRequired('user.admin.validation.descriptionRequired');
 
-        $form->addSubmit('send');
+        $form->addSubmit('send', 'user.admin.action.save');
 
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
@@ -113,11 +113,11 @@ class AclResourceForm extends Control
         $values = $form->getValues();
         if (!$this->aclResourceRepository->isNameFree($values->name, $this->aclResource))
         {
-            $form->addError('Name is not free');
+            $form->addError('user.admin.validation.nameTaken');
         }
 
         if (!$this->user->isAllowed('user', 'edit')) {
-            $form->addError('Nemáte oprávění editovat ACL.');
+            $form->addError('user.admin.validation.aclForbidden');
         }
     }
 

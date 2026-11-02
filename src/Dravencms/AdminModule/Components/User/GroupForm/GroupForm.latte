@@ -6,13 +6,13 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="mb-3">
-                    <label class="form-label" n:name="name">Název</label>
+                    <label class="form-label" n:name="name">{_'user.admin.field.name'}</label>
                     <input type="text" n:name="name" autofocus="autofocus" class="form-control">
                 </div>
             </div><!-- col-sm-6 -->
             <div class="col-sm-6">
                 <div class="mb-3">
-                    <label class="form-label" n:name="color">Color</label>
+                    <label class="form-label" n:name="color">{_'user.admin.field.color'}</label>
                     <input type="text" n:name="color" class="form-control">
                 </div>
             </div><!-- col-sm-6 -->
@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="mb-3">
-                    <label class="form-label" n:name="description">Popis</label>
+                    <label class="form-label" n:name="description">{_'user.admin.field.description'}</label>
                     <textarea n:name="description" class="form-control"></textarea>
                 </div>
             </div><!-- col-sm-12 -->
@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="mb-3">
-                    <label class="form-label" n:name="aclOperation">Oprávnění</label>
+                    <label class="form-label" n:name="aclOperation">{_'user.admin.field.permissions'}</label>
                     <select n:name="aclOperation" class="form-control"></select>
                 </div>
             </div><!-- col-sm-12 -->
@@ -40,7 +40,7 @@
             <div class="col-sm-12">
                 <div class="form-check">
                     <label>
-                        <input type="checkbox" class="form-check-input" n:name="isRegister"> <span class="form-check-label">Je defaultní pro novou pregistraci</span>
+                        <input type="checkbox" class="form-check-input" n:name="isRegister"> <span class="form-check-label">{_'user.admin.field.registrationDefault'}</span>
                     </label>
                 </div> <!-- / .checkbox -->
             </div><!-- col-sm-12 -->
@@ -49,6 +49,6 @@
     </div>
 
     <div class="card-footer">
-        <input type="submit" n:name="send" class="btn btn-success button" value="Uložit">
+        <input type="submit" n:name="send" class="btn btn-success button" value="{_'user.admin.action.save'}">
     </div>
 </form>

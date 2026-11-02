@@ -71,7 +71,7 @@ class AclPresenter extends SecuredPresenter
     #[IsAllowed('user', 'edit')]
     public function actionDefault(): void
     {
-        $this->template->h1 = 'ACL';
+        $this->template->h1 = $this->translator->translate('user.admin.title.acl');
     }
 
     /**
@@ -83,14 +83,14 @@ class AclPresenter extends SecuredPresenter
         if ($id) {
             $aclResource = $this->aclResourceRepository->getOneById($id);
             if (!$aclResource) {
-                $this->error('ACL resource not found!');
+                $this->error($this->translator->translate('user.admin.error.resourceNotFound'));
             }
 
-            $this->template->h1 = 'Editace resource „' . $aclResource->getName() . '“';
+            $this->template->h1 = $this->translator->translate('user.admin.title.editResource', ['name' => $aclResource->getName()]);
 
             $this->aclResource = $aclResource;
         } else {
-            $this->template->h1 = 'Nový resource';
+            $this->template->h1 = $this->translator->translate('user.admin.title.newResource');
         }
     }
 
@@ -103,7 +103,7 @@ class AclPresenter extends SecuredPresenter
         $aclResource = $this->aclResourceRepository->getOneById($aclResourceId);
         if (!$aclResource)
         {
-            $this->error('Resource not found!');
+            $this->error($this->translator->translate('user.admin.error.resourceNotFound'));
         }
 
         $this->aclResource = $aclResource;
@@ -111,14 +111,14 @@ class AclPresenter extends SecuredPresenter
         if ($id) {
             $aclOperation = $this->aclOperationRepository->getOneById($id);
             if (!$aclOperation) {
-                $this->error('ACL Operation not found!');
+                $this->error($this->translator->translate('user.admin.error.operationNotFound'));
             }
 
             $this->aclOperation = $aclOperation;
 
-            $this->template->h1 = 'Editace operation „' . $aclOperation->getName() . '“';
+            $this->template->h1 = $this->translator->translate('user.admin.title.editOperation', ['name' => $aclOperation->getName()]);
         } else {
-            $this->template->h1 = 'Nový operation';
+            $this->template->h1 = $this->translator->translate('user.admin.title.newOperation');
         }
     }
 
@@ -132,10 +132,10 @@ class AclPresenter extends SecuredPresenter
         $aclResource = $this->aclResourceRepository->getOneById($id);
         if (!$aclResource)
         {
-            $this->error('Resource not found!');
+            $this->error($this->translator->translate('user.admin.error.resourceNotFound'));
         }
 
-        $this->template->h1 = 'ACL '.$aclResource->getName();
+        $this->template->h1 = $this->translator->translate('user.admin.title.resourceOperations', ['name' => $aclResource->getName()]);
 
         $this->aclResource = $aclResource;
 
@@ -150,7 +150,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclResourceGridFactory->create();
         $control->onDelete[] = function()
         {
-            $this->flashMessage('Resource has been successfully deleted', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.resourceDeleted'), Flash::SUCCESS);
             $this->redirect('Acl:');
         };
         return $control;
@@ -164,7 +164,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclResourceEditFormFactory->create($this->aclResource);
         $control->onSuccess[] = function()
         {
-            $this->flashMessage('Resource has been successfully saved', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.resourceSaved'), Flash::SUCCESS);
             $this->redirect('Acl:');
         };
         return $control;
@@ -178,7 +178,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclOperationGridFactory->create($this->aclResource);
         $control->onDelete[] = function($aclResource)
         {
-            $this->flashMessage('Operation has been successfully deleted', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.operationDeleted'), Flash::SUCCESS);
             $this->redirect('Acl:operation', $aclResource->getId());
         };
         return $control;
@@ -192,7 +192,7 @@ class AclPresenter extends SecuredPresenter
         $control = $this->aclOperationEditFormFactory->create($this->aclResource, $this->aclOperation);
         $control->onSuccess[] = function($aclResource)
         {
-            $this->flashMessage('Operation has been successfully saved', Flash::SUCCESS);
+            $this->flashMessage($this->translator->translate('user.admin.flash.operationSaved'), Flash::SUCCESS);
             $this->redirect('Acl:operation', $aclResource->getId());
         };
         return $control;
