@@ -3,7 +3,6 @@
 namespace Dravencms\Model\User\Entities;
 
 use Dravencms\Model\Location\Entities\StreetNumber;
-use Dravencms\User\DefaultDataCreator;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -226,22 +225,6 @@ class User implements IIdentity
     public function getRoles(): array
     {
         return $this->groups->toArray();
-    }
-
-    /**
-     * @param DefaultDataCreator $defaultDataCreator
-     * @return bool
-     * @throws \Exception
-     */
-    public function initializeDefaultData(DefaultDataCreator $defaultDataCreator): bool
-    {
-        if ($this->isInitialized) return false;
-
-        $defaultDataCreator->create($this);
-        $this->isInitialized = true;
-        $this->lastActivity = new \DateTime();
-
-        return true;
     }
 
     /**

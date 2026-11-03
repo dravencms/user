@@ -82,6 +82,7 @@ class GroupGrid extends BaseControl
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
+        $grid->setWritePermission('user', 'edit');
 
         $grid->setDataSource($this->groupRepository->getGroupQueryBuilder());
 
@@ -141,9 +142,11 @@ class GroupGrid extends BaseControl
     /**
      * @param integer|array $id
      */
-    #[IsAllowed('user', 'delete')]
+    #[\Dravencms\User\Attributes\IsAllowed('user', 'delete')]
+    #[\Dravencms\Security\Mutation]
     public function handleDelete($id): void
     {
+        $this->requirePermission('user', 'delete');
         $groups = $this->groupRepository->getById($id);
         foreach ($groups AS $group) {
             $this->entityManager->remove($group);

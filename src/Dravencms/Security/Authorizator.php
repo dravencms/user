@@ -27,6 +27,7 @@ class Authorizator implements \Nette\Security\Authorizator
 
     public function initiate(): void
     {
+        $this->identity = null;
         $this->acl = $this->builder->build($this->getUserIdentity()?->getRoles() ?? []);
     }
 

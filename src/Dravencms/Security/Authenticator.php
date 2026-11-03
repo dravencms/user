@@ -47,7 +47,11 @@ class Authenticator implements \Nette\Security\Authenticator, IdentityHandler
     public function sleepIdentity(IIdentity $identity): IIdentity
     {
         //Save only simple identity with id
-        return new SimpleIdentity($identity->getId());
+        if (!$identity instanceof User) { throw new \InvalidArgumentException('Expected a user identity.'); }
+        return new SimpleIdentity($identity->getId(), [], [
+            'namespace' => $identity->getNamespace(),
+            'authStamp' => hash('sha256', $identity->getPassword()),
+        ]);
     }
 
     /**
@@ -56,7 +60,14 @@ class Authenticator implements \Nette\Security\Authenticator, IdentityHandler
      */
     public function wakeupIdentity(IIdentity $identity): ?IIdentity
     {
-        return $this->userRepository->getOneById($identity->getId());
+        $user = $this->userRepository->getOneById($identity->getId());
+        if ($user === null || !$user->isActive() || ($this->namespace && $user->getNamespace() !== $this->namespace)) { return null; }
+        if ($identity instanceof User) {
+            $namespace = $identity->getNamespace(); $stamp = hash('sha256', $identity->getPassword());
+        } elseif ($identity instanceof SimpleIdentity) {
+            $data = $identity->getData(); $namespace = $data['namespace'] ?? null; $stamp = $data['authStamp'] ?? null;
+        } else { return null; }
+        return $namespace === $user->getNamespace() && is_string($stamp) && hash_equals(hash('sha256', $user->getPassword()), $stamp) ? $user : null;
     }
 
     /**
@@ -74,15 +85,17 @@ class Authenticator implements \Nette\Security\Authenticator, IdentityHandler
         $foundUser = $this->userRepository->getUserRepository()->findOneBy($criteria);
 
         if (!$foundUser) {
+            // Perform equivalent password work for unknown accounts as well.
+            $this->passwordManager->hash($password);
             throw new AuthenticationException('User not found', self::IDENTITY_NOT_FOUND);
         }
 
+        $verifyPassword = $foundUser->verifyPassword($password, function($password, $hash) { return $this->passwordManager->verify($password, $hash); });
         if (!$foundUser->isActive())
         {
             throw new AuthenticationException('User is not active', self::IDENTITY_NOT_FOUND);
         }
 
-        $verifyPassword = $foundUser->verifyPassword($password, function($password, $hash) { return $this->passwordManager->verify($password, $hash); });
         if (!$verifyPassword) {
             throw new AuthenticationException('Invalid credentials', self::INVALID_CREDENTIAL);
         }

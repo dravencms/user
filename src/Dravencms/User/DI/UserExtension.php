@@ -13,6 +13,11 @@ use Nette\DI\CompilerExtension;
  */
 class UserExtension extends CompilerExtension implements TranslationProviderInterface
 {
+    public function getConfigSchema(): \Nette\Schema\Schema
+    {
+        return \Nette\Schema\Expect::structure(['activityInterval' => \Nette\Schema\Expect::int(300)->min(1)]);
+    }
+
     public function getTranslationResources(): array
     {
         return [__DIR__ . '/../lang'];
@@ -21,6 +26,8 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
+        $builder->addDefinition($this->prefix('activityRecorder'))->setFactory(\Dravencms\User\UserActivityRecorder::class, ['interval' => $this->getConfig()->activityInterval ?? 300]);
+        $builder->addDefinition($this->prefix('securityMigration'))->setFactory(\Dravencms\User\PasswordResetSchemaMigration::class);
         $builder->addDefinition($this->prefix('aclProvider'))->setFactory(\Dravencms\User\AclProvider::class);
         $builder->addDefinition($this->prefix('aclRegistry'))->setFactory(\Dravencms\User\Acl\AclRegistry::class);
         $builder->addDefinition($this->prefix('aclGrantStore'))->setFactory(\Dravencms\User\Acl\AclGrantStore::class);

@@ -37,6 +37,7 @@ use Dravencms\Model\User\Repository\UserRepository;
  *
  * @author Adam Schubert <adam.schubert@sg1-game.net>
  */
+#[\Dravencms\User\Attributes\IsAllowed('user', 'edit')]
 class UserPresenter extends SecuredPresenter
 {
     /** @var UserRepository @inject */

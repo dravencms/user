@@ -17,8 +17,8 @@ trait TSecuredPresenter
     /** @var EntityManager @inject */
     public $entityManager;
 
-    /** @var DefaultDataCreator @inject */
-    public $defaultDataCreator;
+    /** @var UserActivityRecorder @inject */
+    public $userActivityRecorder;
 
     /** @var Authorizator @inject */
     public $authorizator;
@@ -46,17 +46,11 @@ trait TSecuredPresenter
         }
         elseif ($this->getUser()->isLoggedIn())
         {
-            if ($this->getUserEntity()->initializeDefaultData($this->defaultDataCreator))
-            {
-                $this->entityManager->flush();
-                $this->redirect('this');
-            }
-
             $this->assignUserInfo();
         }
 
 
-        if ($element instanceof \ReflectionMethod && $attributes = $element->getAttributes(IsAllowed::class))
+        if ($attributes = $element->getAttributes(IsAllowed::class))
         {
             $requirement = $attributes[0]->newInstance();
             $resource = $requirement->resource;
@@ -73,12 +67,16 @@ trait TSecuredPresenter
 
         /** @var User $user */
         $user = $this->getUser()->getIdentity();
-        $user->setLastActivity(new \DateTime());
-        $this->entityManager->flush();
+        $this->userActivityRecorder->record($user);
         $this->authorizator->initiate();
         $this->template->userInfo = $user;
 
         $this->assigned = true;
+    }
+
+    protected function requirePermission(string $resource, string $operation): void
+    {
+        if (!$this->getUser()->isAllowed($resource, $operation)) { $this->error('Forbidden.', IResponse::S403_FORBIDDEN); }
     }
 
     /**
@@ -90,6 +88,6 @@ trait TSecuredPresenter
      */
     public function isAllowed(string $resource, string $operation, ?string $role = null): bool {
         trigger_error('presenter::isAllowed is deprecated, use Security/User::isAllowed', E_USER_DEPRECATED);
-        return $this->authorizator->isAllowed($resource, $operation, $role);
+        return $this->authorizator->isAllowed($role, $resource, $operation);
     }
 }

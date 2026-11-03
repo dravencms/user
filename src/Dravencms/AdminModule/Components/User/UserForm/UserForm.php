@@ -93,11 +93,11 @@ class UserForm extends BaseControl
             ->addRule(Form::EMAIL, 'user.admin.validation.emailInvalid')
             ->setRequired('user.admin.validation.emailRequired');
 
-        $form->addPassword('password')
+        $form->addPassword('password')->addFilter(\Nette\Utils\Strings::trim(...))
             ->addConditionOn($form["password"], Form::FILLED)
                 ->addRule(Form::MIN_LENGTH, 'user.admin.validation.passwordMinLength', 8);
 
-        $form->addPassword('passwordAgain')
+        $form->addPassword('passwordAgain')->addFilter(\Nette\Utils\Strings::trim(...))
             ->addConditionOn($form["password"], Form::FILLED)
                 ->setRequired('user.admin.validation.passwordAgainRequired')
                 ->addRule(Form::EQUAL, 'user.admin.validation.passwordsMismatch', $form['password']);
@@ -155,6 +155,7 @@ class UserForm extends BaseControl
      */
     public function onSuccessForm(Form $form): void
     {
+        $this->requirePermission('user', 'edit');
         $values = $form->getValues();
 
 

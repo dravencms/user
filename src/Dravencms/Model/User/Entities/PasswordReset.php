@@ -34,8 +34,10 @@ class PasswordReset
     /**
      * @var string
      */
-    #[ORM\Column(type: "string", length: 32, unique: true, nullable: false)]
+    #[ORM\Column(type: "string", length: 64, unique: true, nullable: false)]
     private $hash;
+
+    private ?string $token = null;
 
     /**
      * @var boolean
@@ -52,13 +54,20 @@ class PasswordReset
     {
         $this->user = $user;
         $this->deletedAt = $deletedAt;
-        $this->hash = md5($user->getEmail() . rand() . microtime());
+        $this->token = bin2hex(random_bytes(32));
+        $this->hash = hash('sha256', $this->token);
         $this->isUsed = false;
     }
 
     /**
      * @return string
      */
+    /** Available only immediately after issuing a reset; never persisted. */
+    public function getToken(): string
+    {
+        return $this->token ?? throw new \LogicException('The reset token is only available when issued.');
+    }
+
     public function getHash(): string
     {
         return $this->hash;

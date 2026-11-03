@@ -109,3 +109,20 @@ A new account prompts for its password without echoing it; automation can supply
 ## License
 
 This package is licensed under the LGPL-3.0 license.
+
+## Session and password-reset security (User 3.1)
+
+Deploy with Admin 3.2 and the compatible plugin releases in maintenance mode. Clear the compiled container cache, preview and apply the targeted reset-digest migration before serving requests:
+
+```sh
+php bin/console user:security:migrate
+php bin/console user:security:migrate --apply
+```
+
+Only `userPasswordReset.hash` is widened from 32 to 64 characters. IDs and other data are retained. Back up the database and review the generated SQL; MySQL DDL is not transactional. Migration data-preservation tests run on SQLite.
+
+New reset tokens use 32 random bytes and persist only a SHA-256 digest. Existing reset links are invalidated by this upgrade; users can request a new link. Expiry and single use are rechecked in the password-change transaction. Successful consumption invalidates other outstanding resets. Reset passwords must contain at least eight characters after trimming.
+
+Session identities include their security namespace and a password fingerprint. Old session identities require a fresh sign-in. Disabled/deleted accounts, wrong namespaces and password changes invalidate restored sessions. Password changes also require the current browser to sign in again.
+
+Authenticated activity is recorded at most once per user per 300 seconds using a conditional update, without flushing unrelated managed entities. Configure `user.activityInterval` in seconds (minimum 1) to change this interval. Login-time default-data creation and the empty DefaultDataCreator service are removed; the legacy initialization column is retained to avoid an unrelated schema migration.

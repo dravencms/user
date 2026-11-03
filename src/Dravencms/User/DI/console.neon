@@ -1,2 +1,3 @@
 'user:acl:migrate': Dravencms\User\Console\AclMigrateCommand
 'user:acl:bootstrap': Dravencms\User\Console\AclBootstrapCommand
+'user:security:migrate': Dravencms\User\Console\SecurityMigrateCommand

@@ -38,11 +38,8 @@ class PasswordResetRepository
      */
     public function cleanPreviousPasswordResetsForUser(User $user): void
     {
-        foreach($this->passwordResetRepository->findBy(['user' => $user]) AS $passwordReset)
-        {
-            $this->entityManager->remove($passwordReset);
-            $this->entityManager->flush();
-        }
+        $this->entityManager->createQuery('UPDATE ' . PasswordReset::class . ' p SET p.isUsed = true WHERE p.user = :user AND p.isUsed = false')
+            ->setParameter('user', $user)->execute();
     }
 
     /**
@@ -51,6 +48,28 @@ class PasswordResetRepository
      */
     public function getActiveByHash(string $hash): ?PasswordReset
     {
-        return $this->passwordResetRepository->findOneBy(['hash' => $hash, 'isUsed' => false]);
+        if (!preg_match('/^[a-f0-9]{64}$/D', $hash)) { return null; }
+        return $this->passwordResetRepository->createQueryBuilder('p')
+            ->where('p.hash = :hash AND p.isUsed = false AND p.deletedAt > :now')
+            ->setParameter('hash', hash('sha256', $hash))->setParameter('now', new \DateTime())
+            ->getQuery()->getOneOrNullResult();
+    }
+    /** Claim the reset once, and change the password in the same transaction. */
+    public function consume(PasswordReset $reset, string $password, \Dravencms\Security\PasswordManager $passwords): bool
+    {
+        if (\Nette\Utils\Strings::length(\Nette\Utils\Strings::trim($password)) < 8) { return false; }
+        return $this->entityManager->getConnection()->transactional(function () use ($reset, $password, $passwords): bool {
+            $user = $reset->getUser();
+            if (!$user->isActive() || $user->getNamespace() !== 'Admin') { return false; }
+            $claimed = $this->entityManager->createQuery('UPDATE ' . PasswordReset::class . ' p SET p.isUsed = true WHERE p.id = :id AND p.hash = :hash AND p.isUsed = false AND p.deletedAt > :now')
+                ->setParameter('id', $reset->getId())->setParameter('hash', $reset->getHash())->setParameter('now', new \DateTime())->execute();
+            if ($claimed !== 1) { return false; }
+            $this->cleanPreviousPasswordResetsForUser($user);
+            $reset->setIsUsed(true);
+            $user->changePassword($password, $passwords->hash(...));
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            return true;
+        });
     }
 }

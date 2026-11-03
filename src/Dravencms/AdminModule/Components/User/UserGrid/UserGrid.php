@@ -73,6 +73,7 @@ class UserGrid extends BaseControl
     {
         /** @var Grid $grid */
         $grid = $this->baseGridFactory->create($this, $name);
+        $grid->setWritePermission('user', 'edit');
 
         $grid->setDataSource($this->userRepository->getUsersQueryBuilder($this->namespace));
 
@@ -138,9 +139,11 @@ class UserGrid extends BaseControl
     /**
      * @param integer|array $id
      */
-    #[IsAllowed('user', 'delete')]
+    #[\Dravencms\User\Attributes\IsAllowed('user', 'delete')]
+    #[\Dravencms\Security\Mutation]
     public function handleDelete($id): void
     {
+        $this->requirePermission('user', 'delete');
         $users = $this->userRepository->getById($id);
         foreach($users AS $user)
         {

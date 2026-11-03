@@ -2,7 +2,7 @@
 
 namespace Dravencms\User\Attributes;
 
-#[\Attribute(\Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class IsAllowed
 {
     public function __construct(

@@ -2,7 +2,6 @@
 - Dravencms\Security\PasswordManager
 
 
-- Dravencms\User\DefaultDataCreator
 
 - Dravencms\Model\User\Repository\CompanyRepository # DEPRECATED
 

@@ -36,6 +36,7 @@ use Dravencms\Model\User\Repository\GroupRepository;
  *
  * @author Adam Schubert <adam.schubert@winternet.cz>
  */
+#[\Dravencms\User\Attributes\IsAllowed('user', 'edit')]
 class GroupPresenter extends SecuredPresenter
 {
     /** @var GroupRepository @inject */
