@@ -155,7 +155,6 @@ class UserForm extends BaseControl
      */
     public function onSuccessForm(Form $form): void
     {
-        $this->requirePermission('user', 'edit');
         $values = $form->getValues();
 
 
