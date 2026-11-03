@@ -79,3 +79,9 @@ admin:
     error:
         resourceNotFound: Zdroj oprávnění nebyl nalezen.
         operationNotFound: Operace nebyla nalezena.
+
+menu:
+    root: 'Uživatelé'
+    overview: 'Přehled'
+    groups: 'Skupiny'
+    acl: 'Oprávnění'

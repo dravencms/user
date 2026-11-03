@@ -79,3 +79,9 @@ admin:
     error:
         resourceNotFound: Permission resource not found.
         operationNotFound: Operation not found.
+
+menu:
+    root: 'Users'
+    overview: 'Overview'
+    groups: 'Groups'
+    acl: 'Permissions'

@@ -20,4 +20,3 @@
 - Dravencms\Model\User\Fixtures\GroupFixtures
 - Dravencms\Model\User\Fixtures\AclOperationFixtures
 - Dravencms\Model\User\Fixtures\AclResourceFixtures
-- Dravencms\Model\User\Fixtures\AdminMenuFixtures
