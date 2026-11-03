@@ -85,3 +85,19 @@ menu:
     overview: 'Overview'
     groups: 'Groups'
     acl: 'Permissions'
+
+acl:
+    resource: 'Users and groups'
+    requiredBy: 'Required by: %permissions%'
+    assignIndependently: 'Assign independently'
+    invalidPermission: 'An unknown permission was selected.'
+    permissions:
+        edit:
+            label: 'Manage users, groups and permissions'
+            description: 'Create and edit users and groups, including their permission assignments.'
+        delete:
+            label: 'Delete users'
+        companyEdit:
+            label: 'Manage companies'
+        companyDelete:
+            label: 'Delete companies'

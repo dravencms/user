@@ -2,7 +2,3 @@
 - Dravencms\AdminModule\Components\User\UserForm\UserFormFactory
 - Dravencms\AdminModule\Components\User\GroupForm\GroupFormFactory
 - Dravencms\AdminModule\Components\User\GroupGrid\GroupGridFactory
-- Dravencms\AdminModule\Components\User\AclOperationForm\AclOperationFormFactory
-- Dravencms\AdminModule\Components\User\AclResourceForm\AclResourceFormFactory
-- Dravencms\AdminModule\Components\User\AclOperationGrid\AclOperationGridFactory
-- Dravencms\AdminModule\Components\User\AclResourceGrid\AclResourceGridFactory

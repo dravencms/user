@@ -21,8 +21,17 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
+        $builder->addDefinition($this->prefix('aclProvider'))->setFactory(\Dravencms\User\AclProvider::class);
+        $builder->addDefinition($this->prefix('aclRegistry'))->setFactory(\Dravencms\User\Acl\AclRegistry::class);
+        $builder->addDefinition($this->prefix('aclGrantStore'))->setFactory(\Dravencms\User\Acl\AclGrantStore::class);
+        $builder->addDefinition($this->prefix('aclBuilder'))->setFactory(\Dravencms\User\Acl\AclPermissionBuilder::class);
+        $builder->addDefinition($this->prefix('aclMigration'))->setFactory(\Dravencms\User\Acl\AclSchemaMigration::class);
+
         if ($this->compiler->getExtensions(\Dravencms\Admin\DI\AdminExtension::class) !== []) {
             $builder->addDefinition($this->prefix('adminMenuProvider'))->setFactory(\Dravencms\User\AdminMenuProvider::class);
+            $builder->addDefinition($this->prefix('groupPresenter'))->setFactory(\Dravencms\AdminModule\UserModule\GroupPresenter::class);
+            $builder->addDefinition($this->prefix('userPresenter'))->setFactory(\Dravencms\AdminModule\UserModule\UserPresenter::class);
+            $this->loadComponents();
         }
         $builder->addDefinition($this->prefix('user'))
             ->setFactory(User::class);
@@ -31,7 +40,6 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
             ->setFactory(\Dravencms\Latte\User\Filters\User::class)
             ->setAutowired(false);
 
-        $this->loadComponents();
         $this->loadModels();
         $this->loadConsole();
     }
@@ -40,6 +48,12 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
     public function beforeCompile()
     {
         $builder = $this->getContainerBuilder();
+
+        $registry = $builder->getDefinition($this->prefix('aclRegistry'));
+        foreach ($builder->findByType(\Dravencms\User\Acl\AclProviderInterface::class) as $name => $definition) {
+            $registry->addSetup('addProvider', ['@' . $name]);
+        }
+        $registry->addSetup('getPermissions');
 
         $latteFactoryService = $builder->getDefinitionByType(LatteFactory::class)->getResultDefinition();
         $latteFactoryService->addSetup('addFilter', ['formatUserName', [$this->prefix('@filters'), 'formatUserName']]);
@@ -78,16 +92,10 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
     {
         $builder = $this->getContainerBuilder();
 
-        foreach ($this->loadFromFile(__DIR__ . '/console.neon') as $i => $command) {
-            $cli = $builder->addDefinition($this->prefix('cli.' . $i))
-                ->setAutowired(false);
-
-            if (is_string($command)) {
-                $cli->setFactory($command);
-            } else {
-                throw new \InvalidArgumentException;
-            }
+        foreach ($this->loadFromFile(__DIR__ . '/console.neon') as $name => $command) {
+            if (!is_string($name) || !is_string($command)) { throw new \InvalidArgumentException('Console commands require a name and class.'); }
+            $builder->addDefinition($this->prefix('cli.' . str_replace(':', '.', $name)))
+                ->setFactory($command)->setAutowired(false)->addTag('console.command', $name);
         }
     }
-
 }

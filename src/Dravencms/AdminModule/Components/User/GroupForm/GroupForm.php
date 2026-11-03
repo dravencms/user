@@ -24,10 +24,8 @@ use Dravencms\Components\BaseControl\BaseControl;
 use Dravencms\Components\BaseForm\BaseFormFactory;
 use Dravencms\Model\User\Entities\Group;
 use Dravencms\Model\User\Repository\GroupRepository;
-use Dravencms\Model\User\Repository\AclOperationRepository;
-use Dravencms\Model\User\Repository\AclResourceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Dravencms\Database\EntityManager;
+use Dravencms\User\Acl\AclRegistry;
+use Dravencms\User\Acl\AclGrantStore;
 use Dravencms\Components\BaseForm\Form;
 use Nette\Security\User;
 
@@ -42,17 +40,14 @@ class GroupForm extends BaseControl
     /** @var BaseFormFactory */
     private $baseFormFactory;
 
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var GroupRepository */
     private $groupRepository;
 
-    /** @var AclOperationRepository */
-    private $aclOperationRepository;
+    /** @var AclRegistry */
+    private $registry;
 
-    /** @var AclResourceRepository */
-    private $aclResourceRepository;
+    /** @var AclGrantStore */
+    private $grantStore;
 
     /** @var User */
     private $user;
@@ -65,27 +60,24 @@ class GroupForm extends BaseControl
     /**
      * GroupForm constructor.
      * @param BaseFormFactory $baseFormFactory
-     * @param EntityManager $entityManager
-     * @param AclOperationRepository $aclOperationRepository
+     * @param AclRegistry $registry
      * @param GroupRepository $groupRepository
-     * @param AclResourceRepository $aclResourceRepository
+     * @param AclGrantStore $grantStore
      * @param User $user
      * @param Group|null $group
      */
     public function __construct(
         BaseFormFactory $baseFormFactory,
-        EntityManager $entityManager,
-        AclOperationRepository $aclOperationRepository,
+        AclRegistry $registry,
         GroupRepository $groupRepository,
-        AclResourceRepository $aclResourceRepository,
+        AclGrantStore $grantStore,
         User $user,
         ?Group $group = null
     ) {
         $this->baseFormFactory = $baseFormFactory;
-        $this->entityManager = $entityManager;
         $this->groupRepository = $groupRepository;
-        $this->aclOperationRepository = $aclOperationRepository;
-        $this->aclResourceRepository = $aclResourceRepository;
+        $this->registry = $registry;
+        $this->grantStore = $grantStore;
         $this->user = $user;
         $this->group = $group;
     }
@@ -107,19 +99,9 @@ class GroupForm extends BaseControl
             ->setRequired('user.admin.validation.colorRequired')
             ->addRule(Form::PATTERN, 'user.admin.validation.colorInvalid', '^[0-9a-f]{3,6}$');
 
-        $aclOperationOptions = [];
-        foreach ($this->aclResourceRepository->getAll() AS $aclResource)
-        {
-            $aclOperations = [];
-            foreach ($aclResource->getAclOperations() AS $aclOperation)
-            {
-                $aclOperations[$aclOperation->getId()] = $aclResource->getName().'-'.$aclOperation->getName();
-            }
-
-            $aclOperationOptions[$aclResource->getName()] = $aclOperations;
-        }
-
-        $form->addMultiSelect('aclOperation', null, $aclOperationOptions);
+        $choices = [];
+        foreach ($this->registry->getPermissions() as $id => $permission) { $choices[$id] = $permission->label; }
+        $form->addCheckboxList('aclOperation', null, $choices);
 
         $form->addCheckbox('isRegister');
 
@@ -128,10 +110,7 @@ class GroupForm extends BaseControl
         $form->onValidate[] = [$this, 'editFormValidate'];
         $form->onSuccess[] = [$this, 'editFormSucceeded'];
         if ($this->group) {
-            $aclOperationIds = [];
-            foreach ($this->group->getAclOperations() as $aclOperation) {
-                $aclOperationIds[$aclOperation->getId()] = $aclOperation->getId();
-            }
+            $aclOperationIds = $this->grantStore->getExplicitKeys($this->group);
 
             $form->setDefaults([
                 'name' => $this->group->getName(),
@@ -154,6 +133,9 @@ class GroupForm extends BaseControl
         if (!$this->groupRepository->isNameFree($values->name, $this->group)) {
             $form->addError('user.admin.validation.groupNameTaken');
         }
+
+        try { $this->registry->resolve($form['aclOperation']->getRawValue()); }
+        catch (\InvalidArgumentException) { $form->addError('user.acl.invalidPermission'); }
 
         if (!$this->user->isAllowed('user', 'edit')) {
             $form->addError('user.admin.validation.groupForbidden');
@@ -184,21 +166,36 @@ class GroupForm extends BaseControl
         }
 
 
-        $operations = new ArrayCollection($this->aclOperationRepository->getById($values->aclOperation));
-
-        $group->setAclOperations($operations);
-
-
-        $this->entityManager->persist($group);
-
-        $this->entityManager->flush();
+        $this->grantStore->assign($group, $values->aclOperation);
 
         $this->onSuccess();
+    }
+
+    public function getPermissionView(): array
+    {
+        $form = $this->getComponent('form');
+        $translator = $form->getTranslator();
+        $definitions = $this->registry->getPermissions();
+        $explicit = array_values(array_intersect($form['aclOperation']->getValue(), array_keys($definitions)));
+        $groups = []; $labels = []; $graph = [];
+        $resourceLabels = $this->registry->getResourceLabels();
+        foreach ($definitions as $id => $permission) {
+            $groups[$permission->resource]['label'] = $resourceLabels[$permission->resource];
+            $groups[$permission->resource]['permissions'][] = $permission;
+            $labels[$id] = $translator !== null ? $translator->translate($permission->label) : $permission->label;
+            $graph[$id] = $permission->requires;
+        }
+        $requiredBy = [];
+        foreach ($this->registry->getRequiredBy($explicit) as $id => $parents) {
+            $requiredBy[$id] = array_map(static fn(string $parent): string => $labels[$parent], $parents);
+        }
+        return ['field' => $form['aclOperation'], 'groups' => $groups, 'explicit' => $explicit, 'effective' => $this->registry->resolve($explicit), 'requiredBy' => $requiredBy, 'labels' => $labels, 'graph' => $graph];
     }
 
     public function render(): void
     {
         $template = $this->template;
+        $template->permissionView = $this->getPermissionView();
         $template->setFile(__DIR__ . '/GroupForm.latte');
         $template->render();
     }

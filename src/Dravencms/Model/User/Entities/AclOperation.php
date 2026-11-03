@@ -1,143 +1,52 @@
-<?php declare(strict_types = 1);
-/**
- * Copyright (C) 2016 Adam Schubert <adam.schubert@sg1-game.net>.
- */
+<?php declare(strict_types=1);
 
 namespace Dravencms\Model\User\Entities;
 
-
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\{ArrayCollection, Collection};
 use Doctrine\ORM\Mapping as ORM;
-use Dravencms\Database\Attributes\TimestampableEntity;
 use Dravencms\Database\Attributes\Identifier;
-use Doctrine\ORM\Mapping\UniqueConstraint;
-use Nette;
 
-/**
- * Class AclOperation
- */
 #[ORM\Entity]
-#[ORM\Table(name: "userAclOperation", uniqueConstraints: [new ORM\UniqueConstraint(name: "resorce_name", columns: ["aclresource_id", "name"])])]
+#[ORM\Table(name: 'userAclOperation')]
+#[ORM\UniqueConstraint(name: 'acl_resource_identifier', columns: ['aclresource_id', 'identifier'])]
 class AclOperation
 {
-    use Nette\SmartObject;
     use Identifier;
-    use TimestampableEntity;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: "string", length: 255, nullable: false)]
-    private $name;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $identifier;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(type: "string", length: 6000, nullable: true)]
-    private $description;
+    #[ORM\ManyToOne(targetEntity: AclResource::class, inversedBy: 'aclOperations')]
+    #[ORM\JoinColumn(name: 'aclresource_id', referencedColumnName: 'id', nullable: false)]
+    private AclResource $aclResource;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection|Group[]
-     *
-     */
-    #[ORM\ManyToMany(targetEntity: "Group", mappedBy: "aclOperations")]
-    private $groups;
+    #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'aclOperations')]
+    private Collection $groups;
 
-    /**
-     * @var AclResource
-     */
-    #[ORM\ManyToOne(targetEntity: "AclResource", inversedBy: "aclOperations")]
-    #[ORM\JoinColumn(name: "aclresource_id", referencedColumnName: "id")]
-    private $aclResource;
-
-    /**
-     * AclOperation constructor.
-     * @param AclResource $aclResource
-     * @param $name
-     * @param $description
-     */
-    public function __construct(AclResource $aclResource, string $name, string $description)
+    public function __construct(AclResource $resource, string $identifier)
     {
-        $this->aclResource = $aclResource;
-        $this->setName($name);
-        $this->setDescription($description);
-
-        $this->groups = new ArrayCollection;
+        if ($identifier === '') { throw new \InvalidArgumentException('Empty ACL operation identifier.'); }
+        $this->aclResource = $resource;
+        $this->identifier = $identifier;
+        $this->groups = new ArrayCollection();
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $name = Nette\Utils\Strings::trim($name);
-        if (Nette\Utils\Strings::length($name) === 0)
-        {
-            throw new Nette\InvalidArgumentException('Invalid $name value');
-        }
-        $this->name = $name;
-    }
+    public function getIdentifier(): string { return $this->identifier; }
+    public function getAclResource(): AclResource { return $this->aclResource; }
+    public function getKey(): string { return $this->aclResource->getIdentifier() . '.' . $this->identifier; }
+    public function getGroups(): Collection { return $this->groups; }
 
-    /**
-     * @return AclResource
-     */
-    public function getAclResource(): AclResource
-    {
-        return $this->aclResource;
-    }
-
-    /**
-     * @param Group $group
-     */
     public function addGroup(Group $group): void
     {
-        if ($this->groups->contains($group))
-        {
-            return;
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group); $group->addAclOperation($this);
         }
-        $this->groups->add($group);
-        $group->addAclOperation($this);
     }
 
-    /**
-     * @param Group $group
-     */
     public function removeGroup(Group $group): void
     {
-        if (!$this->groups->contains($group))
-        {
-            return;
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group); $group->removeAclOperation($this);
         }
-        $this->groups->removeElement($group);
-        $group->removeAclOperation($this);
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return Group[]|\Doctrine\Common\Collections\Collection
-     */
-    public function getGroups()
-    {
-        return $this->groups;
     }
 }

@@ -85,3 +85,19 @@ menu:
     overview: 'Přehled'
     groups: 'Skupiny'
     acl: 'Oprávnění'
+
+acl:
+    resource: 'Uživatelé a skupiny'
+    requiredBy: 'Vyžadováno pro: %permissions%'
+    assignIndependently: 'Přiřadit samostatně'
+    invalidPermission: 'Bylo vybráno neznámé oprávnění.'
+    permissions:
+        edit:
+            label: 'Spravovat uživatele, skupiny a oprávnění'
+            description: 'Vytváření a úpravy uživatelů a skupin včetně přiřazování oprávnění.'
+        delete:
+            label: 'Mazat uživatele'
+        companyEdit:
+            label: 'Spravovat společnosti'
+        companyDelete:
+            label: 'Mazat společnosti'

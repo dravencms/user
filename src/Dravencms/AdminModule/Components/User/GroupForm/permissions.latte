@@ -1,0 +1,16 @@
+<div data-acl-picker data-acl-graph="{json_encode($view['graph'])}" data-acl-labels="{json_encode($view['labels'])}" data-acl-explicit="{json_encode($view['explicit'])}" data-acl-required-label="{_'user.acl.requiredBy'}">
+    <fieldset n:foreach="$view['groups'] as $resource" class="mb-3">
+        <legend class="fs-6 fw-bold">{_$resource['label']}</legend>
+        <div n:foreach="$resource['permissions'] as $permission" class="form-check mb-2" data-acl-row="{$permission->id}">
+            {var $checked = in_array($permission->id, $view['effective'], true)}
+            {var $implied = $checked && !in_array($permission->id, $view['explicit'], true)}
+            {var $input = $view['field']->getControlPart($permission->id)}
+            {do $input->setAttribute('checked', $checked)->setAttribute('disabled', $implied)->setAttribute('data-acl-permission', $permission->id)->addClass('form-check-input')}
+            {$input}
+            <label class="form-check-label" for="{$input->getAttribute('id')}">{_$permission->label}</label>
+            <div n:if="$permission->description !== null" class="small text-secondary">{_$permission->description}</div>
+            <small data-acl-required class="text-secondary" aria-live="polite" hidden="{!isset($view['requiredBy'][$permission->id])}">{ifset $view['requiredBy'][$permission->id]}{_'user.acl.requiredBy', ['permissions' => implode(', ', $view['requiredBy'][$permission->id])]}{/ifset}</small>
+            <button type="button" class="btn btn-sm btn-link" data-acl-keep="{$permission->id}" hidden>{_'user.acl.assignIndependently'}</button>
+        </div>
+    </fieldset>
+</div>

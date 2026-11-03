@@ -1,16 +1,6 @@
 extensions:
     user: Dravencms\User\DI\UserExtension
 
-services:
-    user.aclPresenter:
-        class: Dravencms\AdminModule\UserModule\AclPresenter
-
-    user.groupPresenter:
-        class: Dravencms\AdminModule\UserModule\GroupPresenter
-
-    user.userPresenter:
-        class: Dravencms\AdminModule\UserModule\UserPresenter
-
 nettrine.orm:
     managers:
         default:

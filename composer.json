@@ -22,7 +22,12 @@
     "dravencms/base-grid": ">=0.0.1",
     "dravencms/templated-email": ">=v1.0",
     "dravencms/captcha": ">=0.0.2",
-    "dravencms/locale": ">=v1.1.1"
+    "dravencms/locale": ">=v1.1.1",
+    "php": ">=8.2",
+    "doctrine/dbal": "^4.5",
+    "doctrine/orm": "^3.5",
+    "nette/forms": "^3.3",
+    "symfony/console": "^6.4 || ^7.0 || ^8.0"
   },
   "replace": {
     "dravencms/user-light": "*"
@@ -41,6 +46,21 @@
     }
   },
   "conflict": {
-    "dravencms/admin": "<3.0"
+    "dravencms/admin": "<3.1",
+    "dravencms/api": "<0.5.0",
+    "dravencms/article": "<2.7.0",
+    "dravencms/carousel": "<2.4.0",
+    "dravencms/cookie-consent": "<1.9.0",
+    "dravencms/file": "<2.7.0",
+    "dravencms/file-download": "<2.5.0",
+    "dravencms/form": "<2.6.0",
+    "dravencms/gallery": "<2.5.0",
+    "dravencms/locale": "<2.6.0",
+    "dravencms/location": "<1.6.0",
+    "dravencms/map": "<2.4.0",
+    "dravencms/partner": "<2.5.0",
+    "dravencms/seo": "<3.6.0",
+    "dravencms/structure": "<2.7.0",
+    "dravencms/tag": "<2.5.0"
   }
 }
