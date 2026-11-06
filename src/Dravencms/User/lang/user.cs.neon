@@ -101,3 +101,8 @@ acl:
             label: 'Spravovat společnosti'
         companyDelete:
             label: 'Mazat společnosti'
+
+dashboard:
+    title: "Uživatelé"
+    total: "Uživatelské účty"
+    active: "Aktivní účty"

@@ -126,3 +126,10 @@ New reset tokens use 32 random bytes and persist only a SHA-256 digest. Existing
 Session identities include their security namespace and a password fingerprint. Old session identities require a fresh sign-in. Disabled/deleted accounts, wrong namespaces and password changes invalidate restored sessions. Password changes also require the current browser to sign in again.
 
 Authenticated activity is recorded at most once per user per 300 seconds using a conditional update, without flushing unrelated managed entities. Configure `user.activityInterval` in seconds (minimum 1) to change this interval. Login-time default-data creation and the empty DefaultDataCreator service are removed; the legacy initialization column is retained to avoid an unrelated schema migration.
+
+
+## Dashboard
+
+With Admin 3.5 installed, this package automatically registers an ACL-protected dashboard
+panel showing total and active non-shadow accounts in the current admin namespace. Aggregate data is loaded only
+when an authorized user renders the panel. No setup command or migration is required.

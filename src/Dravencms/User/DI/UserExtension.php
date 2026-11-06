@@ -36,6 +36,9 @@ class UserExtension extends CompilerExtension implements TranslationProviderInte
 
         if ($this->compiler->getExtensions(\Dravencms\Admin\DI\AdminExtension::class) !== []) {
             $builder->addDefinition($this->prefix('adminMenuProvider'))->setFactory(\Dravencms\User\AdminMenuProvider::class);
+            if (interface_exists(\Dravencms\Admin\Dashboard\IDashboardComponent::class)) {
+                $builder->addDefinition($this->prefix('dashboard'))->setFactory(\Dravencms\User\DashboardComponent::class)->setAutowired(false);
+            }
             $builder->addDefinition($this->prefix('groupPresenter'))->setFactory(\Dravencms\AdminModule\UserModule\GroupPresenter::class);
             $builder->addDefinition($this->prefix('userPresenter'))->setFactory(\Dravencms\AdminModule\UserModule\UserPresenter::class);
             $this->loadComponents();
